@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 export function OPUSDCSwap() {
-  const [slot1Symbol, setSlot1Symbol] = useState("OP");
+  const [slot1Symbol, setSlot1Symbol] = useState("WMATIC");
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
   const [slot2Icon, setSlot2Icon] = useState(
-    "https://cryptologos.cc/logos/optimism-ethereum-op-logo.png"
+    "https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/DPYBKVZG55EWFHIK2TVT3HTH7Y.png"
   );
   const [slot1Icon, setSlot1Icon] = useState(
     "https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
@@ -72,10 +72,10 @@ export function OPUSDCDeposit() {
 
         <input className="asset" type="number" />
         <div className="selectAsset1">
-          OP
+          WMATIC
           <img
             className="tokenIcon"
-            src="https://cryptologos.cc/logos/optimism-ethereum-op-logo.png"
+            src="https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/DPYBKVZG55EWFHIK2TVT3HTH7Y.png"
           />
         </div>
         <div className="selectAsset2">
@@ -141,7 +141,7 @@ export function PoolData() {
           <table>
             <tr>
               <td style={{ paddingLeft: 0 }} align="left">
-                OP
+                WMATIC
               </td>
               <td style={{ paddingLeft: 0 }} align="right">
                 -

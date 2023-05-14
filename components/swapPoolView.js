@@ -46,7 +46,7 @@ export default function SwapPoolView() {
       {" "}
       {poolview && (
         <div className="poolView">
-          <h1> Neko Exchange </h1>
+          <h1> Menu </h1>
 
           <table>
             <tr>
@@ -101,15 +101,15 @@ export default function SwapPoolView() {
                 <div className="poolContent">
                   <img
                     className="tokenIcon"
-                    src="https://cryptologos.cc/logos/optimism-ethereum-op-logo.png"
+                    src="https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/DPYBKVZG55EWFHIK2TVT3HTH7Y.png"
                   />
                   <img
                     className="tokenIcon"
                     src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
                   />
                   <div>
-                    <b> Opti-Fruit Tart </b> <br />
-                    OP / USDC
+                    <b> Matic Melt </b> <br />
+                    WMATIC / USDC
                   </div>
                 </div>
               </td>

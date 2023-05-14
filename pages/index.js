@@ -314,7 +314,7 @@ export default function Home() {
         {showBoardText && (
           <div className="textBox">
             <div className="typedOutWrapper">
-              <div className="typedOut">Examine the sticky note board?</div>{" "}
+              <div className="typedOut">View the leaderboard?</div>
             </div>
             <div className="textSelect" onClick={() => showBoardFunc(true)}>
               {" "}
@@ -333,7 +333,7 @@ export default function Home() {
         {nekoText && (
           <div className="textBox">
             <div className="typedOutWrapper">
-              <div className="typedOut"> Examine the neko cat?</div>{" "}
+              <div className="typedOut"> View the leaderboard?</div>{" "}
             </div>
             <div className="textSelect" onClick={() => Neko()}>
               {" "}
@@ -345,20 +345,7 @@ export default function Home() {
             </div>{" "}
           </div>
         )}
-        {showNeko && (
-          <div className="textBoxNeko">
-            <div className="typedOutWrapper">
-              <div className="typedOut">
-                &quot;Welcome to the Neko DEX Cafe!&quot;{" "}
-              </div>
 
-              <div className="textSelect2" onClick={() => setShowNeko(false)}>
-                {" "}
-                Done{" "}
-              </div>
-            </div>
-          </div>
-        )}
 
         <div className="table1" />
 
@@ -377,29 +364,34 @@ export default function Home() {
       )}
       {showBoard && (
         <>
-          <button style={{ zIndex: 11 }} onClick={() => setShowBoard(false)}>
+            <div className="modal">
+      <div className="modal-content">
+        <StickyBoard/>
+        <button style={{ zIndex: 11 }} onClick={() => setShowBoard(false)}>
             Close
           </button>
-          <StickyBoard />
+      </div>
+    </div>
         </>
       )}
 
       {showNeko && (
-        <div className="modal">
-          <Image
-            className="nekoBig"
-            src="https://66.media.tumblr.com/tumblr_ma11pbpN0j1rfjowdo1_500.gif"
-            width={500}
-            height={500}
-            alt="neko"
-          />
-        </div>
-      )}
+        <>
+          <div className="modal">
+  <div className="modal-content">
+<Leaderboard/>
+<button onClick={() => setShowNeko(false)}>Close</button>
+  </div>
+  
+</div>
+
+
+      </>)}
 
       <Image
         className="neko"
         src="https://66.media.tumblr.com/tumblr_ma11pbpN0j1rfjowdo1_500.gif"
-        width={500}
+        width={400}
         height={500}
         alt="neko"
       />
@@ -407,4 +399,15 @@ export default function Home() {
       <Image className="worker" src={worker} alt="worker" />
     </div>
   );
+}
+
+const Leaderboard = () => {
+  
+return(
+<div>
+    <h1>Leaderboard</h1>
+    Top Contributors
+
+</div>
+)
 }

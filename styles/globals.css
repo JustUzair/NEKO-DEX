@@ -195,10 +195,10 @@ input[type="number"] {
 
 .neko {
   max-width: 30px;
-  max-height: 30px;
+  max-height: 40px;
   position: absolute;
-  margin-bottom: 340px;
-  margin-right: 80px;
+  margin-bottom: 350px;
+  margin-right: 90px;
 }
 
 .worker {
