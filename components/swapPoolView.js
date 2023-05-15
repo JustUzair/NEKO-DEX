@@ -5,6 +5,7 @@ import { WBTCUSDCMODAL } from "./swapWBTCUSDC.js";
 import { OPUSDCMODAL } from "./swapOPUSDC.js";
 import { DAIUSDCMODAL } from "./swapDAIUSDC.js";
 
+
 export default function SwapPoolView() {
   const [WETHUSDC, setWETHUSDC] = useState();
   const [WBTCUSDC, setWBTCUSDC] = useState();
@@ -54,7 +55,8 @@ export default function SwapPoolView() {
               <th>Volume</th>
               <th>TVL</th>
             </tr>
-            <tr onClick={() => viewWETHUSDC()}>
+            <tr onClick={() => viewWETHUSDC()}
+            className="poolSection">
               <td>
                 {" "}
                 <div className="poolContent">
@@ -76,7 +78,8 @@ export default function SwapPoolView() {
               <td>-</td>
             </tr>
 
-            <tr onClick={() => viewWBTCUSDC(true)}>
+            <tr onClick={() => viewWBTCUSDC(true)}
+            className="poolSection2">
               <td>
                 <div className="poolContent">
                   <img
@@ -96,7 +99,8 @@ export default function SwapPoolView() {
               <td>-</td>
               <td>-</td>
             </tr>
-            <tr onClick={() => viewOPUSDC(true)}>
+            <tr onClick={() => viewOPUSDC(true)}
+            className="poolSection3">
               <td>
                 <div className="poolContent">
                   <img

@@ -178,8 +178,8 @@ export const OPUSDCMODAL = () => {
   }
 
   return (
-    <div className="tab-container">
-      <h2> Opti-Fruit Tart </h2>
+    <div className="tab-container-3">
+      <h2 style={{color:"white", textShadow:"2px 2px black"}}> Matic Melt </h2>
       <div className="tab-buttons">
         <button
           style={{}}

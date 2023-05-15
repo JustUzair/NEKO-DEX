@@ -178,8 +178,9 @@ export const WBTCUSDCMODAL = () => {
   }
 
   return (
-    <div className="tab-container">
-      <h2> WBTC Ube Pandasal </h2>
+    <div className="tab-container-2">
+      <h2
+      style={{color:"white", textShadow:"2px 2px black"}}> WBTC Ube Pandasal </h2>
       <div className="tab-buttons">
         <button
           style={{}}

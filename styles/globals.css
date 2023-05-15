@@ -144,6 +144,7 @@
   border-radius: 5px;
   margin: 10px;
   animation: fadeIn 0.5s;
+  background-color: white;
 }
 
 .asset {
@@ -281,22 +282,52 @@ th {
   animation: fadeIn 0.5s;
   height: 60px;
   padding-top: 20px;
+  color:white;
+  text-shadow: 2px 2px 4px #000000;
 }
+
+.poolHighlight:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+
 
 .tab-content {
   display: flex;
   justify-content: center;
-  background: white;
+  background: none;
   animation: fadeIn 0.5s;
 }
 
-.tab-container {
+.tab-container-1 {
   animation: fadeIn 0.5s;
   padding: 20px;
+  background: url("https://static.vecteezy.com/system/resources/previews/002/042/860/original/chocolate-chip-cookiess-on-plate-with-chocolate-squares-on-wooden-table-vector.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
+.tab-container-2 {
+  animation: fadeIn 0.5s;
+  padding: 20px;
+  background: url("https://cdn.shopify.com/s/files/1/0274/6977/4959/products/UbeCheesePandesal_Sticker_49cbd09e-3dcb-4ed4-a852-d2d73c6e6496_1200x1200.jpg?v=1602346370");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
+.tab-container-3 {
+  animation: fadeIn 0.5s;
+  padding: 20px;
+  background: url("https://i.ibb.co/Mc5vCvT/image.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top;
 }
 
 .poolTab {
-  background: white;
+  background: none;
   border-top: 2px solid black;
   border-right: 2px solid black;
   border-left: none;
@@ -304,7 +335,10 @@ th {
 }
 
 .active {
-  background-color: white;
+  color:white;
+  border:none;
+  background: none;
+  text-shadow: 1px 1px 1px #000000;
   border-bottom: none;
   width: 100px;
   height: 30px;
@@ -355,4 +389,26 @@ th {
 
 .poolView {
   padding: 15px;
+  
+}
+
+.poolSection {
+    background-size: cover;
+   background: url("https://i.ibb.co/8bd47L5/Untitled.png"); 
+   background-repeat: no-repeat;
+   background-position: center;
+}
+
+.poolSection2 {
+    background-size: cover;
+   background: url("https://i.ibb.co/7jHgWJ9/image.png"); 
+   background-repeat: no-repeat;
+   background-position: center;
+}
+
+.poolSection3 {
+    background-size: cover;
+   background: url("https://i.ibb.co/dBCkr4H/image.png"); 
+   background-repeat: no-repeat;
+   background-position: center;
 }

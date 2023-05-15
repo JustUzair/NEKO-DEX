@@ -178,8 +178,8 @@ export const WETHUSDCMODAL = () => {
   }
 
   return (
-    <div className="tab-container">
-      <h2> Eth-Choco Chip Cookie Dough </h2>
+    <div className="tab-container-1">
+      <h2 style={{color:"white", textShadow:"2px 2px black"}}> Eth-Choco Chip Cookie Dough </h2>
       <div className="tab-buttons">
         <button
           style={{}}
