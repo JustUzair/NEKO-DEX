@@ -5,6 +5,7 @@ import { WBTCUSDCMODAL } from "./swapWBTCUSDC.js";
 import { OPUSDCMODAL } from "./swapOPUSDC.js";
 import { DAIUSDCMODAL } from "./swapDAIUSDC.js";
 
+
 export default function SwapPoolView() {
   const [WETHUSDC, setWETHUSDC] = useState();
   const [WBTCUSDC, setWBTCUSDC] = useState();
@@ -46,7 +47,11 @@ export default function SwapPoolView() {
       {" "}
       {poolview && (
         <div className="poolView">
-          <h1> Neko Exchange </h1>
+          <h1> Menu <div style={{
+            display:"inline-block",
+            fontSize:"15px",
+            marginLeft:"210px",
+            }}>0.03% of all trades are donated ✨🐱‍🚀</div></h1> 
 
           <table>
             <tr>
@@ -54,7 +59,8 @@ export default function SwapPoolView() {
               <th>Volume</th>
               <th>TVL</th>
             </tr>
-            <tr onClick={() => viewWETHUSDC()}>
+            <tr onClick={() => viewWETHUSDC()}
+            className="poolSection">
               <td>
                 {" "}
                 <div className="poolContent">
@@ -76,7 +82,8 @@ export default function SwapPoolView() {
               <td>-</td>
             </tr>
 
-            <tr onClick={() => viewWBTCUSDC(true)}>
+            <tr onClick={() => viewWBTCUSDC(true)}
+            className="poolSection2">
               <td>
                 <div className="poolContent">
                   <img
@@ -96,20 +103,21 @@ export default function SwapPoolView() {
               <td>-</td>
               <td>-</td>
             </tr>
-            <tr onClick={() => viewOPUSDC(true)}>
+            <tr onClick={() => viewOPUSDC(true)}
+            className="poolSection3">
               <td>
                 <div className="poolContent">
                   <img
                     className="tokenIcon"
-                    src="https://cryptologos.cc/logos/optimism-ethereum-op-logo.png"
+                    src="https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/DPYBKVZG55EWFHIK2TVT3HTH7Y.png"
                   />
                   <img
                     className="tokenIcon"
                     src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
                   />
                   <div>
-                    <b> Opti-Fruit Tart </b> <br />
-                    OP / USDC
+                    <b> Matic Melt </b> <br />
+                    WMATIC / USDC
                   </div>
                 </div>
               </td>
