@@ -68,7 +68,7 @@
 }
 
 .modal-content {
-  background-color: #fff;
+  background-color: pink;
   width: 700px;
   height: 500px;
   border-radius: 5px;
@@ -302,7 +302,7 @@ th {
 .tab-container-1 {
   animation: fadeIn 0.5s;
   padding: 20px;
-  background: url("https://static.vecteezy.com/system/resources/previews/002/042/860/original/chocolate-chip-cookiess-on-plate-with-chocolate-squares-on-wooden-table-vector.jpg");
+  background: url("https://static.vecteezy.com/system/resources/previews/002/079/185/original/seamless-pattern-of-chocolate-chip-cookies-repetitive-background-of-sweet-round-biscuits-with-brown-cream-on-top-vector.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top;
@@ -394,21 +394,40 @@ th {
 
 .poolSection {
     background-size: cover;
-   background: url("https://i.ibb.co/8bd47L5/Untitled.png"); 
+   background: url("https://i.ibb.co/wR5FWTt/image.png"); 
    background-repeat: no-repeat;
    background-position: center;
+}
+
+.poolSection:hover {
+  background: url("https://i.ibb.co/8bd47L5/Untitled.png");
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .poolSection2 {
     background-size: cover;
-   background: url("https://i.ibb.co/7jHgWJ9/image.png"); 
+    background: url("https://i.ibb.co/tPFj9R2/image.png");
+
    background-repeat: no-repeat;
    background-position: center;
 }
 
+.poolSection2:hover {
+  background: url("https://i.ibb.co/7jHgWJ9/image.png"); 
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .poolSection3 {
     background-size: cover;
-   background: url("https://i.ibb.co/dBCkr4H/image.png"); 
+    background: url("https://i.ibb.co/G3dYSS1/image.png"); 
    background-repeat: no-repeat;
    background-position: center;
+}
+
+.poolSection3:hover{
+  background: url("https://i.ibb.co/dBCkr4H/image.png"); 
+  background-repeat: no-repeat;
+  background-position: center;
 }

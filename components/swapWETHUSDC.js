@@ -51,6 +51,7 @@ export function WETHUSDCSwap() {
 
         <button className="swapButton"> Swap </button>
       </div>
+
     </>
   );
 }
@@ -208,6 +209,7 @@ export const WETHUSDCMODAL = () => {
         {activeTab === 3 && <WETHUSDCWithdraw />}
 
         <PoolData />
+        
       </div>
     </div>
   );

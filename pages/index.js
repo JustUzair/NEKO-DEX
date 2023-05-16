@@ -3,6 +3,8 @@ import Image from "next/image";
 
 import React, { useState, useEffect } from "react";
 
+import { Leaderboard } from "../components/leaderboard.js";
+
 import SwapPoolView from "../components/swapPoolView.js";
 import StickyBoard from "../components/stickyNotes.js";
 
@@ -20,10 +22,10 @@ const BOX_COLOR = "#ccc";
 const INNER_BOX_SIZE = 70;
 const INNER_BOX_COLOR = "blue";
 const KEY_CODES = {
-  W: 87,
-  A: 65,
-  S: 83,
-  D: 68,
+  UP: 38,
+  LEFT: 37,
+  DOWN: 40,
+  RIGHT: 39,
 };
 const OBSTACLE_WIDTH = 75;
 const OBSTACLE_HEIGHT = 300;
@@ -66,12 +68,12 @@ export default function Home() {
       const minLeft = 0;
 
       switch (keyCode) {
-        case KEY_CODES.W:
+        case KEY_CODES.UP:
           setInnerBoxPosition({ top: Math.max(minTop + 140, top - 10), left });
           setDirection("up");
           setIsIdle(false);
           break;
-        case KEY_CODES.A:
+        case KEY_CODES.LEFT:
           setInnerBoxPosition({
             top,
             left: Math.max(minLeft + 185, left - 10),
@@ -79,12 +81,12 @@ export default function Home() {
           setDirection("left");
           setIsIdle(false);
           break;
-        case KEY_CODES.S:
+        case KEY_CODES.DOWN:
           setInnerBoxPosition({ top: Math.min(maxTop, top + 10), left });
           setDirection("down");
           setIsIdle(false);
           break;
-        case KEY_CODES.D:
+        case KEY_CODES.RIGHT:
           setInnerBoxPosition({ top, left: Math.min(maxLeft, left + 10) });
           setDirection("right");
           setIsIdle(false);
@@ -399,15 +401,4 @@ export default function Home() {
       <Image className="worker" src={worker} alt="worker" />
     </div>
   );
-}
-
-const Leaderboard = () => {
-  
-return(
-<div>
-    <h1>Leaderboard</h1>
-    Top Contributors
-
-</div>
-)
 }

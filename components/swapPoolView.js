@@ -47,7 +47,11 @@ export default function SwapPoolView() {
       {" "}
       {poolview && (
         <div className="poolView">
-          <h1> Menu </h1>
+          <h1> Menu <div style={{
+            display:"inline-block",
+            fontSize:"15px",
+            marginLeft:"210px",
+            }}>0.03% of all trades are donated ✨🐱‍🚀</div></h1> 
 
           <table>
             <tr>
