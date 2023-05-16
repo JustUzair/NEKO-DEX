@@ -431,3 +431,19 @@ th {
   background-repeat: no-repeat;
   background-position: center;
 }
+
+.login {
+  height: 600px;
+  width: 800px;
+  background: url("https://preview.redd.it/qn8hkb2w49j91.gif?width=640&crop=smart&format=png8&s=e4b046aa81a6683e4ef4fc3363ae9f59ae3fc560");
+  color:white;
+  text-align: center;
+  line-height: 4;
+}
+
+.login-button {
+  padding:25px;
+  margin-top: 50px;
+  border-radius: 50px;
+  width: 200px;
+}
