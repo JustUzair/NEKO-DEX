@@ -32,7 +32,7 @@ const BOARD_WIDTH = 230;
 const BOARD_HEIGHT = 50;
 
 
-export function Game() {
+export const Game = () => {
  
 /////////////////////GAME CODE ////////////////////
 
