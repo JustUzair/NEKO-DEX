@@ -15,8 +15,7 @@ import upImage from "../public/assets/up.gif";
 
 import worker from "../public/assets/worker.gif";
 
-const BOX_HEIGHT = 600;
-const BOX_WIDTH = 800;
+
 const BOX_COLOR = "#ccc";
 const INNER_BOX_SIZE = 70;
 const INNER_BOX_COLOR = "blue";
@@ -34,19 +33,6 @@ const BOARD_HEIGHT = 50;
 
 
 export function Game() {
-
-  /////////////////// LOGIN//////////////////
-  // const [showLogin, setShowLogin] = useState(true);
-
-  // const Login = () => {
-  //   return (
-  //     <div style={{color:"white"}}className="container">
-  //       <h1> Login </h1>
-  //       Please connect your wallet to continue
-  //       <button onClick={() => setShowLogin(false)}> Login </button>
-  //     </div>
-  //   );
-  // };
  
 /////////////////////GAME CODE ////////////////////
 
@@ -54,196 +40,25 @@ export function Game() {
     top: 500,
     left: 255,
   });
-  const [showDEX, setShowDEX] = useState(false);
-  const [showBoard, setShowBoard] = useState(false);
+  // const [showDEX, setShowDEX] = useState(false);
+  // const [showBoard, setShowBoard] = useState(false);
 
-  const [showDEXText, setShowDEXText] = useState(false);
-  const [showBoardText, setShowBoardText] = useState(false);
+  // const [showDEXText, setShowDEXText] = useState(false);
+  // const [showBoardText, setShowBoardText] = useState(false);
 
   const [direction, setDirection] = useState("left");
 
   const [collision, setCollision] = useState(false);
 
-  const [nekoText, setNekoText] = useState(false);
 
-  const [showNeko, setShowNeko] = useState(false);
+
+  const[showRoom1, setShowRoom1] = useState(true);
+
+  const [showRoom2, setShowRoom2] = useState(false);
 
   const [isIdle, setIsIdle] = useState(true);
 
-  useEffect(() => {
-    function handleKeyPress(event) {
-      const { keyCode } = event;
-      const { top, left } = innerBoxPosition;
-      const maxTop = BOX_HEIGHT - INNER_BOX_SIZE;
-      const maxLeft = BOX_WIDTH - INNER_BOX_SIZE;
-      const minTop = 0;
-      const minLeft = 0;
 
-      switch (keyCode) {
-        case KEY_CODES.UP:
-          setInnerBoxPosition({ top: Math.max(minTop + 140, top - 10), left });
-          setDirection("up");
-          setIsIdle(false);
-          break;
-        case KEY_CODES.LEFT:
-          setInnerBoxPosition({
-            top,
-            left: Math.max(minLeft + 185, left - 10),
-          });
-          setDirection("left");
-          setIsIdle(false);
-          break;
-        case KEY_CODES.DOWN:
-          setInnerBoxPosition({ top: Math.min(maxTop, top + 10), left });
-          setDirection("down");
-          setIsIdle(false);
-          break;
-        case KEY_CODES.RIGHT:
-          setInnerBoxPosition({ top, left: Math.min(maxLeft, left + 10) });
-          setDirection("right");
-          setIsIdle(false);
-          break;
-        default:
-          setIsIdle(true);
-          break;
-      }
-    }
-
-    window?.addEventListener("keydown", handleKeyPress);
-
-    return () => {
-      window?.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [innerBoxPosition]);
-
-  useEffect(() => {
-    function checkCollision() {
-      const innerBoxRect = document
-        .querySelector(".inner-box")
-        .getBoundingClientRect();
-      const obstacleRect = document
-        .querySelector(".obstacle")
-        .getBoundingClientRect();
-      const boardRect = document
-        .querySelector(".board")
-        .getBoundingClientRect();
-      const table1Rect = document
-        .querySelector(".table1")
-        .getBoundingClientRect();
-      const table2Rect = document
-        .querySelector(".table2")
-        .getBoundingClientRect();
-
-      const catRect = document.querySelector(".neko").getBoundingClientRect();
-
-      if (
-        !showDEX &&
-        !showBoard &&
-        innerBoxRect.left < obstacleRect.right &&
-        innerBoxRect.right > obstacleRect.left &&
-        innerBoxRect.top < obstacleRect.bottom &&
-        innerBoxRect.bottom > obstacleRect.top
-      ) {
-        setShowBoardText(false);
-        setShowDEXText(true);
-      }
-      if (
-        !showDEX &&
-        !showBoard &&
-        innerBoxRect.left < boardRect.right &&
-        innerBoxRect.right > boardRect.left &&
-        innerBoxRect.top < boardRect.bottom &&
-        innerBoxRect.bottom > boardRect.top
-      ) {
-        setShowDEXText(false);
-        setShowBoardText(true);
-      }
-
-      if (
-        innerBoxRect.left < table1Rect.right &&
-        innerBoxRect.right > table1Rect.left &&
-        innerBoxRect.top < table1Rect.bottom &&
-        innerBoxRect.bottom > table1Rect.top
-      ) {
-      }
-
-      if (
-        innerBoxRect.left < table2Rect.right &&
-        innerBoxRect.right > table2Rect.left &&
-        innerBoxRect.top < table2Rect.bottom &&
-        innerBoxRect.bottom > table2Rect.top
-      ) {
-      }
-      if (
-        innerBoxRect.left < catRect.right &&
-        innerBoxRect.right > catRect.left &&
-        innerBoxRect.top < catRect.bottom &&
-        innerBoxRect.bottom > catRect.top
-      ) {
-        setNekoText(true);
-      }
-      if (
-        !(
-          innerBoxRect.left < catRect.right &&
-          innerBoxRect.right > catRect.left &&
-          innerBoxRect.top < catRect.bottom &&
-          innerBoxRect.bottom > catRect.top
-        )
-      ) {
-        setNekoText(false);
-        setShowNeko(false);
-      }
-      if (
-        !showDEX &&
-        !showBoard &&
-        innerBoxRect.left < obstacleRect.right &&
-        innerBoxRect.right > obstacleRect.left &&
-        innerBoxRect.top < obstacleRect.bottom &&
-        innerBoxRect.bottom > obstacleRect.top
-      ) {
-        setShowBoardText(false);
-        setShowDEXText(true);
-      }
-      if (
-        !(
-          innerBoxRect.left - 30 < obstacleRect.right &&
-          innerBoxRect.right + 30 > obstacleRect.left &&
-          innerBoxRect.top - 30 < obstacleRect.bottom &&
-          innerBoxRect.bottom + 30 > obstacleRect.top
-        )
-      ) {
-        setShowDEXText(false);
-      }
-
-      if (
-        !(
-          innerBoxRect.left - 30 < boardRect.right &&
-          innerBoxRect.right + 30 > boardRect.left &&
-          innerBoxRect.top - 30 < boardRect.bottom &&
-          innerBoxRect.bottom + 30 > boardRect.top
-        )
-      ) {
-        setShowBoardText(false);
-      }
-    }
-
-    checkCollision();
-  }, [innerBoxPosition]);
-
-  function showDexFunc() {
-    setShowDEX(true);
-    setShowDEXText(false);
-  }
-
-  function showBoardFunc() {
-    setShowBoard(true);
-    setShowBoardText(false);
-  }
-
-  function Neko() {
-    setNekoText(false);
-    setShowNeko(true);
-  }
 
   const getImage = () => {
     if (isIdle) {
@@ -272,8 +87,228 @@ export function Game() {
     return () => clearInterval(interval);
   }, [innerBoxPosition]);
 
-  return (
-    <div className="container">
+
+/////////////////////////ROOM 1//////////////////////////////
+
+  const Room1 = () => {
+   const [showDEX, setShowDEX] = useState(false);
+  const [showBoard, setShowBoard] = useState(false);
+
+  const [showDEXText, setShowDEXText] = useState(false);
+  const [showBoardText, setShowBoardText] = useState(false);
+  const [nekoText, setNekoText] = useState(false);
+
+  const [showNeko, setShowNeko] = useState(false);
+  
+    const [usingModal, setUsingModal] = useState(false);
+
+    const BOX_HEIGHT = 600;
+    const BOX_WIDTH = 800;
+
+
+
+    useEffect(() => {
+      function handleKeyPress(event) {
+        const { keyCode } = event;
+        const { top, left } = innerBoxPosition;
+        const maxTop = BOX_HEIGHT - INNER_BOX_SIZE;
+        const maxLeft = BOX_WIDTH - INNER_BOX_SIZE;
+        const minTop = 0;
+        const minLeft = 0;
+
+        if(!usingModal){
+        switch (keyCode) {
+          case KEY_CODES.UP:
+            setInnerBoxPosition({ top: Math.max(minTop + 140, top - 10), left });
+            setDirection("up");
+            setIsIdle(false);
+            
+            break;
+          case KEY_CODES.LEFT:
+            setInnerBoxPosition({
+              top,
+              left: Math.max(minLeft + 185, left - 10),
+            });
+            setDirection("left");
+            setIsIdle(false);
+            break;
+          case KEY_CODES.DOWN:
+            setInnerBoxPosition({ top: Math.min(maxTop, top + 10), left });
+            setDirection("down");
+            setIsIdle(false);
+            break;
+          case KEY_CODES.RIGHT:
+            setInnerBoxPosition({ top, left: Math.min(maxLeft, left + 10) });
+            setDirection("right");
+            setIsIdle(false);
+            break;
+          default:
+            setIsIdle(true);
+            break;
+        }
+      }}
+  
+      window?.addEventListener("keydown", handleKeyPress);
+  
+      return () => {
+        window?.removeEventListener("keydown", handleKeyPress);
+      };
+    }, [innerBoxPosition]);
+
+    useEffect(() => {
+      function checkCollision() {
+        
+        const innerBoxRect = document
+          .querySelector(".inner-box")
+          .getBoundingClientRect();
+        const obstacleRect = document
+          .querySelector(".obstacle")
+          .getBoundingClientRect();
+        const boardRect = document
+          .querySelector(".board")
+          .getBoundingClientRect();
+        const table1Rect = document
+          .querySelector(".table1")
+          .getBoundingClientRect();
+        const leaveRoomRect1 = document
+          .querySelector(".leaveRoom1")
+          .getBoundingClientRect();
+  
+        const catRect = document.querySelector(".neko").getBoundingClientRect();
+        
+        if (
+          !showDEX &&
+          !showBoard &&
+          innerBoxRect.left < obstacleRect.right &&
+          innerBoxRect.right > obstacleRect.left &&
+          innerBoxRect.top < obstacleRect.bottom &&
+          innerBoxRect.bottom > obstacleRect.top
+        ) {
+          console.log("testing")
+          setShowBoardText(false);
+          setShowDEXText(true);
+        }
+        if (
+          !showDEX &&
+          !showBoard &&
+          innerBoxRect.left < obstacleRect.right &&
+          innerBoxRect.right > obstacleRect.left &&
+          innerBoxRect.top < obstacleRect.bottom &&
+          innerBoxRect.bottom > obstacleRect.top
+        ) {
+          console.log("testing")
+          setShowBoardText(false);
+          setShowDEXText(true);
+        }
+        if (
+          !showDEX &&
+          !showBoard &&
+          innerBoxRect.left < boardRect.right &&
+          innerBoxRect.right > boardRect.left &&
+          innerBoxRect.top < boardRect.bottom &&
+          innerBoxRect.bottom > boardRect.top
+        ) {
+          setShowDEXText(false);
+          setShowBoardText(true);
+        }
+  
+        if (
+          innerBoxRect.left < table1Rect.right &&
+          innerBoxRect.right > table1Rect.left &&
+          innerBoxRect.top < table1Rect.bottom &&
+          innerBoxRect.bottom > table1Rect.top
+        ) {
+        }
+  
+        if (
+          innerBoxRect.left < leaveRoomRect1.right &&
+          innerBoxRect.right > leaveRoomRect1.left &&
+          innerBoxRect.top < leaveRoomRect1.bottom &&
+          innerBoxRect.bottom > leaveRoomRect1.top
+        ) {
+          setShowRoom1(false);
+          setShowRoom2(true);
+          setInnerBoxPosition({ top: 400, left: 60 });
+          console.log("leave room 1");
+
+          
+        }
+        if (
+          innerBoxRect.left < catRect.right &&
+          innerBoxRect.right > catRect.left &&
+          innerBoxRect.top < catRect.bottom &&
+          innerBoxRect.bottom > catRect.top
+        ) {
+          setNekoText(true);
+        }
+        if (
+          !(
+            innerBoxRect.left < catRect.right &&
+            innerBoxRect.right > catRect.left &&
+            innerBoxRect.top < catRect.bottom &&
+            innerBoxRect.bottom > catRect.top
+          )
+        ) {
+          setNekoText(false);
+          setShowNeko(false);
+        }
+        if (
+          !showDEX &&
+          !showBoard &&
+          innerBoxRect.left < obstacleRect.right &&
+          innerBoxRect.right > obstacleRect.left &&
+          innerBoxRect.top < obstacleRect.bottom &&
+          innerBoxRect.bottom > obstacleRect.top
+        ) {
+          setShowBoardText(false);
+          setShowDEXText(true);
+        }
+        if (
+          !(
+            innerBoxRect.left - 30 < obstacleRect.right &&
+            innerBoxRect.right + 30 > obstacleRect.left &&
+            innerBoxRect.top - 30 < obstacleRect.bottom &&
+            innerBoxRect.bottom + 30 > obstacleRect.top
+          )
+        ) {
+          setShowDEXText(false);
+        }
+  
+        if (
+          !(
+            innerBoxRect.left - 30 < boardRect.right &&
+            innerBoxRect.right + 30 > boardRect.left &&
+            innerBoxRect.top - 30 < boardRect.bottom &&
+            innerBoxRect.bottom + 30 > boardRect.top
+          )
+        ) {
+          setShowBoardText(false);
+        }
+    }
+  
+      checkCollision();
+    }, [innerBoxPosition]);
+  
+    function showDexFunc() {
+      setShowDEX(true);
+      setShowDEXText(false);
+    }
+  
+    function showBoardFunc() {
+      setShowBoard(true);
+      setShowBoardText(false);
+    }
+  
+    function Neko() {
+      setNekoText(false);
+      setShowNeko(true);
+    }
+
+
+
+    return(
+      <div className="container">
+        
       <div
         className="box"
         style={{
@@ -281,6 +316,8 @@ export function Game() {
           width: BOX_WIDTH,
         }}
       >
+        
+    
         <div className="bottom-right-div"></div>
         <div
           className={`inner-box ${direction}`}
@@ -364,6 +401,8 @@ export function Game() {
         <div className="table1" />
 
         <div className="table2" />
+
+        <div className="leaveRoom1" />
       </div>
 
       {showDEX && (
@@ -412,9 +451,148 @@ export function Game() {
 
       <Image className="worker" src={worker} alt="worker" />
     </div>
+    )}
+
+/////////////////////////ROOM 2//////////////////////////////
+
+const Room2 = () => {
+  const BOX_HEIGHT = 600;
+  const BOX_WIDTH = 800;
+
+
+  useEffect(() => {
+    function handleKeyPress(event) {
+      const { keyCode } = event;
+      const { top, left } = innerBoxPosition;
+       const maxTop = BOX_HEIGHT - INNER_BOX_SIZE;
+       const maxLeft = BOX_WIDTH - INNER_BOX_SIZE;
+      const minTop = 0;
+      const minLeft = 0;
+
+      switch (keyCode) {
+        case KEY_CODES.UP:
+          setInnerBoxPosition({ top: Math.max(minTop, top - 10), left });
+          setDirection("up");
+          setIsIdle(false);
+          
+          break;
+        case KEY_CODES.LEFT:
+          setInnerBoxPosition({
+            top,
+            left: left - 10,
+          });
+          setDirection("left");
+          setIsIdle(false);
+          break;
+          case KEY_CODES.DOWN:
+            setInnerBoxPosition({ top: Math.min(maxTop, top + 10), left });
+            setDirection("down");
+            setIsIdle(false);
+            break;
+          case KEY_CODES.RIGHT:
+            setInnerBoxPosition({ top, left: Math.min(maxLeft, left + 10) });
+            setDirection("right");
+            setIsIdle(false);
+            break;
+          setIsIdle(true);
+          break;
+      }
+    }
+    
+
+    window?.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window?.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [innerBoxPosition]);
+
+
+
+  useEffect(() => {
+    function checkCollision() {
+      const innerBoxRect = document
+        .querySelector(".inner-box")
+        .getBoundingClientRect();
+      const leaveRoom2 = document
+        .querySelector(".leaveRoom2")
+        .getBoundingClientRect();
+
+      if  (
+          innerBoxRect.left + 50 < leaveRoom2.right &&
+          innerBoxRect.right < leaveRoom2.left &&
+          innerBoxRect.top < leaveRoom2.bottom &&
+          innerBoxRect.bottom > leaveRoom2.top
+        )  {
+        setShowRoom2(false);
+        setShowRoom1(true);
+        setInnerBoxPosition({ top: 400, left: 600 });
+        console.log("leave room 2")
+      }
+
+    }
+
+    checkCollision();
+  }, [innerBoxPosition]);
+
+
+
+  
+  return(
+    <div className="container">
+      <div className="box2" style={{ height: BOX_HEIGHT, width: BOX_WIDTH }}>
+
+    <div className="leaveRoom2"/>
+
+      <div
+          className={`inner-box ${direction}`}
+          style={{
+            height: INNER_BOX_SIZE,
+            width: INNER_BOX_SIZE,
+            backgroundImage: `url(${getImage().src})`,
+            top: innerBoxPosition.top,
+            left: innerBoxPosition.left,
+            backgroundPosition: "0 -10px",
+          }}
+        ></div>
+
+
+
+
+
+
+
+
+
+        <div className="bottom-right-div"></div>
+       </div>
+       </div>
+  )}
+      
+
+
+
+
+
+
+
+
+
+
+////////////////////// RETURN //////////////////////////////
+
+  return (
+    
+    <>
+    {showRoom1 && (
+      <Room1/>
+    
+    )}
+
+    {showRoom2 && (
+      <Room2/>
+    )}
+    
+    </>
   );
 }
-// else{
-//   <Login/>
-// }
-// }
