@@ -17,7 +17,7 @@ export default function Home() {
   }, []);
   useEffect(() => {
     authenticate();
-    console.log(`Account : ${account}`);
+    // console.log(`Account : ${account}`);
     if (account != null) setLogin(true);
     else setLogin(false);
   }, [account]);

@@ -3,7 +3,6 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { Leaderboard } from "../components/leaderboard.js";
 
-
 import SwapPoolView from "../components/swapPoolView.js";
 import StickyBoard from "../components/stickyNotes.js";
 
@@ -14,6 +13,7 @@ import downImage from "../public/assets/down.gif";
 import upImage from "../public/assets/up.gif";
 
 import worker from "../public/assets/worker.gif";
+import { useMoralis, useWeb3Contract } from "react-moralis";
 
 const BOX_HEIGHT = 600;
 const BOX_WIDTH = 800;
@@ -32,9 +32,11 @@ const OBSTACLE_HEIGHT = 300;
 const BOARD_WIDTH = 230;
 const BOARD_HEIGHT = 50;
 
-
 export function Game() {
-
+  const { enableWeb3, authenticate, account, isWeb3Enabled } = useMoralis();
+  useEffect(() => {
+    enableWeb3();
+  }, []);
   /////////////////// LOGIN//////////////////
   // const [showLogin, setShowLogin] = useState(true);
 
@@ -47,8 +49,8 @@ export function Game() {
   //     </div>
   //   );
   // };
- 
-/////////////////////GAME CODE ////////////////////
+
+  /////////////////////GAME CODE ////////////////////
 
   const [innerBoxPosition, setInnerBoxPosition] = useState({
     top: 500,
@@ -360,7 +362,6 @@ export function Game() {
           </div>
         )}
 
-
         <div className="table1" />
 
         <div className="table2" />
@@ -378,29 +379,30 @@ export function Game() {
       )}
       {showBoard && (
         <>
-            <div className="modal">
-      <div className="modal-content">
-        <StickyBoard/>
-        <button style={{ zIndex: 11 }} onClick={() => setShowBoard(false)}>
-            Close
-          </button>
-      </div>
-    </div>
+          <div className="modal">
+            <div className="modal-content">
+              <StickyBoard />
+              <button
+                style={{ zIndex: 11 }}
+                onClick={() => setShowBoard(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </>
       )}
 
       {showNeko && (
         <>
           <div className="modal">
-  <div className="modal-content">
-<Leaderboard/>
-<button onClick={() => setShowNeko(false)}>Close</button>
-  </div>
-  
-</div>
-
-
-      </>)}
+            <div className="modal-content">
+              <Leaderboard />
+              <button onClick={() => setShowNeko(false)}>Close</button>
+            </div>
+          </div>
+        </>
+      )}
 
       <Image
         className="neko"
