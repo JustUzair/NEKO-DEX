@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-import "../interfaces/IERC20.sol";
+import "./interfaces/IERC20.sol";
 
 contract stickyNotes {
 
     uint public totalDonated;
-
 
     struct stickyNote {
         address donor;
