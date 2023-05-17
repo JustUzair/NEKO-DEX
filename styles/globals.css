@@ -6,13 +6,27 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 900px;
+  background-color: black;
+}
+
+.container-fadeout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 900px;
   background-color: black;
 }
 
 .box {
   position: relative;
   background: url("https://i.ibb.co/fp2FyZz/background.png");
+}
+
+.box2 {
+  position: relative;
+  repeat: none;
+  background: url("https://img.itch.zone/aW1hZ2UvMTAzNTYwNS81OTIxNjQ3LnBuZw==/696x512%23/OtJRo1.png");
 }
 
 .inner-box {
@@ -442,7 +456,28 @@ th {
 
   color: white;
   text-align: center;
-  line-height: 4;
+}
+
+.login-fadeout {
+  height: 600px;
+  width: 800px;
+  background: url("https://preview.redd.it/qn8hkb2w49j91.gif?width=640&crop=smart&format=png8&s=e4b046aa81a6683e4ef4fc3363ae9f59ae3fc560");
+  color: white;
+  text-align: center;
+  animation: fadeOut ease 1s;
+}
+
+.overlay-black {
+  /*fade in from black*/
+  animation: fadeOut ease 2s;
+  background-color: #000000;
+  height: 600px;
+  width: 800px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  opacity: 0;
 }
 @keyframes gradientBG {
   0% {
@@ -490,4 +525,73 @@ th {
   margin-top: 50px;
   border-radius: 50px;
   width: 200px;
+}
+
+.leaveRoom1 {
+  position: absolute;
+  right: 0;
+  padding: 25px;
+  margin-top: 10px;
+  border-radius: 50px;
+  width: 10px;
+  height: 550px;
+
+  border: 2px solid red;
+}
+
+.leaveRoom2 {
+  position: absolute;
+  left: 0;
+  padding: 25px;
+  margin-top: 10px;
+  border-radius: 50px;
+  width: 10px;
+  height: 550px;
+
+  border: 2px solid red;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-moz-keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-o-keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-ms-keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
