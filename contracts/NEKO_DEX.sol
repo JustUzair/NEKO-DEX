@@ -36,6 +36,9 @@ contract NEKO_DEX is ERC20 {
     IERC20 public token1; // second asset
     address public feeReceiver; // charity foundation address
 
+    uint256 public totalToken1Donated; //counter for the total donated amount of token0 to the foundation
+    uint256 public totalToken0Donated; // counter for the total donated amount of token1 to the foundation
+
     /// @notice Creates a new liquidity pool for the given assets.
     /// @param _token0 The first asset.
     /// @param _token1 The second asset.
@@ -135,6 +138,7 @@ function swap(uint256 token0In, uint256 token1In, uint256 token0OutMin, uint256 
         token1Out = getOutputAmountWithFee(token0In, true); // calculate the output amount of token1 based on the input amount of token0
         require(token1Out >= token1OutMin, "Slippage protection"); // check if the output amount of token1 is greater than the minimum output amount of token1
         _fee = getOutputAmountNoFee(token0In,true) - token1Out; // calculate the fee
+        totalToken1Donated += _fee; //add the amount donated to the counter
         token1.transfer(msg.sender, token1Out); // transfer token1 to sender
         token1.transfer(feeReceiver,_fee); // transfer fee to feeReceiver
         
@@ -144,6 +148,7 @@ function swap(uint256 token0In, uint256 token1In, uint256 token0OutMin, uint256 
         token0Out = getOutputAmountWithFee(token1In,false); // calculate the output amount of token0 based on the input amount of token1
         require(token0Out >= token0OutMin, "Slippage protection"); // check if the output amount of token0 is greater than the minimum output amount of token0
         _fee = getOutputAmountNoFee(token1In,false) - token0Out; // calculate the fee
+        totalToken0Donated += _fee; //add the amount donated to the counter
         token0.transfer(msg.sender, token0Out); // transfer token0 to sender
         token0.transfer(feeReceiver,_fee); // transfer fee to feeReceiver
     }
