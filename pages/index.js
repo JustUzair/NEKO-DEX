@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Game } from "./game.js";
+import Game from "../components/Game";
 import { useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useMoralis, useWeb3Contract } from "react-moralis";

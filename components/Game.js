@@ -1,10 +1,10 @@
 import Head from "next/head";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import { Leaderboard } from "../components/leaderboard.js";
+import { Leaderboard } from "./leaderboard.js";
 
-import SwapPoolView from "../components/swapPoolView.js";
-import StickyBoard from "../components/stickyNotes.js";
+import SwapPoolView from "./swapPoolView.js";
+import StickyBoard from "./stickyNotes.js";
 
 import leftImage from "../public/assets/left.gif";
 import rightImage from "../public/assets/right.gif";
@@ -30,7 +30,7 @@ const OBSTACLE_HEIGHT = 300;
 const BOARD_WIDTH = 230;
 const BOARD_HEIGHT = 50;
 
-export function Game() {
+export default function Game() {
   const { enableWeb3, authenticate, account, isWeb3Enabled } = useMoralis();
   useEffect(() => {
     enableWeb3();
@@ -570,8 +570,3 @@ export function Game() {
     </>
   );
 }
-
-// else{
-//   <Login/>
-// }
-// }
