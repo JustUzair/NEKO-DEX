@@ -407,7 +407,19 @@ export default function Game() {
 
           <div className="table2" />
 
-          <div className="leaveRoom1" />
+          <div className="leaveRoom1">
+            <span>
+              Room - 2{" "}
+              <span
+                style={{
+                  fontSize: "1.8rem",
+                  fontWeight: "bold",
+                }}
+              >
+                &#11167;
+              </span>
+            </span>
+          </div>
         </div>
 
         {showDEX && (
@@ -523,7 +535,7 @@ export default function Game() {
 
         if (
           innerBoxRect.left + 50 < leaveRoom2.right &&
-          innerBoxRect.right < leaveRoom2.left &&
+          innerBoxRect.right < leaveRoom2.left + 170 &&
           innerBoxRect.top < leaveRoom2.bottom &&
           innerBoxRect.bottom > leaveRoom2.top
         ) {
@@ -540,7 +552,19 @@ export default function Game() {
     return (
       <div className="container">
         <div className="box2" style={{ height: BOX_HEIGHT, width: BOX_WIDTH }}>
-          <div className="leaveRoom2" />
+          <div className="leaveRoom2">
+            <span>
+              Room - 1{" "}
+              <span
+                style={{
+                  fontSize: "1.8rem",
+                  fontWeight: "bold",
+                }}
+              >
+                &#11167;
+              </span>
+            </span>
+          </div>
 
           <div
             className={`inner-box ${direction}`}

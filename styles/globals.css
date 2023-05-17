@@ -529,28 +529,39 @@ th {
 
 .leaveRoom1 {
   position: absolute;
-  right: 0;
-  padding: 25px;
-  margin-top: 10px;
-  border-radius: 50px;
-  width: 10px;
-  height: 550px;
-
-  border: 2px solid red;
+  right: -78px;
+  top: 0;
+  height: 598px;
+  border: 1px solid #fff;
+  background: #0a0a0a;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 105px;
+  font-weight: bold;
 }
-
+.leaveRoom1 span {
+  transform: rotate(-90deg);
+}
 .leaveRoom2 {
   position: absolute;
-  left: 0;
-  padding: 25px;
-  margin-top: 10px;
-  border-radius: 50px;
-  width: 10px;
-  height: 550px;
-
-  border: 2px solid red;
+  left: -108px;
+  top: 0;
+  height: 598px;
+  border: 1px solid #fff;
+  background: #0a0a0a;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 104px;
+  font-weight: bold;
+  z-index: 999;
 }
-
+.leaveRoom2 span {
+  transform: rotate(90deg);
+}
 @keyframes fadeOut {
   0% {
     opacity: 1;
