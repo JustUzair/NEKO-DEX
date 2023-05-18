@@ -178,7 +178,7 @@ export const DAIUSDCMODAL = () => {
   }
 
   return (
-    <div className="tab-container">
+    <div className="tab-container-4">
       <h2> Stablecoin Strudel </h2>
       <div className="tab-buttons">
         <button

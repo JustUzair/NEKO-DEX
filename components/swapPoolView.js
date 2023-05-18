@@ -47,7 +47,7 @@ export default function SwapPoolView() {
       {" "}
       {poolview && (
         <div className="poolView">
-          <h1> Menu <div style={{
+          <h1 style={{color:"white", textShadow:"4px 4px 4px black"}}> Menu <div style={{
             display:"inline-block",
             fontSize:"15px",
             marginLeft:"210px",
@@ -124,7 +124,7 @@ export default function SwapPoolView() {
               <td>-</td>
               <td>-</td>
             </tr>
-            <tr onClick={() => viewDAIUSDC(true)}>
+            <tr className="poolSection4" onClick={() => viewDAIUSDC(true)}>
               <td>
                 <div className="poolContent">
                   <img
