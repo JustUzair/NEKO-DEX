@@ -83,13 +83,16 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 6;
   animation: fadeIn 0.5s;
+
 }
 
 .modal-content {
-  background-color: pink;
+  background: rgb(222,16,93);
+  background: linear-gradient(145deg, rgba(222,16,93,1) 0%, rgba(210,19,158,1) 52%);
   width: 700px;
   height: 500px;
-  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5);
+  
 }
 
 .textBox {
@@ -156,6 +159,8 @@ body {
 }
 
 .swapBox {
+  color:white;
+  text-shadow: 2px 2px black;
   border: 2px solid black;
   width: 40%;
   height: 200px;
@@ -163,6 +168,7 @@ body {
   margin: 10px;
   animation: fadeIn 0.5s;
   background-color: white;
+  background: rgba(225, 192, 203, 0.7);
 }
 
 .asset {
@@ -301,7 +307,7 @@ th {
   height: 60px;
   padding-top: 20px;
   color: white;
-  text-shadow: 2px 2px 4px #000000;
+  text-shadow: 0px 0px 10px black, 0px 0px 10px black, 0px 0px 10px black, 0px 0px 10px black, 0px 0px 10px black, 0px 0px 10px black;
 }
 
 .poolHighlight:hover {
@@ -318,28 +324,41 @@ th {
 .tab-container-1 {
   animation: fadeIn 0.5s;
   padding: 20px;
-  background: url("https://static.vecteezy.com/system/resources/previews/002/079/185/original/seamless-pattern-of-chocolate-chip-cookies-repetitive-background-of-sweet-round-biscuits-with-brown-cream-on-top-vector.jpg");
+  background: url("https://i.ibb.co/xFMnghf/DALL-E-2023-05-17-20-06-06-pattern-of-chocolate-chip-cookies-colorful-pixel-art-sprites.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top;
+  box-shadow: inset 0 0 30px #000000;
 }
 
 .tab-container-2 {
   animation: fadeIn 0.5s;
   padding: 20px;
-  background: url("https://cdn.shopify.com/s/files/1/0274/6977/4959/products/UbeCheesePandesal_Sticker_49cbd09e-3dcb-4ed4-a852-d2d73c6e6496_1200x1200.jpg?v=1602346370");
+  background: url("https://i.ibb.co/jWCD5p1/image.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top;
+  box-shadow: inset 0 0 30px #000000;
 }
 
 .tab-container-3 {
   animation: fadeIn 0.5s;
   padding: 20px;
-  background: url("https://i.ibb.co/Mc5vCvT/image.png");
+  background: url("https://i.ibb.co/n3HzHTG/DALL-E-2023-05-17-20-08-42-pattern-of-sandwiches-colorful-pixel-art-sprites.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top;
+  box-shadow: inset 0 0 30px #000000;
+}
+
+.tab-container-4 {
+  animation: fadeIn 0.5s;
+  padding: 20px;
+  background: url("https://i.ibb.co/BVyQjcZ/DALL-E-2023-05-17-20-10-32-pattern-of-strudels-colorful-pixel-art-sprites.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top;
+  box-shadow: inset 0 0 30px #000000;
 }
 
 .poolTab {
@@ -358,9 +377,13 @@ th {
   border-bottom: none;
   width: 100px;
   height: 30px;
+  border: 2px solid black;
+  background-color: rgba(255, 192, 203, 0.9);
+  border-radius: 5px;
 }
 
 .inactive {
+
   padding: 10px;
   border: none;
   background: none;
@@ -405,46 +428,61 @@ th {
 
 .poolView {
   padding: 15px;
+  
 }
+
+
 
 .poolSection {
   background-size: cover;
-  background: url("https://i.ibb.co/wR5FWTt/image.png");
+  background: url("https://i.ibb.co/7JLZFRM/image.png");
   background-repeat: no-repeat;
   background-position: center;
+  box-shadow: inset 0 0 20px #000000;
+ 
 }
 
 .poolSection:hover {
-  background: url("https://i.ibb.co/8bd47L5/Untitled.png");
-  background-repeat: no-repeat;
-  background-position: center;
-}
+  box-shadow: inset 0 0 10px #000000;
+
+} 
 
 .poolSection2 {
   background-size: cover;
-  background: url("https://i.ibb.co/tPFj9R2/image.png");
+  background: url("https://i.ibb.co/mS04HmT/image.png");
 
   background-repeat: no-repeat;
   background-position: center;
+  box-shadow: inset 0 0 20px #000000;
 }
 
-.poolSection2:hover {
-  background: url("https://i.ibb.co/7jHgWJ9/image.png");
-  background-repeat: no-repeat;
-  background-position: center;
-}
+ .poolSection2:hover {
+
+  box-shadow: inset 0 0 10px #000000;
+} 
 
 .poolSection3 {
   background-size: cover;
-  background: url("https://i.ibb.co/G3dYSS1/image.png");
+  background: url("https://i.ibb.co/WBnRDy8/image.png");
   background-repeat: no-repeat;
   background-position: center;
+  box-shadow: inset 0 0 20px #000000;
 }
 
 .poolSection3:hover {
-  background: url("https://i.ibb.co/dBCkr4H/image.png");
+  box-shadow: inset 0 0 10px #000000;
+} 
+
+.poolSection4 {
+  background-size: cover;
+  background: url("https://i.ibb.co/Y02gCXF/image.png");
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center; 
+  box-shadow: inset 0 0 20px #000000;
+}
+
+.poolSection4:hover {
+  box-shadow: inset 0 0 10px #000000;
 }
 
 .login {
