@@ -179,7 +179,7 @@ export const DAIUSDCMODAL = () => {
 
   return (
     <div className="tab-container-4">
-      <h2> Stablecoin Strudel </h2>
+      <h2 style={{color:"white", textShadow: "0px 0px 10px brown, 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange"}}> Stablecoin Strudel </h2>
       <div className="tab-buttons">
         <button
           style={{}}

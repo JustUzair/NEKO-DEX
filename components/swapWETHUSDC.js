@@ -52,6 +52,14 @@ export function WETHUSDCSwap() {
         <button className="swapButton"> Swap </button>
       </div>
 
+      <div className="infoPanel">
+      <div className="typedOutWrapperInfo">
+        <div className="typedOutInfo">  
+      🔀 Swap WETH for USDC or <br/> USDC for WETH.
+      </div>
+      </div>
+      </div>
+
     </>
   );
 }
@@ -91,6 +99,14 @@ export function WETHUSDCDeposit() {
 
         <button className="swapButton"> Deposit </button>
       </div>
+
+      <div className="infoPanel">
+      <div className="typedOutWrapperInfo">
+        <div className="typedOutInfo">  
+        ✨ Deposit WETH and USDC to <br/> to produce trading fees, <br/> which are donated.
+      </div>
+      </div>
+      </div>
     </>
   );
 }
@@ -108,6 +124,13 @@ export function WETHUSDCWithdraw() {
         <div className="selectAsset1">LP Tokens</div>
 
         <button className="swapButton"> Withdraw </button>
+      </div>
+      <div className="infoPanel">
+      <div className="typedOutWrapperInfo">
+        <div className="typedOutInfo">  
+        📤 Stop accumulating fees and <br/> claim your WETH and USDC.
+      </div>
+      </div>
       </div>
     </>
   );
@@ -180,7 +203,7 @@ export const WETHUSDCMODAL = () => {
 
   return (
     <div className="tab-container-1">
-      <h2 style={{color:"white", textShadow:"2px 2px black"}}> Eth-Choco Chip Cookie Dough </h2>
+      <h2 style={{color:"white", textShadow: "0px 0px 10px brown, 0px 0px 10px brown, 0px 0px 10px brown, 0px 0px 10px brown, 0px 0px 10px brown, 0px 0px 10px brown"}}> Eth-Choco Chip Cookie Dough </h2>
       <div className="tab-buttons">
         <button
           style={{}}

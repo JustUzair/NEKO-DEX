@@ -6,7 +6,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 900px;
+  height: 800px;
   background-color: black;
 }
 
@@ -80,7 +80,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 6;
   animation: fadeIn 0.5s;
 
@@ -167,8 +167,7 @@ body {
   border-radius: 5px;
   margin: 10px;
   animation: fadeIn 0.5s;
-  background-color: white;
-  background: rgba(225, 192, 203, 0.7);
+  background: rgba(170, 51, 106, 0.7);
 }
 
 .asset {
@@ -180,6 +179,10 @@ body {
   margin-bottom: 2px;
   padding-left: 25px;
   text-decoration: none;
+  background: rgba(170, 51, 106, 1);
+  color:white;
+  text-shadow: 2px 2px black;
+  font-size: 20px;
 }
 
 .swapButton {
@@ -378,12 +381,12 @@ th {
   width: 100px;
   height: 30px;
   border: 2px solid black;
-  background-color: rgba(255, 192, 203, 0.9);
+  background: rgba(170, 51, 106, 0.7);
   border-radius: 5px;
 }
 
 .inactive {
-
+  text-shadow: 1px 1px 1px #fff;
   padding: 10px;
   border: none;
   background: none;
@@ -644,3 +647,41 @@ th {
     opacity: 0;
   }
 }
+
+.modalButton {
+  background: rgba(170, 51, 106, 1);
+  border-radius: 6px;
+  padding: 5px 20px;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+
+}
+
+.infoPanel {
+  position:absolute;
+  margin-top: -120px;
+  margin-left:410px; 
+  max-width: 250px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #000000;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.typedOutWrapperInfo {
+
+}
+
+.typedOutInfo {
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 1s steps(20, end) forwards,
+    blink-caret 0.75s step-end infinite;
+}
+

@@ -47,14 +47,20 @@ export default function SwapPoolView() {
       {" "}
       {poolview && (
         <div className="poolView">
-          <h1 style={{color:"white", textShadow:"4px 4px 4px black"}}> Menu <div style={{
+          <h1 style={{color:"white", textShadow:"4px 4px 4px black"}}> 
+          Menu 
+
+          <div style={{marginLeft: "50px", display:"inline-block", fontSize:"15px"}}> 
+          TVL : $15,403,431.20</div>
+
+          <div style={{
             display:"inline-block",
-            fontSize:"15px",
-            marginLeft:"210px",
-            }}>0.03% of all trades are donated ✨🐱‍🚀</div></h1> 
+            fontSize:"12px",
+            marginLeft:"100px",
+            }}>0.03% of all swaps are donated ✨🐱‍🚀</div></h1> 
 
           <table>
-            <tr>
+            <tr style={{color:"white", textShadow:"4px 4px 4px black"}}>
               <th>Pool</th>
               <th>Volume</th>
               <th>TVL</th>
@@ -66,7 +72,7 @@ export default function SwapPoolView() {
                 <div className="poolContent">
                   <img
                     className="tokenIcon"
-                    src="https://w7.pngwing.com/pngs/383/521/png-transparent-eth-crypto-cryptocurrency-cryptocurrencies-cash-money-bank-payment-icon.png"
+                    src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png"
                   />
                   <img
                     className="tokenIcon"
@@ -153,7 +159,7 @@ export default function SwapPoolView() {
       {OPUSDC && <OPUSDCMODAL />}
       {DAIUSDC && <DAIUSDCMODAL />}
       {(WETHUSDC || WBTCUSDC || OPUSDC || DAIUSDC || WETHUSDC) && (
-        <button onClick={() => viewNone(false)}>Back</button>
+        <button className="modalButton" onClick={() => viewNone(false)}>Back</button>
       )}
     </>
   );

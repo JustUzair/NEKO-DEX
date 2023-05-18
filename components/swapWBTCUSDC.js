@@ -51,6 +51,13 @@ export function WBTCUSDCSwap() {
 
         <button className="swapButton"> Swap </button>
       </div>
+      <div className="infoPanel">
+      <div className="typedOutWrapperInfo">
+        <div className="typedOutInfo">  
+      🔀 Swap WBTC for USDC or <br/> USDC for WBTC.
+      </div>
+      </div>
+      </div>
     </>
   );
 }
@@ -90,6 +97,13 @@ export function WBTCUSDCDeposit() {
 
         <button className="swapButton"> Deposit </button>
       </div>
+      <div className="infoPanel">
+      <div className="typedOutWrapperInfo">
+        <div className="typedOutInfo">  
+        ✨ Deposit WBTC and USDC to <br/> to produce trading fees, <br/> which are donated.
+      </div>
+      </div>
+      </div>
     </>
   );
 }
@@ -107,6 +121,13 @@ export function WBTCUSDCWithdraw() {
         <div className="selectAsset1">LP Tokens</div>
 
         <button className="swapButton"> Withdraw </button>
+      </div>
+      <div className="infoPanel">
+      <div className="typedOutWrapperInfo">
+        <div className="typedOutInfo">  
+        📤 Stop accumulating fees and <br/> claim your WETH and USDC.
+      </div>
+      </div>
       </div>
     </>
   );
@@ -180,7 +201,7 @@ export const WBTCUSDCMODAL = () => {
   return (
     <div className="tab-container-2">
       <h2
-      style={{color:"white", textShadow:"2px 2px black"}}> WBTC Ube Pandasal </h2>
+      style={{color:"white", textShadow: "0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple"}}> WBTC Ube Pandasal </h2>
       <div className="tab-buttons">
         <button
           style={{}}
