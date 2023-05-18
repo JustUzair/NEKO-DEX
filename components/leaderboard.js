@@ -117,16 +117,21 @@ export const Leaderboard = () => {
 
     const Top10 = () => {
         return (
+            <>
+            
             <div style={{padding:"15px",margin:"15px", borderRadius:"6px"}}>
+             
               <div style={{fontSize: "30px"}}>Leaderboard </div>
-              <div style={{fontSize: "10px"
+              
+              {/* <div style={{fontSize: "10px"
               ,width:"150px",
                border: "black solid 1px", 
                marginTop:"-30px", 
                marginLeft:"450px", 
                padding:"5px"}}>Users who own the most <br/> LP tokens will be listed here</div>  
-                
-                <table>
+                 */}
+                <table style={{background:"white", boxShadow:"inset 0 0 6px black", borderRadius:"6px"}}>
+                    
                     <tr>
                         <th>Rank</th>
                         <th>Address</th>
@@ -182,13 +187,21 @@ export const Leaderboard = () => {
                     <td>0x1234...5678</td>
                     <td>1000</td>
                     </tr>
-        
+
         
                 </table>
-        
+                
+
             
             </div>
-            )
+            <div className="infoPanelLeaderboard">
+      <div className="typedOutWrapperLeaderboard">
+        <div className="typedOutInfo">  
+        🏆 The Top 10 liquidity providers
+      </div>
+      </div>
+      </div>
+          </>  )
     }
     if(activeTab === 1) {
         return (
@@ -198,24 +211,24 @@ export const Leaderboard = () => {
             </>
         )
     }
-    if(activeTab == 2) {
-        return(
-        <>
-        <StakeLP/>
-        <Buttons/>
-        </>
-        )
+    // if(activeTab == 2) {
+    //     return(
+    //     <>
+    //     <StakeLP/>
+    //     <Buttons/>
+    //     </>
+    //     )
 
-    }
-    if(activeTab == 3) {
-        return(
-        <>
-        <UnstakeLP/>
+    // }
+    // if(activeTab == 3) {
+    //     return(
+    //     <>
+    //     <UnstakeLP/>
        
-        <Buttons/>
-        </>
-        )
+    //     <Buttons/>
+    //     </>
+    //     )
 
-    }
+    // }
     }
     

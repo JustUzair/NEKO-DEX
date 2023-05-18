@@ -62,7 +62,9 @@ export default function Game() {
 
   const [direction, setDirection] = useState("left");
 
-  const [collision, setCollision] = useState(false);
+  // const [collision, setCollision] = useState(false);
+
+  const [showControls, setShowControls] = useState(true);
 
   const [showRoom1, setShowRoom1] = useState(true);
 
@@ -132,8 +134,9 @@ export default function Game() {
               });
               setDirection("up");
               setIsIdle(false);
-
+              setShowControls(false);
               break;
+
             case KEY_CODES.LEFT:
               setInnerBoxPosition({
                 top,
@@ -141,16 +144,20 @@ export default function Game() {
               });
               setDirection("left");
               setIsIdle(false);
+              setShowControls(false);
+        
               break;
             case KEY_CODES.DOWN:
               setInnerBoxPosition({ top: Math.min(maxTop, top + 10), left });
               setDirection("down");
               setIsIdle(false);
+              setShowControls(false);
               break;
             case KEY_CODES.RIGHT:
               setInnerBoxPosition({ top, left: Math.min(maxLeft, left + 10) });
               setDirection("right");
               setIsIdle(false);
+              setShowControls(false);
               break;
             default:
               setIsIdle(true);
@@ -312,6 +319,19 @@ export default function Game() {
       setShowNeko(true);
     }
 
+
+    const DisplayControls = () => {
+      return (
+        <div className="infoPanelControls">
+          <div className="typedOutInfo">
+            <p>Use the arrow keys <br/> to move around</p>
+            </div>
+        </div>
+      );
+    }
+
+
+
     return (
       <div className="container">
         <div
@@ -347,6 +367,10 @@ export default function Game() {
               width: BOARD_WIDTH,
             }}
           ></div>
+
+          {showControls && ( 
+            <DisplayControls/>
+           )}
 
           {showDEXText && (
             <div className="textBox">

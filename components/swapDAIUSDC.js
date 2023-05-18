@@ -51,6 +51,13 @@ export function DAIUSDCSwap() {
 
         <button className="swapButton"> Swap </button>
       </div>
+      <div className="infoPanel">
+      <div className="typedOutWrapperInfo">
+        <div className="typedOutInfo">  
+      🔀 Swap DAI for USDC or <br/> USDC for DAI.
+      </div>
+      </div>
+      </div>
     </>
   );
 }
@@ -90,6 +97,13 @@ export function DAIUSDCDeposit() {
 
         <button className="swapButton"> Deposit </button>
       </div>
+      <div className="infoPanel">
+      <div className="typedOutWrapperInfo">
+        <div className="typedOutInfo">  
+        ✨ Deposit DAI and USDC to <br/> to produce trading fees, <br/> which are donated.
+      </div>
+      </div>
+      </div>
     </>
   );
 }
@@ -107,6 +121,13 @@ export function DAIUSDCWithdraw() {
         <div className="selectAsset1">LP Tokens</div>
 
         <button className="swapButton"> Withdraw </button>
+      </div>
+      <div className="infoPanel">
+      <div className="typedOutWrapperInfo">
+        <div className="typedOutInfo">  
+        📤 Stop accumulating fees and <br/> claim your DAI and USDC.
+      </div>
+      </div>
       </div>
     </>
   );
