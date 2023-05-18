@@ -51,6 +51,13 @@ export function OPUSDCSwap() {
 
         <button className="swapButton"> Swap </button>
       </div>
+      <div className="infoPanel">
+      <div className="typedOutWrapperInfo">
+        <div className="typedOutInfo">  
+      🔀 Swap WMATIC for USDC or <br/> USDC for WMATIC.
+      </div>
+      </div>
+      </div>
     </>
   );
 }
@@ -90,6 +97,13 @@ export function OPUSDCDeposit() {
 
         <button className="swapButton"> Deposit </button>
       </div>
+      <div className="infoPanel">
+      <div className="typedOutWrapperInfo">
+        <div className="typedOutInfo">  
+        ✨ Deposit WMATIC and USDC to <br/> to produce trading fees, <br/> which are donated.
+      </div>
+      </div>
+      </div>
     </>
   );
 }
@@ -107,6 +121,13 @@ export function OPUSDCWithdraw() {
         <div className="selectAsset1">LP Tokens</div>
 
         <button className="swapButton"> Withdraw </button>
+      </div>
+      <div className="infoPanel">
+      <div className="typedOutWrapperInfo">
+        <div className="typedOutInfo">  
+        📤 Stop accumulating fees and <br/> claim your WMATIC and USDC.
+      </div>
+      </div>
       </div>
     </>
   );
@@ -179,7 +200,7 @@ export const OPUSDCMODAL = () => {
 
   return (
     <div className="tab-container-3">
-      <h2 style={{color:"white", textShadow:"2px 2px black"}}> Matic Melt </h2>
+      <h2 style={{color:"white", textShadow: "0px 0px 10px brown, 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green"}}> Matic Melt </h2>
       <div className="tab-buttons">
         <button
           style={{}}

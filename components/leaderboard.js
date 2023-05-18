@@ -8,9 +8,9 @@ export const Leaderboard = () => {
     const Buttons = () => {
         return (
             <div style={{padding:"15px"}}>
-                <button onClick={() => setActiveTab(1)}>Leaderboard</button>
-                <button onClick={() => setActiveTab(2)}>Stake LP</button>
-                <button onClick={() => setActiveTab(3)}>Unstake LP</button>
+                {/* <button className="modalButton" onClick={() => setActiveTab(1)}>Leaderboard</button> */}
+                {/* <button className="modalButton" onClick={() => setActiveTab(2)}>Stake LP</button>
+                <button className="modalButton" onClick={() => setActiveTab(3)}>Unstake LP</button> */}
             </div>
 
         )
@@ -117,9 +117,15 @@ export const Leaderboard = () => {
 
     const Top10 = () => {
         return (
-            <div style={{padding:"15px",margin:"15px", border:"1px solid black", borderRadius:"6px"}}>
-                <h1>Leaderboard ⭐</h1>
-                Top 10 Contributors 
+            <div style={{padding:"15px",margin:"15px", borderRadius:"6px"}}>
+              <div style={{fontSize: "30px"}}>Leaderboard </div>
+              <div style={{fontSize: "10px"
+              ,width:"150px",
+               border: "black solid 1px", 
+               marginTop:"-30px", 
+               marginLeft:"450px", 
+               padding:"5px"}}>Users who own the most <br/> LP tokens will be listed here</div>  
+                
                 <table>
                     <tr>
                         <th>Rank</th>

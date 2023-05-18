@@ -428,7 +428,7 @@ export default function Game() {
               <>
                 <SwapPoolView />
               </>
-              <button onClick={() => setShowDEX(false)}>Close</button>
+              <button className="modalButton" onClick={() => setShowDEX(false)}>Close</button>
             </div>
           </div>
         )}
@@ -453,7 +453,7 @@ export default function Game() {
             <div className="modal">
               <div className="modal-content">
                 <Leaderboard />
-                <button onClick={() => setShowNeko(false)}>Close</button>
+                <button className="modalButton" onClick={() => setShowNeko(false)}>Close</button>
               </div>
             </div>
           </>
