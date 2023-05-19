@@ -719,6 +719,13 @@ th {
   /* box-shadow: 5px 10px 20px rgba(10, 10, 10, 0.7) !important;
    */
   filter: invert(100%) drop-shadow(16px 16px 10px black);
+  overflow-y: -moz-scrollbars-none;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+  overflow-y: scroll;
+}
+.note::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
 
 .sticky-notes--container::-webkit-scrollbar-track {
