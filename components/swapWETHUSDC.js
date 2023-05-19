@@ -4,10 +4,12 @@ import ierc20Abi from "../constants/ierc20Abi.json";
 import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 import { BigNumber, ethers } from "ethers";
 const explorerAddress = `https://mumbai.polygonscan.com/address/`;
-
+import DEXAbi from "../constants/DEXAbi.json";
 export function WETHUSDCSwap() {
   const [slot1Symbol, setSlot1Symbol] = useState("WETH");
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
+  const [firstSlotInput, setFirstSlotInput] = useState(0);
+  const [secondSlotOutput, setSecondSlotOutput] = useState(0);
 
   const [slot2Icon, setSlot2Icon] = useState(
     "https://w7.pngwing.com/pngs/383/521/png-transparent-eth-crypto-cryptocurrency-cryptocurrencies-cash-money-bank-payment-icon.png"
@@ -35,6 +37,38 @@ export function WETHUSDCSwap() {
         ]
       : null;
 
+  const getBasedAssetPrice = async amount => {
+    // alert(slot1Symbol);
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress: ETHPoolContractAddress,
+          functionName: "getOutputAmountWithFee",
+          params: {
+            inputAmount: await ethers.utils
+              .parseUnits(
+                amount.toString() || parseInt("0").toString(),
+                "ether"
+              )
+              .toString(),
+            isToken0: slot1Symbol == "USDC" ? true : false,
+          },
+        },
+        onError: error => {
+          console.error(error);
+        },
+        onSuccess: data => {
+          console.log(data);
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          setSecondSlotOutput(parseFloat(value).toFixed(2));
+        },
+      });
+    }
+  };
+
   function switchAssets() {
     const templink = slot1Icon;
     setSlot1Icon(slot2Icon);
@@ -43,7 +77,9 @@ export function WETHUSDCSwap() {
     setSlot1Symbol(slot2Symbol);
     setSlot2Symbol(tempAsset);
   }
-
+  useEffect(() => {
+    getBasedAssetPrice(firstSlotInput);
+  }, [switchAssets]);
   return (
     <>
       <h1
@@ -60,9 +96,19 @@ export function WETHUSDCSwap() {
         <img
           src="https://i.ibb.co/B431MDW/sort.png"
           className="switchAssets"
-          onClick={() => switchAssets()}
+          onClick={() => {
+            switchAssets();
+          }}
         />
-        <input className="asset" type="number" />
+        <input
+          className="asset"
+          type="number"
+          onChange={e => {
+            setFirstSlotInput(e.target.value);
+            getBasedAssetPrice(e.target.value);
+          }}
+          value={firstSlotInput}
+        />
         <div className="selectAsset1">
           {slot1Symbol}
           <img className="tokenIcon" src={slot2Icon} />
@@ -72,7 +118,7 @@ export function WETHUSDCSwap() {
           <img className="tokenIcon" src={slot1Icon} />
         </div>
 
-        <input className="asset" type="number" />
+        <input className="asset" type="number" value={secondSlotOutput} />
 
         <button className="swapButton"> Swap </button>
       </div>
