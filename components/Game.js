@@ -145,7 +145,7 @@ export default function Game() {
               setDirection("left");
               setIsIdle(false);
               setShowControls(false);
-        
+
               break;
             case KEY_CODES.DOWN:
               setInnerBoxPosition({ top: Math.min(maxTop, top + 10), left });
@@ -319,18 +319,17 @@ export default function Game() {
       setShowNeko(true);
     }
 
-
     const DisplayControls = () => {
       return (
         <div className="infoPanelControls">
           <div className="typedOutInfo">
-            <p>Use the arrow keys <br/> to move around</p>
-            </div>
+            <p>
+              Use the arrow keys <br /> to move around
+            </p>
+          </div>
         </div>
       );
-    }
-
-
+    };
 
     return (
       <div className="container">
@@ -368,9 +367,7 @@ export default function Game() {
             }}
           ></div>
 
-          {showControls && ( 
-            <DisplayControls/>
-           )}
+          {showControls && <DisplayControls />}
 
           {showDEXText && (
             <div className="textBox">
@@ -452,7 +449,9 @@ export default function Game() {
               <>
                 <SwapPoolView />
               </>
-              <button className="modalButton" onClick={() => setShowDEX(false)}>Close</button>
+              <button className="modalButton" onClick={() => setShowDEX(false)}>
+                Close
+              </button>
             </div>
           </div>
         )}
@@ -462,7 +461,12 @@ export default function Game() {
               <div className="modal-content">
                 <StickyBoard />
                 <button
-                  style={{ zIndex: 11 }}
+                  style={{
+                    zIndex: 11,
+                    position: "absolute",
+                    bottom: "26%",
+                    right: "33%",
+                  }}
                   onClick={() => setShowBoard(false)}
                 >
                   Close
@@ -477,7 +481,12 @@ export default function Game() {
             <div className="modal">
               <div className="modal-content">
                 <Leaderboard />
-                <button className="modalButton" onClick={() => setShowNeko(false)}>Close</button>
+                <button
+                  className="modalButton"
+                  onClick={() => setShowNeko(false)}
+                >
+                  Close
+                </button>
               </div>
             </div>
           </>
