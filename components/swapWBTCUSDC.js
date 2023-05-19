@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
+import contractAddresses from "../constants/networkMappings.json";
+import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 
+const explorerAddress = `https://mumbai.polygonscan.com/address/`;
 export function WBTCUSDCSwap() {
   const [slot1Symbol, setSlot1Symbol] = useState("WBTC");
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
@@ -52,11 +55,11 @@ export function WBTCUSDCSwap() {
         <button className="swapButton"> Swap </button>
       </div>
       <div className="infoPanel">
-      <div className="typedOutWrapperInfo">
-        <div className="typedOutInfo">  
-      🔀 Swap WBTC for USDC or <br/> USDC for WBTC.
-      </div>
-      </div>
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+            🔀 Swap WBTC for USDC or <br /> USDC for WBTC.
+          </div>
+        </div>
       </div>
     </>
   );
@@ -98,11 +101,12 @@ export function WBTCUSDCDeposit() {
         <button className="swapButton"> Deposit </button>
       </div>
       <div className="infoPanel">
-      <div className="typedOutWrapperInfo">
-        <div className="typedOutInfo">  
-        ✨ Deposit WBTC and USDC to <br/> to produce trading fees, <br/> which are donated.
-      </div>
-      </div>
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+            ✨ Deposit WBTC and USDC to <br /> to produce trading fees, <br />{" "}
+            which are donated.
+          </div>
+        </div>
       </div>
     </>
   );
@@ -123,17 +127,36 @@ export function WBTCUSDCWithdraw() {
         <button className="swapButton"> Withdraw </button>
       </div>
       <div className="infoPanel">
-      <div className="typedOutWrapperInfo">
-        <div className="typedOutInfo">  
-        📤 Stop accumulating fees and <br/> claim your WETH and USDC.
-      </div>
-      </div>
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+            📤 Stop accumulating fees and <br /> claim your WETH and USDC.
+          </div>
+        </div>
       </div>
     </>
   );
 }
 
 export function PoolData() {
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
+
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const WBTCPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WBTCPool"][
+          contractAddresses[chainId]["WBTCPool"].length - 1
+        ]
+      : null;
+  const WBTCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WBTC"][
+          contractAddresses[chainId]["WBTC"].length - 1
+        ]
+      : null;
+
   return (
     <>
       <div className="swapBox" style={{ height: 300 }}>
@@ -145,7 +168,18 @@ export function PoolData() {
                 Pool
               </td>
               <td style={{ paddingLeft: 0 }} align="right">
-                -
+                {WBTCPoolContractAddress ? (
+                  <a
+                    href={`${explorerAddress}${WBTCPoolContractAddress}`}
+                    target="_blank"
+                  >
+                    {WBTCPoolContractAddress.substr(0, 4) +
+                      "..." +
+                      WBTCPoolContractAddress.substr(-4)}
+                  </a>
+                ) : (
+                  "-"
+                )}
               </td>
             </tr>
 
@@ -154,7 +188,18 @@ export function PoolData() {
                 Token
               </td>
               <td style={{ paddingLeft: 0 }} align="right">
-                -
+                {WBTCTestTokenContractAddress ? (
+                  <a
+                    href={`${explorerAddress}${WBTCTestTokenContractAddress}`}
+                    target="_blank"
+                  >
+                    {WBTCTestTokenContractAddress.substr(0, 4) +
+                      "..." +
+                      WBTCTestTokenContractAddress.substr(-4)}
+                  </a>
+                ) : (
+                  "-"
+                )}
               </td>
             </tr>
           </table>
@@ -201,7 +246,15 @@ export const WBTCUSDCMODAL = () => {
   return (
     <div className="tab-container-2">
       <h2
-      style={{color:"white", textShadow: "0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple"}}> WBTC Ube Pandasal </h2>
+        style={{
+          color: "white",
+          textShadow:
+            "0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple",
+        }}
+      >
+        {" "}
+        WBTC Ube Pandasal{" "}
+      </h2>
       <div className="tab-buttons">
         <button
           style={{}}

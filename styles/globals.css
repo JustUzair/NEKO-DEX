@@ -743,3 +743,12 @@ th {
     transparent
   );
 }
+
+.swapBox a {
+  text-decoration: none;
+  color: #fafafa;
+}
+.swapBox a:hover {
+  transition: all 0.2s;
+  color: #f6aaf1;
+}

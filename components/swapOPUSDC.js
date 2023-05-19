@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import contractAddresses from "../constants/networkMappings.json";
+const explorerAddress = `https://mumbai.polygonscan.com/address/`;
+import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 
 export function OPUSDCSwap() {
   const [slot1Symbol, setSlot1Symbol] = useState("WMATIC");
@@ -52,11 +55,11 @@ export function OPUSDCSwap() {
         <button className="swapButton"> Swap </button>
       </div>
       <div className="infoPanel">
-      <div className="typedOutWrapperInfo">
-        <div className="typedOutInfo">  
-      🔀 Swap WMATIC for USDC or <br/> USDC for WMATIC.
-      </div>
-      </div>
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+            🔀 Swap WMATIC for USDC or <br /> USDC for WMATIC.
+          </div>
+        </div>
       </div>
     </>
   );
@@ -98,11 +101,12 @@ export function OPUSDCDeposit() {
         <button className="swapButton"> Deposit </button>
       </div>
       <div className="infoPanel">
-      <div className="typedOutWrapperInfo">
-        <div className="typedOutInfo">  
-        ✨ Deposit WMATIC and USDC to <br/> to produce trading fees, <br/> which are donated.
-      </div>
-      </div>
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+            ✨ Deposit WMATIC and USDC to <br /> to produce trading fees, <br />{" "}
+            which are donated.
+          </div>
+        </div>
       </div>
     </>
   );
@@ -123,17 +127,36 @@ export function OPUSDCWithdraw() {
         <button className="swapButton"> Withdraw </button>
       </div>
       <div className="infoPanel">
-      <div className="typedOutWrapperInfo">
-        <div className="typedOutInfo">  
-        📤 Stop accumulating fees and <br/> claim your WMATIC and USDC.
-      </div>
-      </div>
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+            📤 Stop accumulating fees and <br /> claim your WMATIC and USDC.
+          </div>
+        </div>
       </div>
     </>
   );
 }
 
 export function PoolData() {
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
+
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const WMATICPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WMATICPool"][
+          contractAddresses[chainId]["WMATICPool"].length - 1
+        ]
+      : null;
+  const WMATICTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WMATIC"][
+          contractAddresses[chainId]["WMATIC"].length - 1
+        ]
+      : null;
+
   return (
     <>
       <div className="swapBox" style={{ height: 300 }}>
@@ -145,7 +168,18 @@ export function PoolData() {
                 Pool
               </td>
               <td style={{ paddingLeft: 0 }} align="right">
-                -
+                {WMATICPoolContractAddress ? (
+                  <a
+                    href={`${explorerAddress}${WMATICPoolContractAddress}`}
+                    target="_blank"
+                  >
+                    {WMATICPoolContractAddress.substr(0, 4) +
+                      "..." +
+                      WMATICPoolContractAddress.substr(-4)}
+                  </a>
+                ) : (
+                  "-"
+                )}
               </td>
             </tr>
 
@@ -154,7 +188,18 @@ export function PoolData() {
                 Token
               </td>
               <td style={{ paddingLeft: 0 }} align="right">
-                -
+                {WMATICTestTokenContractAddress ? (
+                  <a
+                    href={`${explorerAddress}${WMATICTestTokenContractAddress}`}
+                    target="_blank"
+                  >
+                    {WMATICTestTokenContractAddress.substr(0, 4) +
+                      "..." +
+                      WMATICTestTokenContractAddress.substr(-4)}
+                  </a>
+                ) : (
+                  "-"
+                )}
               </td>
             </tr>
           </table>
@@ -200,7 +245,16 @@ export const OPUSDCMODAL = () => {
 
   return (
     <div className="tab-container-3">
-      <h2 style={{color:"white", textShadow: "0px 0px 10px brown, 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green"}}> Matic Melt </h2>
+      <h2
+        style={{
+          color: "white",
+          textShadow:
+            "0px 0px 10px brown, 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green",
+        }}
+      >
+        {" "}
+        Matic Melt{" "}
+      </h2>
       <div className="tab-buttons">
         <button
           style={{}}

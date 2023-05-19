@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import contractAddresses from "../constants/networkMappings.json";
+import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
+const explorerAddress = `https://mumbai.polygonscan.com/address/`;
+
 export function DAIUSDCSwap() {
   const [slot1Symbol, setSlot1Symbol] = useState("DAI");
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
@@ -52,11 +56,11 @@ export function DAIUSDCSwap() {
         <button className="swapButton"> Swap </button>
       </div>
       <div className="infoPanel">
-      <div className="typedOutWrapperInfo">
-        <div className="typedOutInfo">  
-      🔀 Swap DAI for USDC or <br/> USDC for DAI.
-      </div>
-      </div>
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+            🔀 Swap DAI for USDC or <br /> USDC for DAI.
+          </div>
+        </div>
       </div>
     </>
   );
@@ -98,11 +102,12 @@ export function DAIUSDCDeposit() {
         <button className="swapButton"> Deposit </button>
       </div>
       <div className="infoPanel">
-      <div className="typedOutWrapperInfo">
-        <div className="typedOutInfo">  
-        ✨ Deposit DAI and USDC to <br/> to produce trading fees, <br/> which are donated.
-      </div>
-      </div>
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+            ✨ Deposit DAI and USDC to <br /> to produce trading fees, <br />{" "}
+            which are donated.
+          </div>
+        </div>
       </div>
     </>
   );
@@ -123,17 +128,36 @@ export function DAIUSDCWithdraw() {
         <button className="swapButton"> Withdraw </button>
       </div>
       <div className="infoPanel">
-      <div className="typedOutWrapperInfo">
-        <div className="typedOutInfo">  
-        📤 Stop accumulating fees and <br/> claim your DAI and USDC.
-      </div>
-      </div>
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+            📤 Stop accumulating fees and <br /> claim your DAI and USDC.
+          </div>
+        </div>
       </div>
     </>
   );
 }
 
 export function PoolData() {
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
+
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const DAIPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["DAIPool"][
+          contractAddresses[chainId]["DAIPool"].length - 1
+        ]
+      : null;
+  const DAITestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["DAI"][
+          contractAddresses[chainId]["DAI"].length - 1
+        ]
+      : null;
+
   return (
     <>
       <div className="swapBox" style={{ height: 300 }}>
@@ -145,7 +169,18 @@ export function PoolData() {
                 Pool
               </td>
               <td style={{ paddingLeft: 0 }} align="right">
-                -
+                {DAIPoolContractAddress ? (
+                  <a
+                    href={`${explorerAddress}${DAIPoolContractAddress}`}
+                    target="_blank"
+                  >
+                    {DAIPoolContractAddress.substr(0, 4) +
+                      "..." +
+                      DAIPoolContractAddress.substr(-4)}
+                  </a>
+                ) : (
+                  "-"
+                )}
               </td>
             </tr>
 
@@ -154,7 +189,18 @@ export function PoolData() {
                 Token
               </td>
               <td style={{ paddingLeft: 0 }} align="right">
-                -
+                {DAITestTokenContractAddress ? (
+                  <a
+                    href={`${explorerAddress}${DAITestTokenContractAddress}`}
+                    target="_blank"
+                  >
+                    {DAITestTokenContractAddress.substr(0, 4) +
+                      "..." +
+                      DAITestTokenContractAddress.substr(-4)}
+                  </a>
+                ) : (
+                  "-"
+                )}
               </td>
             </tr>
           </table>
@@ -200,7 +246,16 @@ export const DAIUSDCMODAL = () => {
 
   return (
     <div className="tab-container-4">
-      <h2 style={{color:"white", textShadow: "0px 0px 10px brown, 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange"}}> Stablecoin Strudel </h2>
+      <h2
+        style={{
+          color: "white",
+          textShadow:
+            "0px 0px 10px brown, 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange",
+        }}
+      >
+        {" "}
+        Stablecoin Strudel{" "}
+      </h2>
       <div className="tab-buttons">
         <button
           style={{}}

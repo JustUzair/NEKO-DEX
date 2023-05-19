@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-
+import contractAddresses from "../constants/networkMappings.json";
+import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
+const explorerAddress = `https://mumbai.polygonscan.com/address/`;
 export function WETHUSDCSwap() {
   const [slot1Symbol, setSlot1Symbol] = useState("WETH");
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
@@ -9,6 +11,25 @@ export function WETHUSDCSwap() {
   const [slot1Icon, setSlot1Icon] = useState(
     "https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
   );
+
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
+
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const ETHPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["ETHPool"][
+          contractAddresses[chainId]["ETHPool"].length - 1
+        ]
+      : null;
+  const WETHTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WETH"][
+          contractAddresses[chainId]["WETH"].length - 1
+        ]
+      : null;
 
   function switchAssets() {
     const templink = slot1Icon;
@@ -53,13 +74,12 @@ export function WETHUSDCSwap() {
       </div>
 
       <div className="infoPanel">
-      <div className="typedOutWrapperInfo">
-        <div className="typedOutInfo">  
-      🔀 Swap WETH for USDC or <br/> USDC for WETH.
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+            🔀 Swap WETH for USDC or <br /> USDC for WETH.
+          </div>
+        </div>
       </div>
-      </div>
-      </div>
-
     </>
   );
 }
@@ -101,11 +121,12 @@ export function WETHUSDCDeposit() {
       </div>
 
       <div className="infoPanel">
-      <div className="typedOutWrapperInfo">
-        <div className="typedOutInfo">  
-        ✨ Deposit WETH and USDC to <br/> to produce trading fees, <br/> which are donated.
-      </div>
-      </div>
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+            ✨ Deposit WETH and USDC to <br /> to produce trading fees, <br />{" "}
+            which are donated.
+          </div>
+        </div>
       </div>
     </>
   );
@@ -126,17 +147,36 @@ export function WETHUSDCWithdraw() {
         <button className="swapButton"> Withdraw </button>
       </div>
       <div className="infoPanel">
-      <div className="typedOutWrapperInfo">
-        <div className="typedOutInfo">  
-        📤 Stop accumulating fees and <br/> claim your WETH and USDC.
-      </div>
-      </div>
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+            📤 Stop accumulating fees and <br /> claim your WETH and USDC.
+          </div>
+        </div>
       </div>
     </>
   );
 }
 
 export function PoolData() {
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
+
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const ETHPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["ETHPool"][
+          contractAddresses[chainId]["ETHPool"].length - 1
+        ]
+      : null;
+  const WETHTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WETH"][
+          contractAddresses[chainId]["WETH"].length - 1
+        ]
+      : null;
+
   return (
     <>
       <div className="swapBox" style={{ height: 300 }}>
@@ -147,8 +187,19 @@ export function PoolData() {
               <td style={{ paddingLeft: 0 }} align="left">
                 Pool
               </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                -
+              <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
+                {ETHPoolContractAddress ? (
+                  <a
+                    href={`${explorerAddress}${ETHPoolContractAddress}`}
+                    target="_blank"
+                  >
+                    {ETHPoolContractAddress.substr(0, 4) +
+                      "..." +
+                      ETHPoolContractAddress.substr(-4)}
+                  </a>
+                ) : (
+                  "-"
+                )}
               </td>
             </tr>
 
@@ -156,8 +207,19 @@ export function PoolData() {
               <td style={{ paddingLeft: 0 }} align="left">
                 Token
               </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                -
+              <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
+                {WETHTestTokenContractAddress ? (
+                  <a
+                    href={`${explorerAddress}${WETHTestTokenContractAddress}`}
+                    target="_blank"
+                  >
+                    {WETHTestTokenContractAddress.substr(0, 4) +
+                      "..." +
+                      WETHTestTokenContractAddress.substr(-4)}
+                  </a>
+                ) : (
+                  "-"
+                )}
               </td>
             </tr>
           </table>
@@ -203,7 +265,16 @@ export const WETHUSDCMODAL = () => {
 
   return (
     <div className="tab-container-1">
-      <h2 style={{color:"white", textShadow: "0px 0px 10px brown, 0px 0px 10px brown, 0px 0px 10px brown, 0px 0px 10px brown, 0px 0px 10px brown, 0px 0px 10px brown"}}> Eth-Choco Chip Cookie Dough </h2>
+      <h2
+        style={{
+          color: "white",
+          textShadow:
+            "0px 0px 10px brown, 0px 0px 10px brown, 0px 0px 10px brown, 0px 0px 10px brown, 0px 0px 10px brown, 0px 0px 10px brown",
+        }}
+      >
+        {" "}
+        Eth-Choco Chip Cookie Dough{" "}
+      </h2>
       <div className="tab-buttons">
         <button
           style={{}}
@@ -232,7 +303,6 @@ export const WETHUSDCMODAL = () => {
         {activeTab === 3 && <WETHUSDCWithdraw />}
 
         <PoolData />
-        
       </div>
     </div>
   );
