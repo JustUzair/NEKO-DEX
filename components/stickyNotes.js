@@ -197,7 +197,7 @@ export default function StickyNotes() {
               console.error(error);
             },
             onSuccess: data => {
-              console.log(data);
+              //   console.log(data);
               setStickyNotes(true);
               successNotification("Amount Donated 👏");
             },
@@ -233,7 +233,7 @@ export default function StickyNotes() {
             note["message"] = item[2];
 
             arr1.push(note);
-            console.log(arr1);
+            // console.log(arr1);
           });
           setNotes(prevState => [...prevState, ...arr1]);
         },
