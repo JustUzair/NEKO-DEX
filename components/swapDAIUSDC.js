@@ -3,6 +3,8 @@ import Image from "next/image";
 import contractAddresses from "../constants/networkMappings.json";
 import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 const explorerAddress = `https://mumbai.polygonscan.com/address/`;
+import ierc20Abi from "../constants/ierc20Abi.json";
+import { BigNumber, ethers } from "ethers";
 
 export function DAIUSDCSwap() {
   const [slot1Symbol, setSlot1Symbol] = useState("DAI");
@@ -142,7 +144,8 @@ export function PoolData() {
   const { runContractFunction } = useWeb3Contract();
   const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
     useMoralis();
-
+  const [DAIReserve, setDAIReserve] = useState(0);
+  const [USDCReserve, setUSDCReserve] = useState(0);
   const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex);
   const DAIPoolContractAddress =
@@ -157,7 +160,52 @@ export function PoolData() {
           contractAddresses[chainId]["DAI"].length - 1
         ]
       : null;
-
+  const USDCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["USDC"][
+          contractAddresses[chainId]["USDC"].length - 1
+        ]
+      : null;
+  const getTokenBalances = async () => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: DAITestTokenContractAddress,
+          functionName: "balanceOf",
+          params: { account: DAIPoolContractAddress },
+        },
+        onError: error => {
+          console.error(error);
+        },
+        onSuccess: data => {
+          const ether = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          setDAIReserve(ether);
+        },
+      });
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: USDCTestTokenContractAddress,
+          functionName: "balanceOf",
+          params: { account: DAIPoolContractAddress },
+        },
+        onError: error => {
+          console.error(error);
+        },
+        onSuccess: data => {
+          const usdc = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          setUSDCReserve(usdc);
+        },
+      });
+    }
+  };
+  useEffect(() => {
+    getTokenBalances();
+  }, [account]);
   return (
     <>
       <div className="swapBox" style={{ height: 300 }}>
@@ -211,7 +259,7 @@ export function PoolData() {
                 DAI
               </td>
               <td style={{ paddingLeft: 0 }} align="right">
-                -
+                {DAIReserve > 0 ? `~${parseFloat(DAIReserve).toFixed(4)}` : "-"}
               </td>
             </tr>
 
@@ -220,7 +268,9 @@ export function PoolData() {
                 USDC
               </td>
               <td style={{ paddingLeft: 0 }} align="right">
-                -
+                {USDCReserve > 0
+                  ? `~${parseFloat(USDCReserve).toFixed(4)}`
+                  : "-"}
               </td>
             </tr>
             <tr>

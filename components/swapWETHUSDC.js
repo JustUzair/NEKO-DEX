@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import contractAddresses from "../constants/networkMappings.json";
+import ierc20Abi from "../constants/ierc20Abi.json";
 import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
+import { BigNumber, ethers } from "ethers";
 const explorerAddress = `https://mumbai.polygonscan.com/address/`;
+
 export function WETHUSDCSwap() {
   const [slot1Symbol, setSlot1Symbol] = useState("WETH");
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
+
   const [slot2Icon, setSlot2Icon] = useState(
     "https://w7.pngwing.com/pngs/383/521/png-transparent-eth-crypto-cryptocurrency-cryptocurrencies-cash-money-bank-payment-icon.png"
   );
@@ -161,7 +165,8 @@ export function PoolData() {
   const { runContractFunction } = useWeb3Contract();
   const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
     useMoralis();
-
+  const [ETHReserve, setETHReserve] = useState(0);
+  const [USDCReserve, setUSDCReserve] = useState(0);
   const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex);
   const ETHPoolContractAddress =
@@ -176,7 +181,52 @@ export function PoolData() {
           contractAddresses[chainId]["WETH"].length - 1
         ]
       : null;
-
+  const USDCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["USDC"][
+          contractAddresses[chainId]["USDC"].length - 1
+        ]
+      : null;
+  const getTokenBalances = async () => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: WETHTestTokenContractAddress,
+          functionName: "balanceOf",
+          params: { account: ETHPoolContractAddress },
+        },
+        onError: error => {
+          console.error(error);
+        },
+        onSuccess: data => {
+          const ether = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          setETHReserve(ether);
+        },
+      });
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: USDCTestTokenContractAddress,
+          functionName: "balanceOf",
+          params: { account: ETHPoolContractAddress },
+        },
+        onError: error => {
+          console.error(error);
+        },
+        onSuccess: data => {
+          const usdc = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          setUSDCReserve(usdc);
+        },
+      });
+    }
+  };
+  useEffect(() => {
+    getTokenBalances();
+  }, [account]);
   return (
     <>
       <div className="swapBox" style={{ height: 300 }}>
@@ -229,8 +279,8 @@ export function PoolData() {
               <td style={{ paddingLeft: 0 }} align="left">
                 WETH
               </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                -
+              <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
+                {ETHReserve > 0 ? `~${parseFloat(ETHReserve).toFixed(4)}` : "-"}
               </td>
             </tr>
 
@@ -238,8 +288,10 @@ export function PoolData() {
               <td style={{ paddingLeft: 0 }} align="left">
                 USDC
               </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                -
+              <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
+                {USDCReserve > 0
+                  ? `~${parseFloat(USDCReserve).toFixed(4)}`
+                  : "-"}
               </td>
             </tr>
             <tr>

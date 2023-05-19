@@ -207,7 +207,6 @@ export default function StickyNotes() {
     }
   };
   const getStickyNotes = async () => {
-    console.log("here");
     if (!isWeb3Enabled) await enableWeb3();
     if (account) {
       // approve

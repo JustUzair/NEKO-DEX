@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import contractAddresses from "../constants/networkMappings.json";
 const explorerAddress = `https://mumbai.polygonscan.com/address/`;
 import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
-
+import ierc20Abi from "../constants/ierc20Abi.json";
+import { BigNumber, ethers } from "ethers";
 export function OPUSDCSwap() {
   const [slot1Symbol, setSlot1Symbol] = useState("WMATIC");
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
@@ -141,7 +142,8 @@ export function PoolData() {
   const { runContractFunction } = useWeb3Contract();
   const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
     useMoralis();
-
+  const [WMATICReserve, setWMATICReserve] = useState(0);
+  const [USDCReserve, setUSDCReserve] = useState(0);
   const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex);
   const WMATICPoolContractAddress =
@@ -156,7 +158,52 @@ export function PoolData() {
           contractAddresses[chainId]["WMATIC"].length - 1
         ]
       : null;
-
+  const USDCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["USDC"][
+          contractAddresses[chainId]["USDC"].length - 1
+        ]
+      : null;
+  const getTokenBalances = async () => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: WMATICTestTokenContractAddress,
+          functionName: "balanceOf",
+          params: { account: WMATICPoolContractAddress },
+        },
+        onError: error => {
+          console.error(error);
+        },
+        onSuccess: data => {
+          const matic = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          setWMATICReserve(matic);
+        },
+      });
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: USDCTestTokenContractAddress,
+          functionName: "balanceOf",
+          params: { account: WMATICPoolContractAddress },
+        },
+        onError: error => {
+          console.error(error);
+        },
+        onSuccess: data => {
+          const usdc = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          setUSDCReserve(usdc);
+        },
+      });
+    }
+  };
+  useEffect(() => {
+    getTokenBalances();
+  }, [account]);
   return (
     <>
       <div className="swapBox" style={{ height: 300 }}>
@@ -210,7 +257,9 @@ export function PoolData() {
                 WMATIC
               </td>
               <td style={{ paddingLeft: 0 }} align="right">
-                -
+                {WMATICReserve > 0
+                  ? `~${parseFloat(WMATICReserve).toFixed(4)}`
+                  : "-"}
               </td>
             </tr>
 
@@ -219,7 +268,9 @@ export function PoolData() {
                 USDC
               </td>
               <td style={{ paddingLeft: 0 }} align="right">
-                -
+                {USDCReserve > 0
+                  ? `~${parseFloat(USDCReserve).toFixed(4)}`
+                  : "-"}
               </td>
             </tr>
             <tr>
