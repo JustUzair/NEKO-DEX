@@ -3,9 +3,36 @@ import contractAddresses from "../constants/networkMappings.json";
 import ierc20Abi from "../constants/ierc20Abi.json";
 import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 import { BigNumber, ethers } from "ethers";
+import { useNotification } from "web3uikit";
 const explorerAddress = `https://mumbai.polygonscan.com/address/`;
 import DEXAbi from "../constants/DEXAbi.json";
+
 export function WETHUSDCSwap() {
+  const dispatch = useNotification();
+  //****************************************************************/
+  //-----------------------NOTIFICATION-----------------------------
+  //****************************************************************/
+
+  const successNotification = msg => {
+    dispatch({
+      type: "success",
+      message: `${msg} Successfully! (View in explorer after tx confirms)`,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+
+  const failureNotification = msg => {
+    dispatch({
+      type: "error",
+      message: `${msg} ( View console for more info )`,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+  //****************************************************************/
+  //--------------------END NOTIFICATION-----------------------------
+  //****************************************************************/
   const [slot1Symbol, setSlot1Symbol] = useState("WETH");
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
   const [firstSlotInput, setFirstSlotInput] = useState(0);
@@ -58,7 +85,7 @@ export function WETHUSDCSwap() {
                 "ether"
               )
               .toString(),
-            isToken0: slot1Symbol == "USDC" ? true : false,
+            isToken0: slot1Symbol === "USDC" ? true : false,
           },
         },
         onError: error => {
@@ -76,11 +103,18 @@ export function WETHUSDCSwap() {
   const swapAssets = async () => {
     if (!isWeb3Enabled) enableWeb3();
     if (account) {
+      //   console.log(
+      //     `${slot1Symbol} Address ${
+      //       slot1Symbol == "USDC"
+      //         ? USDCTestTokenContractAddress
+      //         : W
+      //     }`
+      //   );
       await runContractFunction({
         params: {
           abi: DEXAbi,
           contractAddress:
-            slot1Symbol == "USDC"
+            slot1Symbol === "USDC"
               ? USDCTestTokenContractAddress
               : WETHTestTokenContractAddress,
           functionName: "balanceOf",
@@ -92,38 +126,112 @@ export function WETHUSDCSwap() {
           console.error(error);
         },
         onSuccess: data => {
-          console.log(data);
-          console.log(
-            `FUNDS : ${ethers.utils.formatUnits(data.toString(), "ether")}`
-          );
-          //   const value = ethers.utils.formatUnits(data.toString(), "ether");
-          //   //   console.log(`ETHER : ${ether}`);
-          //   setSecondSlotOutput(parseFloat(value).toFixed(4));
+          //   console.log(data);
+          //   console.log(
+          //     `FUNDS : ${ethers.utils.formatUnits(data.toString(), "ether")}`
+          //   );
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value <= 0);
+          if (value <= 0) {
+            failureNotification("You do not have enough funds of Asset 1");
+            return;
+          }
+          console.log("balance ", data.toString());
         },
       });
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress:
+            slot1Symbol === "USDC"
+              ? USDCTestTokenContractAddress
+              : WETHTestTokenContractAddress,
+          functionName: "approve",
+          params: {
+            spender: ETHPoolContractAddress,
+            amount: ethers.utils.parseEther(firstSlotInput).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+        },
+        onSuccess: data => {
+          console.log("approve", data);
+          console.log(
+            `First slot input in wei : `,
+            ethers.utils.parseEther(firstSlotInput.toString()).toString()
+          );
+        },
+      });
+      console.log(
+        `TOKEN 0 : `,
+        ethers.utils.parseEther(firstSlotInput).toString()
+      );
+      console.log(
+        `TOKEN 1 : `,
+        ethers.utils.parseEther(secondSlotOutput).toString()
+      );
+      //   console.log(Math.floor(secondSlotOutput).toString());
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress: ETHPoolContractAddress,
+          functionName: "swap",
+          params:
+            slot1Symbol === "USDC"
+              ? {
+                  token0In: ethers.utils.parseEther(firstSlotInput).toString(),
+                  token1In: 0,
+                  token0OutMin: 0,
+                  token1OutMin: 0,
+                }
+              : {
+                  token0In: 0,
+                  token1In: ethers.utils.parseEther(firstSlotInput).toString(),
+                  token0OutMin: 0,
+                  token1OutMin: 0,
+                },
+        },
+        onError: error => {
+          console.error(error);
+        },
+        onSuccess: data => {
+          console.log("swap", data);
+          successNotification(`Assets swapped`);
+
+          setFirstSlotInput(0);
+        },
+      });
+
+      //   HARDCODE TEST
       //   await runContractFunction({
       //     params: {
       //       abi: DEXAbi,
       //       contractAddress: ETHPoolContractAddress,
-      //       functionName: "getOutputAmountWithFee",
-      //       params: {
-      //         inputAmount: await ethers.utils
-      //           .parseUnits(
-      //             amount.toString() || parseInt("0").toString(),
-      //             "ether"
-      //           )
-      //           .toString(),
-      //         isToken0: slot1Symbol == "USDC" ? true : false,
-      //       },
+      //       functionName: "swap",
+      //       params:
+      //         slot1Symbol == "USDC"
+      //           ? {
+      //               token0In: "1800000000000000000000",
+      //               token1In: 0,
+      //               token0OutMin: 0,
+      //               token1OutMin: 0,
+      //             }
+      //           : {
+      //               token0In: 0,
+      //               token1In: "1000000000000000000",
+      //               token0OutMin: 0,
+      //               token1OutMin: 0,
+      //             },
       //     },
       //     onError: error => {
       //       console.error(error);
       //     },
       //     onSuccess: data => {
-      //       console.log(data);
-      //       const value = ethers.utils.formatUnits(data.toString(), "ether");
-      //       //   console.log(`ETHER : ${ether}`);
-      //       setSecondSlotOutput(parseFloat(value).toFixed(4));
+      //       console.log("swap", data);
+      //       successNotification(`Assets swapped`);
+      //       //   getTokenBalances();
       //     },
       //   });
     }
