@@ -5,7 +5,6 @@ import { WBTCUSDCMODAL } from "./swapWBTCUSDC.js";
 import { OPUSDCMODAL } from "./swapOPUSDC.js";
 import { DAIUSDCMODAL } from "./swapDAIUSDC.js";
 
-
 export default function SwapPoolView() {
   const [WETHUSDC, setWETHUSDC] = useState();
   const [WBTCUSDC, setWBTCUSDC] = useState();
@@ -47,110 +46,119 @@ export default function SwapPoolView() {
       {" "}
       {poolview && (
         <div className="poolView">
-          <h1 style={{color:"white", textShadow:"4px 4px 4px black"}}> 
-          Menu 
-
-          <div style={{marginLeft: "50px", display:"inline-block", fontSize:"15px"}}> 
-          TVL : $15,403,431.20</div>
-
-          <div style={{
-            display:"inline-block",
-            fontSize:"12px",
-            marginLeft:"100px",
-            }}>0.03% of all swaps are donated ✨🐱‍🚀</div></h1> 
+          <h1 style={{ color: "white", textShadow: "4px 4px 4px black" }}>
+            Menu
+            <div
+              style={{
+                marginLeft: "50px",
+                display: "inline-block",
+                fontSize: "15px",
+              }}
+            >
+              TVL : $15,403,431.20
+            </div>
+            <div
+              style={{
+                display: "inline-block",
+                fontSize: "12px",
+                marginLeft: "100px",
+              }}
+            >
+              0.03% of all swaps are donated ✨🐱‍🚀
+            </div>
+          </h1>
 
           <table>
-            <tr style={{color:"white", textShadow:"4px 4px 4px black"}}>
-              <th>Pool</th>
-              <th>Volume</th>
-              <th>TVL</th>
-            </tr>
-            <tr onClick={() => viewWETHUSDC()}
-            className="poolSection">
-              <td>
-                {" "}
-                <div className="poolContent">
-                  <img
-                    className="tokenIcon"
-                    src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png"
-                  />
-                  <img
-                    className="tokenIcon"
-                    src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
-                  />{" "}
-                  <div>
-                    <b> Eth-Choco Chip Cookie Dough </b> <br />
-                    WETH / USDC
+            <tbody>
+              <tr style={{ color: "white", textShadow: "4px 4px 4px black" }}>
+                <th>Pool</th>
+                <th>Volume</th>
+                <th>TVL</th>
+              </tr>
+              <tr onClick={() => viewWETHUSDC()} className="poolSection">
+                <td>
+                  {" "}
+                  <div className="poolContent">
+                    <img
+                      className="tokenIcon"
+                      src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png"
+                    />
+                    <img
+                      className="tokenIcon"
+                      src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
+                    />{" "}
+                    <div>
+                      <b> Eth-Choco Chip Cookie Dough </b> <br />
+                      WETH / USDC
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
+                </td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
 
-            <tr onClick={() => viewWBTCUSDC(true)}
-            className="poolSection2">
-              <td>
-                <div className="poolContent">
-                  <img
-                    className="tokenIcon"
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png"
-                  />
-                  <img
-                    className="tokenIcon"
-                    src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
-                  />
-                  <div>
-                    <b> WBTC Ube Pandasal </b> <br />
-                    WBTC / USDC
+              <tr onClick={() => viewWBTCUSDC(true)} className="poolSection2">
+                <td>
+                  <div className="poolContent">
+                    <img
+                      className="tokenIcon"
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png"
+                    />
+                    <img
+                      className="tokenIcon"
+                      src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
+                    />
+                    <div>
+                      <b> WBTC Ube Pandasal </b> <br />
+                      WBTC / USDC
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr onClick={() => viewOPUSDC(true)}
-            className="poolSection3">
-              <td>
-                <div className="poolContent">
-                  <img
-                    className="tokenIcon"
-                    src="https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/DPYBKVZG55EWFHIK2TVT3HTH7Y.png"
-                  />
-                  <img
-                    className="tokenIcon"
-                    src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
-                  />
-                  <div>
-                    <b> Matic Melt </b> <br />
-                    WMATIC / USDC
+                </td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr onClick={() => viewOPUSDC(true)} className="poolSection3">
+                <td>
+                  <div className="poolContent">
+                    <img
+                      className="tokenIcon"
+                      src="https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/DPYBKVZG55EWFHIK2TVT3HTH7Y.png"
+                    />
+                    <img
+                      className="tokenIcon"
+                      src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
+                    />
+                    <div>
+                      <b> Matic Melt </b> <br />
+                      WMATIC / USDC
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr className="poolSection4" onClick={() => viewDAIUSDC(true)}>
-              <td>
-                <div className="poolContent">
-                  <img
-                    className="tokenIcon"
-                    src="https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.png"
-                  />
-                  <img
-                    className="tokenIcon"
-                    src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
-                  />
-                  <div>
-                    {" "}
-                    <b> Stablecoin Strudel </b> <br />
-                    DAI / USDC
+                </td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr className="poolSection4" onClick={() => viewDAIUSDC(true)}>
+                <td>
+                  <div className="poolContent">
+                    <img
+                      className="tokenIcon"
+                      src="https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.png"
+                    />
+                    <img
+                      className="tokenIcon"
+                      src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
+                    />
+                    <div>
+                      {" "}
+                      <b> Stablecoin Strudel </b> <br />
+                      DAI / USDC
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
+                </td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+            </tbody>
           </table>
         </div>
       )}
@@ -159,7 +167,9 @@ export default function SwapPoolView() {
       {OPUSDC && <OPUSDCMODAL />}
       {DAIUSDC && <DAIUSDCMODAL />}
       {(WETHUSDC || WBTCUSDC || OPUSDC || DAIUSDC || WETHUSDC) && (
-        <button className="modalButton" onClick={() => viewNone(false)}>Back</button>
+        <button className="modalButton" onClick={() => viewNone(false)}>
+          Back
+        </button>
       )}
     </>
   );

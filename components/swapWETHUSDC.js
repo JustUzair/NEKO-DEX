@@ -79,7 +79,7 @@ export function WETHUSDCSwap() {
   }
   useEffect(() => {
     getBasedAssetPrice(firstSlotInput);
-  }, [switchAssets]);
+  }, [firstSlotInput, switchAssets]);
   return (
     <>
       <h1
@@ -118,7 +118,12 @@ export function WETHUSDCSwap() {
           <img className="tokenIcon" src={slot1Icon} />
         </div>
 
-        <input className="asset" type="number" value={secondSlotOutput} />
+        <input
+          className="asset"
+          type="number"
+          value={secondSlotOutput}
+          readOnly={true}
+        />
 
         <button className="swapButton"> Swap </button>
       </div>
@@ -279,75 +284,81 @@ export function PoolData() {
         <div style={{ marginTop: 8, marginLeft: 10, marginBottom: 10 }}>
           <h4> Contracts </h4>
           <table>
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                Pool
-              </td>
-              <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
-                {ETHPoolContractAddress ? (
-                  <a
-                    href={`${explorerAddress}${ETHPoolContractAddress}`}
-                    target="_blank"
-                  >
-                    {ETHPoolContractAddress.substr(0, 4) +
-                      "..." +
-                      ETHPoolContractAddress.substr(-4)}
-                  </a>
-                ) : (
-                  "-"
-                )}
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  Pool
+                </td>
+                <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
+                  {ETHPoolContractAddress ? (
+                    <a
+                      href={`${explorerAddress}${ETHPoolContractAddress}`}
+                      target="_blank"
+                    >
+                      {ETHPoolContractAddress.substr(0, 4) +
+                        "..." +
+                        ETHPoolContractAddress.substr(-4)}
+                    </a>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+              </tr>
 
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                Token
-              </td>
-              <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
-                {WETHTestTokenContractAddress ? (
-                  <a
-                    href={`${explorerAddress}${WETHTestTokenContractAddress}`}
-                    target="_blank"
-                  >
-                    {WETHTestTokenContractAddress.substr(0, 4) +
-                      "..." +
-                      WETHTestTokenContractAddress.substr(-4)}
-                  </a>
-                ) : (
-                  "-"
-                )}
-              </td>
-            </tr>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  Token
+                </td>
+                <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
+                  {WETHTestTokenContractAddress ? (
+                    <a
+                      href={`${explorerAddress}${WETHTestTokenContractAddress}`}
+                      target="_blank"
+                    >
+                      {WETHTestTokenContractAddress.substr(0, 4) +
+                        "..." +
+                        WETHTestTokenContractAddress.substr(-4)}
+                    </a>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+              </tr>
+            </tbody>
           </table>
           <h4> Currency reserves </h4>
           <table>
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                WETH
-              </td>
-              <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
-                {ETHReserve > 0 ? `~${parseFloat(ETHReserve).toFixed(4)}` : "-"}
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  WETH
+                </td>
+                <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
+                  {ETHReserve > 0
+                    ? `~${parseFloat(ETHReserve).toFixed(4)}`
+                    : "-"}
+                </td>
+              </tr>
 
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                USDC
-              </td>
-              <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
-                {USDCReserve > 0
-                  ? `~${parseFloat(USDCReserve).toFixed(4)}`
-                  : "-"}
-              </td>
-            </tr>
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                USD total
-              </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                -
-              </td>
-            </tr>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  USDC
+                </td>
+                <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
+                  {USDCReserve > 0
+                    ? `~${parseFloat(USDCReserve).toFixed(4)}`
+                    : "-"}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  USD total
+                </td>
+                <td style={{ paddingLeft: 0 }} align="right">
+                  -
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>

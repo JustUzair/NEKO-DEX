@@ -3,18 +3,70 @@ import contractAddresses from "../constants/networkMappings.json";
 import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 import ierc20Abi from "../constants/ierc20Abi.json";
 import { BigNumber, ethers } from "ethers";
+import DEXAbi from "../constants/DEXAbi.json";
 
 const explorerAddress = `https://mumbai.polygonscan.com/address/`;
 export function WBTCUSDCSwap() {
   const [slot1Symbol, setSlot1Symbol] = useState("WBTC");
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
+  const [firstSlotInput, setFirstSlotInput] = useState(0);
+  const [secondSlotOutput, setSecondSlotOutput] = useState(0);
   const [slot2Icon, setSlot2Icon] = useState(
     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png"
   );
   const [slot1Icon, setSlot1Icon] = useState(
     "https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
   );
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
 
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const WBTCPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WBTCPool"][
+          contractAddresses[chainId]["WBTCPool"].length - 1
+        ]
+      : null;
+  const WBTCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WBTC"][
+          contractAddresses[chainId]["WBTC"].length - 1
+        ]
+      : null;
+
+  const getBasedAssetPrice = async amount => {
+    // alert(slot1Symbol);
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress: WBTCPoolContractAddress,
+          functionName: "getOutputAmountWithFee",
+          params: {
+            inputAmount: await ethers.utils
+              .parseUnits(
+                amount.toString() || parseInt("0").toString(),
+                "ether"
+              )
+              .toString(),
+            isToken0: slot1Symbol == "USDC" ? true : false,
+          },
+        },
+        onError: error => {
+          console.error(error);
+        },
+        onSuccess: data => {
+          //   console.log(data);
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          setSecondSlotOutput(parseFloat(value).toFixed(2));
+        },
+      });
+    }
+  };
   function switchAssets() {
     const templink = slot1Icon;
     setSlot1Icon(slot2Icon);
@@ -23,7 +75,9 @@ export function WBTCUSDCSwap() {
     setSlot1Symbol(slot2Symbol);
     setSlot2Symbol(tempAsset);
   }
-
+  useEffect(() => {
+    getBasedAssetPrice(firstSlotInput);
+  }, [firstSlotInput, switchAssets]);
   return (
     <>
       <h1
@@ -42,7 +96,15 @@ export function WBTCUSDCSwap() {
           className="switchAssets"
           onClick={() => switchAssets()}
         />
-        <input className="asset" type="number" />
+        <input
+          className="asset"
+          type="number"
+          onChange={e => {
+            setFirstSlotInput(e.target.value);
+            getBasedAssetPrice(e.target.value);
+          }}
+          value={firstSlotInput}
+        />
         <div className="selectAsset1">
           {slot1Symbol}
           <img className="tokenIcon" src={slot2Icon} />
@@ -52,7 +114,12 @@ export function WBTCUSDCSwap() {
           <img className="tokenIcon" src={slot1Icon} />
         </div>
 
-        <input className="asset" type="number" />
+        <input
+          className="asset"
+          type="number"
+          value={secondSlotOutput}
+          readOnly={true}
+        />
 
         <button className="swapButton"> Swap </button>
       </div>
@@ -211,77 +278,81 @@ export function PoolData() {
         <div style={{ marginTop: 8, marginLeft: 10, marginBottom: 10 }}>
           <h4> Contracts </h4>
           <table>
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                Pool
-              </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                {WBTCPoolContractAddress ? (
-                  <a
-                    href={`${explorerAddress}${WBTCPoolContractAddress}`}
-                    target="_blank"
-                  >
-                    {WBTCPoolContractAddress.substr(0, 4) +
-                      "..." +
-                      WBTCPoolContractAddress.substr(-4)}
-                  </a>
-                ) : (
-                  "-"
-                )}
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  Pool
+                </td>
+                <td style={{ paddingLeft: 0 }} align="right">
+                  {WBTCPoolContractAddress ? (
+                    <a
+                      href={`${explorerAddress}${WBTCPoolContractAddress}`}
+                      target="_blank"
+                    >
+                      {WBTCPoolContractAddress.substr(0, 4) +
+                        "..." +
+                        WBTCPoolContractAddress.substr(-4)}
+                    </a>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+              </tr>
 
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                Token
-              </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                {WBTCTestTokenContractAddress ? (
-                  <a
-                    href={`${explorerAddress}${WBTCTestTokenContractAddress}`}
-                    target="_blank"
-                  >
-                    {WBTCTestTokenContractAddress.substr(0, 4) +
-                      "..." +
-                      WBTCTestTokenContractAddress.substr(-4)}
-                  </a>
-                ) : (
-                  "-"
-                )}
-              </td>
-            </tr>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  Token
+                </td>
+                <td style={{ paddingLeft: 0 }} align="right">
+                  {WBTCTestTokenContractAddress ? (
+                    <a
+                      href={`${explorerAddress}${WBTCTestTokenContractAddress}`}
+                      target="_blank"
+                    >
+                      {WBTCTestTokenContractAddress.substr(0, 4) +
+                        "..." +
+                        WBTCTestTokenContractAddress.substr(-4)}
+                    </a>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+              </tr>
+            </tbody>
           </table>
           <h4> Currency reserves </h4>
           <table>
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                WBTC
-              </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                {WBTCReserve > 0
-                  ? `~${parseFloat(WBTCReserve).toFixed(4)}`
-                  : "-"}
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  WBTC
+                </td>
+                <td style={{ paddingLeft: 0 }} align="right">
+                  {WBTCReserve > 0
+                    ? `~${parseFloat(WBTCReserve).toFixed(4)}`
+                    : "-"}
+                </td>
+              </tr>
 
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                USDC
-              </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                {USDCReserve > 0
-                  ? `~${parseFloat(USDCReserve).toFixed(4)}`
-                  : "-"}
-              </td>
-            </tr>
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                USD total
-              </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                -
-              </td>
-            </tr>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  USDC
+                </td>
+                <td style={{ paddingLeft: 0 }} align="right">
+                  {USDCReserve > 0
+                    ? `~${parseFloat(USDCReserve).toFixed(4)}`
+                    : "-"}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  USD total
+                </td>
+                <td style={{ paddingLeft: 0 }} align="right">
+                  -
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>

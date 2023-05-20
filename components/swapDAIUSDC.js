@@ -5,17 +5,69 @@ import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 const explorerAddress = `https://mumbai.polygonscan.com/address/`;
 import ierc20Abi from "../constants/ierc20Abi.json";
 import { BigNumber, ethers } from "ethers";
+import DEXAbi from "../constants/DEXAbi.json";
 
 export function DAIUSDCSwap() {
   const [slot1Symbol, setSlot1Symbol] = useState("DAI");
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
+  const [firstSlotInput, setFirstSlotInput] = useState(0);
+  const [secondSlotOutput, setSecondSlotOutput] = useState(0);
   const [slot2Icon, setSlot2Icon] = useState(
     "https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.png"
   );
   const [slot1Icon, setSlot1Icon] = useState(
     "https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
   );
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
 
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const DAIPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["DAIPool"][
+          contractAddresses[chainId]["DAIPool"].length - 1
+        ]
+      : null;
+  const DAITestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["DAI"][
+          contractAddresses[chainId]["DAI"].length - 1
+        ]
+      : null;
+
+  const getBasedAssetPrice = async amount => {
+    // alert(slot1Symbol);
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress: DAIPoolContractAddress,
+          functionName: "getOutputAmountWithFee",
+          params: {
+            inputAmount: await ethers.utils
+              .parseUnits(
+                amount.toString() || parseInt("0").toString(),
+                "ether"
+              )
+              .toString(),
+            isToken0: slot1Symbol == "USDC" ? true : false,
+          },
+        },
+        onError: error => {
+          console.error(error);
+        },
+        onSuccess: data => {
+          //   console.log(data);
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          setSecondSlotOutput(parseFloat(value).toFixed(2));
+        },
+      });
+    }
+  };
   function switchAssets() {
     const templink = slot1Icon;
     setSlot1Icon(slot2Icon);
@@ -24,7 +76,9 @@ export function DAIUSDCSwap() {
     setSlot1Symbol(slot2Symbol);
     setSlot2Symbol(tempAsset);
   }
-
+  useEffect(() => {
+    getBasedAssetPrice(firstSlotInput);
+  }, [firstSlotInput, switchAssets]);
   return (
     <>
       <h1
@@ -43,7 +97,14 @@ export function DAIUSDCSwap() {
           className="switchAssets"
           onClick={() => switchAssets()}
         />
-        <input className="asset" type="number" />
+        <input
+          className="asset"
+          type="number"
+          onChange={e => {
+            setFirstSlotInput(e.target.value);
+            getBasedAssetPrice(e.target.value);
+          }}
+        />
         <div className="selectAsset1">
           {slot1Symbol}
           <img className="tokenIcon" src={slot2Icon} />
@@ -53,7 +114,12 @@ export function DAIUSDCSwap() {
           <img className="tokenIcon" src={slot1Icon} />
         </div>
 
-        <input className="asset" type="number" />
+        <input
+          className="asset"
+          type="number"
+          value={secondSlotOutput}
+          readOnly={true}
+        />
 
         <button className="swapButton"> Swap </button>
       </div>
@@ -180,6 +246,8 @@ export function PoolData() {
           console.error(error);
         },
         onSuccess: data => {
+          //   console.log(data);
+
           const ether = ethers.utils.formatUnits(data.toString(), "ether");
           //   console.log(`ETHER : ${ether}`);
           setDAIReserve(ether);
@@ -196,6 +264,7 @@ export function PoolData() {
           console.error(error);
         },
         onSuccess: data => {
+          //   console.log(data);
           const usdc = ethers.utils.formatUnits(data.toString(), "ether");
           //   console.log(`ETHER : ${ether}`);
           setUSDCReserve(usdc);
@@ -212,75 +281,81 @@ export function PoolData() {
         <div style={{ marginTop: 8, marginLeft: 10, marginBottom: 10 }}>
           <h4> Contracts </h4>
           <table>
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                Pool
-              </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                {DAIPoolContractAddress ? (
-                  <a
-                    href={`${explorerAddress}${DAIPoolContractAddress}`}
-                    target="_blank"
-                  >
-                    {DAIPoolContractAddress.substr(0, 4) +
-                      "..." +
-                      DAIPoolContractAddress.substr(-4)}
-                  </a>
-                ) : (
-                  "-"
-                )}
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  Pool
+                </td>
+                <td style={{ paddingLeft: 0 }} align="right">
+                  {DAIPoolContractAddress ? (
+                    <a
+                      href={`${explorerAddress}${DAIPoolContractAddress}`}
+                      target="_blank"
+                    >
+                      {DAIPoolContractAddress.substr(0, 4) +
+                        "..." +
+                        DAIPoolContractAddress.substr(-4)}
+                    </a>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+              </tr>
 
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                Token
-              </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                {DAITestTokenContractAddress ? (
-                  <a
-                    href={`${explorerAddress}${DAITestTokenContractAddress}`}
-                    target="_blank"
-                  >
-                    {DAITestTokenContractAddress.substr(0, 4) +
-                      "..." +
-                      DAITestTokenContractAddress.substr(-4)}
-                  </a>
-                ) : (
-                  "-"
-                )}
-              </td>
-            </tr>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  Token
+                </td>
+                <td style={{ paddingLeft: 0 }} align="right">
+                  {DAITestTokenContractAddress ? (
+                    <a
+                      href={`${explorerAddress}${DAITestTokenContractAddress}`}
+                      target="_blank"
+                    >
+                      {DAITestTokenContractAddress.substr(0, 4) +
+                        "..." +
+                        DAITestTokenContractAddress.substr(-4)}
+                    </a>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+              </tr>
+            </tbody>
           </table>
           <h4> Currency reserves </h4>
           <table>
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                DAI
-              </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                {DAIReserve > 0 ? `~${parseFloat(DAIReserve).toFixed(4)}` : "-"}
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  DAI
+                </td>
+                <td style={{ paddingLeft: 0 }} align="right">
+                  {DAIReserve > 0
+                    ? `~${parseFloat(DAIReserve).toFixed(4)}`
+                    : "-"}
+                </td>
+              </tr>
 
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                USDC
-              </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                {USDCReserve > 0
-                  ? `~${parseFloat(USDCReserve).toFixed(4)}`
-                  : "-"}
-              </td>
-            </tr>
-            <tr>
-              <td style={{ paddingLeft: 0 }} align="left">
-                USD total
-              </td>
-              <td style={{ paddingLeft: 0 }} align="right">
-                -
-              </td>
-            </tr>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  USDC
+                </td>
+                <td style={{ paddingLeft: 0 }} align="right">
+                  {USDCReserve > 0
+                    ? `~${parseFloat(USDCReserve).toFixed(4)}`
+                    : "-"}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  USD total
+                </td>
+                <td style={{ paddingLeft: 0 }} align="right">
+                  -
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
