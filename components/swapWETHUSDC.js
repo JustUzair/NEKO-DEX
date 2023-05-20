@@ -124,6 +124,7 @@ export function WETHUSDCSwap() {
         },
         onError: error => {
           console.error(error);
+          failureNotification(error.message);
         },
         onSuccess: data => {
           //   console.log(data);
@@ -155,6 +156,7 @@ export function WETHUSDCSwap() {
         },
         onError: error => {
           console.error(error);
+          failureNotification(error.message);
         },
         onSuccess: data => {
           console.log("approve", data);
@@ -195,10 +197,11 @@ export function WETHUSDCSwap() {
         },
         onError: error => {
           console.error(error);
+          failureNotification(error.message);
         },
         onSuccess: data => {
           console.log("swap", data);
-          successNotification(`Assets swapped`);
+          successNotification(`Assets swapped `);
 
           setFirstSlotInput(0);
         },
