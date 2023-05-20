@@ -11,6 +11,8 @@ export function WBTCUSDCSwap() {
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
   const [firstSlotInput, setFirstSlotInput] = useState(0);
   const [secondSlotOutput, setSecondSlotOutput] = useState(0);
+  const [isSwapped, setIsSwapped] = useState(false);
+
   const [slot2Icon, setSlot2Icon] = useState(
     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png"
   );
@@ -74,10 +76,11 @@ export function WBTCUSDCSwap() {
     const tempAsset = slot1Symbol;
     setSlot1Symbol(slot2Symbol);
     setSlot2Symbol(tempAsset);
+    setIsSwapped(!isSwapped);
   }
   useEffect(() => {
     getBasedAssetPrice(firstSlotInput);
-  }, [firstSlotInput, switchAssets]);
+  }, [isSwapped, firstSlotInput]);
   return (
     <>
       <h1

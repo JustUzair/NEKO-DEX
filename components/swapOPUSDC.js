@@ -11,6 +11,8 @@ export function OPUSDCSwap() {
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
   const [firstSlotInput, setFirstSlotInput] = useState(0);
   const [secondSlotOutput, setSecondSlotOutput] = useState(0);
+  const [isSwapped, setIsSwapped] = useState(false);
+
   const [slot2Icon, setSlot2Icon] = useState(
     "https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/DPYBKVZG55EWFHIK2TVT3HTH7Y.png"
   );
@@ -53,7 +55,7 @@ export function OPUSDCSwap() {
           console.error(error);
         },
         onSuccess: data => {
-          console.log(data);
+          //   console.log(data);
           const value = ethers.utils.formatUnits(data.toString(), "ether");
           //   console.log(`ETHER : ${ether}`);
           setSecondSlotOutput(parseFloat(value).toFixed(4));
@@ -68,10 +70,11 @@ export function OPUSDCSwap() {
     const tempAsset = slot1Symbol;
     setSlot1Symbol(slot2Symbol);
     setSlot2Symbol(tempAsset);
+    setIsSwapped(!isSwapped);
   }
   useEffect(() => {
     getBasedAssetPrice(firstSlotInput);
-  }, [firstSlotInput, switchAssets]);
+  }, [isSwapped, firstSlotInput]);
   return (
     <>
       <h1

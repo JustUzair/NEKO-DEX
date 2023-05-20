@@ -10,7 +10,7 @@ export function WETHUSDCSwap() {
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
   const [firstSlotInput, setFirstSlotInput] = useState(0);
   const [secondSlotOutput, setSecondSlotOutput] = useState(0);
-
+  const [isSwapped, setIsSwapped] = useState(false);
   const [slot2Icon, setSlot2Icon] = useState(
     "https://w7.pngwing.com/pngs/383/521/png-transparent-eth-crypto-cryptocurrency-cryptocurrencies-cash-money-bank-payment-icon.png"
   );
@@ -36,7 +36,12 @@ export function WETHUSDCSwap() {
           contractAddresses[chainId]["WETH"].length - 1
         ]
       : null;
-
+  const USDCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["USDC"][
+          contractAddresses[chainId]["USDC"].length - 1
+        ]
+      : null;
   const getBasedAssetPrice = async amount => {
     // alert(slot1Symbol);
     if (!isWeb3Enabled) await enableWeb3();
@@ -60,7 +65,7 @@ export function WETHUSDCSwap() {
           console.error(error);
         },
         onSuccess: data => {
-          console.log(data);
+          //   console.log(data);
           const value = ethers.utils.formatUnits(data.toString(), "ether");
           //   console.log(`ETHER : ${ether}`);
           setSecondSlotOutput(parseFloat(value).toFixed(4));
@@ -68,7 +73,61 @@ export function WETHUSDCSwap() {
       });
     }
   };
-
+  const swapAssets = async () => {
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress:
+            slot1Symbol == "USDC"
+              ? USDCTestTokenContractAddress
+              : WETHTestTokenContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+        },
+        onSuccess: data => {
+          console.log(data);
+          console.log(
+            `FUNDS : ${ethers.utils.formatUnits(data.toString(), "ether")}`
+          );
+          //   const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   //   console.log(`ETHER : ${ether}`);
+          //   setSecondSlotOutput(parseFloat(value).toFixed(4));
+        },
+      });
+      //   await runContractFunction({
+      //     params: {
+      //       abi: DEXAbi,
+      //       contractAddress: ETHPoolContractAddress,
+      //       functionName: "getOutputAmountWithFee",
+      //       params: {
+      //         inputAmount: await ethers.utils
+      //           .parseUnits(
+      //             amount.toString() || parseInt("0").toString(),
+      //             "ether"
+      //           )
+      //           .toString(),
+      //         isToken0: slot1Symbol == "USDC" ? true : false,
+      //       },
+      //     },
+      //     onError: error => {
+      //       console.error(error);
+      //     },
+      //     onSuccess: data => {
+      //       console.log(data);
+      //       const value = ethers.utils.formatUnits(data.toString(), "ether");
+      //       //   console.log(`ETHER : ${ether}`);
+      //       setSecondSlotOutput(parseFloat(value).toFixed(4));
+      //     },
+      //   });
+    }
+  };
   function switchAssets() {
     const templink = slot1Icon;
     setSlot1Icon(slot2Icon);
@@ -76,10 +135,11 @@ export function WETHUSDCSwap() {
     const tempAsset = slot1Symbol;
     setSlot1Symbol(slot2Symbol);
     setSlot2Symbol(tempAsset);
+    setIsSwapped(!isSwapped);
   }
   useEffect(() => {
     getBasedAssetPrice(firstSlotInput);
-  }, [firstSlotInput, switchAssets]);
+  }, [isSwapped, firstSlotInput]);
   return (
     <>
       <h1
@@ -125,7 +185,10 @@ export function WETHUSDCSwap() {
           readOnly={true}
         />
 
-        <button className="swapButton"> Swap </button>
+        <button className="swapButton" onClick={swapAssets}>
+          {" "}
+          Swap{" "}
+        </button>
       </div>
 
       <div className="infoPanel">

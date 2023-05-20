@@ -12,6 +12,8 @@ export function DAIUSDCSwap() {
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
   const [firstSlotInput, setFirstSlotInput] = useState(0);
   const [secondSlotOutput, setSecondSlotOutput] = useState(0);
+  const [isSwapped, setIsSwapped] = useState(false);
+
   const [slot2Icon, setSlot2Icon] = useState(
     "https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.png"
   );
@@ -60,7 +62,7 @@ export function DAIUSDCSwap() {
           console.error(error);
         },
         onSuccess: data => {
-          //   console.log(data);
+          console.log(data);
           const value = ethers.utils.formatUnits(data.toString(), "ether");
           //   console.log(`ETHER : ${ether}`);
           setSecondSlotOutput(parseFloat(value).toFixed(4));
@@ -75,10 +77,11 @@ export function DAIUSDCSwap() {
     const tempAsset = slot1Symbol;
     setSlot1Symbol(slot2Symbol);
     setSlot2Symbol(tempAsset);
+    setIsSwapped(!isSwapped);
   }
   useEffect(() => {
     getBasedAssetPrice(firstSlotInput);
-  }, [firstSlotInput, switchAssets]);
+  }, [isSwapped, firstSlotInput]);
   return (
     <>
       <h1

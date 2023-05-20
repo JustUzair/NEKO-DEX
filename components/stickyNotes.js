@@ -50,24 +50,7 @@ export default function StickyNotes() {
           contractAddresses[chainId]["StickyNotes"].length - 1
         ]
       : null;
-  const ETHPoolContractAddress =
-    chainId in contractAddresses
-      ? contractAddresses[chainId]["ETHPool"][
-          contractAddresses[chainId]["ETHPool"].length - 1
-        ]
-      : null;
-  const WBTCPoolContractAddress =
-    chainId in contractAddresses
-      ? contractAddresses[chainId]["WBTCPool"][
-          contractAddresses[chainId]["WBTCPool"].length - 1
-        ]
-      : null;
-  const WMATICPoolContractAddress =
-    chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATICPool"][
-          contractAddresses[chainId]["WMATICPool"].length - 1
-        ]
-      : null;
+
   const LeaderboardContractAddress =
     chainId in contractAddresses
       ? contractAddresses[chainId]["Leaderboard"][
