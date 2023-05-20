@@ -56,7 +56,7 @@ export function OPUSDCSwap() {
           console.log(data);
           const value = ethers.utils.formatUnits(data.toString(), "ether");
           //   console.log(`ETHER : ${ether}`);
-          setSecondSlotOutput(parseFloat(value).toFixed(2));
+          setSecondSlotOutput(parseFloat(value).toFixed(4));
         },
       });
     }
