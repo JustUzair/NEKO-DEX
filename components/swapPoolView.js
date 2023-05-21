@@ -45,26 +45,26 @@ export default function SwapPoolView() {
   const [OPUSDC, setOPUSDC] = useState(false);
 
   const [DAIUSDC, setDAIUSDC] = useState(false);
-  const [poolview, setPoolview] = useState(true);
+  const [poolview, setPoolView] = useState(true);
 
   function viewWETHUSDC() {
     setWETHUSDC(true);
-    setPoolview(false);
+    setPoolView(false);
   }
 
   function viewWBTCUSDC() {
     setWBTCUSDC(true);
-    setPoolview(false);
+    setPoolView(false);
   }
 
   function viewOPUSDC() {
     setOPUSDC(true);
-    setPoolview(false);
+    setPoolView(false);
   }
 
   function viewDAIUSDC() {
     setDAIUSDC(true);
-    setPoolview(false);
+    setPoolView(false);
   }
 
   function viewNone() {
@@ -72,7 +72,7 @@ export default function SwapPoolView() {
     setDAIUSDC(false);
     setOPUSDC(false);
     setWBTCUSDC(false);
-    setPoolview(true);
+    setPoolView(true);
   }
 
   return isValidChain ? (
@@ -317,11 +317,17 @@ export default function SwapPoolView() {
         </div>
       )}
       {WETHUSDC && (
-        <WETHUSDCMODAL setPoolView={setPoolview} setWETHUSDC={setWETHUSDC} />
+        <WETHUSDCMODAL setPoolView={setPoolView} setWETHUSDC={setWETHUSDC} />
       )}
-      {WBTCUSDC && <WBTCUSDCMODAL />}
-      {OPUSDC && <OPUSDCMODAL />}
-      {DAIUSDC && <DAIUSDCMODAL />}
+      {WBTCUSDC && (
+        <WBTCUSDCMODAL setPoolView={setPoolView} setWBTCUSDC={setWBTCUSDC} />
+      )}
+      {OPUSDC && (
+        <OPUSDCMODAL setPoolView={setPoolView} setOPUSDC={setOPUSDC} />
+      )}
+      {DAIUSDC && (
+        <DAIUSDCMODAL setPoolView={setPoolView} setDAIUSDC={setDAIUSDC} />
+      )}
       {(WETHUSDC || WBTCUSDC || OPUSDC || DAIUSDC || WETHUSDC) && (
         <button className="modalButton" onClick={() => viewNone(false)}>
           Back

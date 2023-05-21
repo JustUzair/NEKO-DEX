@@ -38,7 +38,7 @@ export default function Home() {
               style={{
                 //   background: "rgba(232,63,121,1)",
                 background: "linear-gradient(to right, #E84C3D, #FF4E3F)",
-                padding: "0px 50px",
+                padding: "20px 50px",
                 color: "#fff",
                 borderRadius: "15px",
                 width: "fit-content",

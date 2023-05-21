@@ -166,14 +166,14 @@ export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
           );
         },
       });
-      console.log(
-        `TOKEN 0 : `,
-        ethers.utils.parseEther(firstSlotInput).toString()
-      );
-      console.log(
-        `TOKEN 1 : `,
-        ethers.utils.parseEther(secondSlotOutput).toString()
-      );
+      //   console.log(
+      //     `TOKEN 0 : `,
+      //     ethers.utils.parseEther(firstSlotInput).toString()
+      //   );
+      //   console.log(
+      //     `TOKEN 1 : `,
+      //     ethers.utils.parseEther(secondSlotOutput).toString()
+      //   );
       //   console.log(Math.floor(secondSlotOutput).toString());
       await runContractFunction({
         params: {
@@ -201,46 +201,19 @@ export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
         },
         onSuccess: async data => {
           //   console.log("swap", data);
-          successNotification(`Assets swap job submitted `);
-
-          await data.wait(1);
-          successNotification(`Assets swapped `);
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan")
+            } ) `
+          );
           setPoolView(true);
           setWETHUSDC(false);
+          await data.wait(1);
+          successNotification(`Assets swapped `);
           setFirstSlotInput(0);
         },
       });
-
-      //   HARDCODE TEST
-      //   await runContractFunction({
-      //     params: {
-      //       abi: DEXAbi,
-      //       contractAddress: ETHPoolContractAddress,
-      //       functionName: "swap",
-      //       params:
-      //         slot1Symbol == "USDC"
-      //           ? {
-      //               token0In: "1800000000000000000000",
-      //               token1In: 0,
-      //               token0OutMin: 0,
-      //               token1OutMin: 0,
-      //             }
-      //           : {
-      //               token0In: 0,
-      //               token1In: "1000000000000000000",
-      //               token0OutMin: 0,
-      //               token1OutMin: 0,
-      //             },
-      //     },
-      //     onError: error => {
-      //       console.error(error);
-      //     },
-      //     onSuccess: data => {
-      //       console.log("swap", data);
-      //       successNotification(`Assets swapped`);
-      //       //   getTokenBalances();
-      //     },
-      //   });
     }
   };
   function switchAssets() {
@@ -512,9 +485,24 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0 }} align="left">
                   WETH
                 </td>
-                <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
+                <td
+                  style={{ paddingLeft: 0, fontWeight: "700" }}
+                  align="right"
+                  title={
+                    ETHReserve > 0
+                      ? `~${parseFloat(ETHReserve).toFixed(4)} WETH`
+                      : "-"
+                  }
+                >
                   {ETHReserve > 0
-                    ? `~${parseFloat(ETHReserve).toFixed(4)}`
+                    ? `~${
+                        parseFloat(ETHReserve).toFixed(4).toString().length > 13
+                          ? parseFloat(ETHReserve)
+                              .toFixed(4)
+                              .toString()
+                              .substring(0, 13) + "..."
+                          : parseFloat(ETHReserve).toFixed(4)
+                      }`
                     : "-"}
                 </td>
               </tr>
@@ -523,9 +511,25 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0 }} align="left">
                   USDC
                 </td>
-                <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
+                <td
+                  style={{ paddingLeft: 0, fontWeight: "700" }}
+                  align="right"
+                  title={
+                    USDCReserve > 0
+                      ? `~${parseFloat(USDCReserve).toFixed(4)} USDC`
+                      : "-"
+                  }
+                >
                   {USDCReserve > 0
-                    ? `~${parseFloat(USDCReserve).toFixed(4)}`
+                    ? `~${
+                        parseFloat(USDCReserve).toFixed(4).toString().length >
+                        13
+                          ? parseFloat(USDCReserve)
+                              .toFixed(4)
+                              .toString()
+                              .substring(0, 13) + "..."
+                          : parseFloat(USDCReserve).toFixed(4)
+                      }`
                     : "-"}
                 </td>
               </tr>

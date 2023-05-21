@@ -5,8 +5,34 @@ import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 import ierc20Abi from "../constants/ierc20Abi.json";
 import { BigNumber, ethers } from "ethers";
 import DEXAbi from "../constants/DEXAbi.json";
+import { useNotification } from "web3uikit";
 
-export function OPUSDCSwap() {
+export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
+  const dispatch = useNotification();
+  //****************************************************************/
+  //-----------------------NOTIFICATION-----------------------------
+  //****************************************************************/
+
+  const successNotification = msg => {
+    dispatch({
+      type: "success",
+      message: `${msg} Successfully! `,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+
+  const failureNotification = msg => {
+    dispatch({
+      type: "error",
+      message: `${msg} ( View console for more info )`,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+  //****************************************************************/
+  //--------------------END NOTIFICATION-----------------------------
+  //****************************************************************/
   const [slot1Symbol, setSlot1Symbol] = useState("WMATIC");
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
   const [firstSlotInput, setFirstSlotInput] = useState(0);
@@ -31,7 +57,18 @@ export function OPUSDCSwap() {
           contractAddresses[chainId]["WMATICPool"].length - 1
         ]
       : null;
-
+  const WMATICTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WMATIC"][
+          contractAddresses[chainId]["WMATIC"].length - 1
+        ]
+      : null;
+  const USDCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["USDC"][
+          contractAddresses[chainId]["USDC"].length - 1
+        ]
+      : null;
   const getBasedAssetPrice = async amount => {
     // alert(slot1Symbol);
     if (!isWeb3Enabled) await enableWeb3();
@@ -59,6 +96,122 @@ export function OPUSDCSwap() {
           const value = ethers.utils.formatUnits(data.toString(), "ether");
           //   console.log(`ETHER : ${ether}`);
           setSecondSlotOutput(parseFloat(value).toFixed(4));
+        },
+      });
+    }
+  };
+  const swapAssets = async () => {
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      //   console.log(
+      //     `${slot1Symbol} Address ${
+      //       slot1Symbol == "USDC"
+      //         ? USDCTestTokenContractAddress
+      //         : W
+      //     }`
+      //   );
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress:
+            slot1Symbol === "USDC"
+              ? USDCTestTokenContractAddress
+              : WMATICTestTokenContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          //   console.log(data);
+          //   console.log(
+          //     `FUNDS : ${ethers.utils.formatUnits(data.toString(), "ether")}`
+          //   );
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value <= 0);
+          if (value <= 0) {
+            failureNotification("You do not have enough funds of Asset 1");
+            return;
+          }
+          //   console.log("balance ", data.toString());
+        },
+      });
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress:
+            slot1Symbol === "USDC"
+              ? USDCTestTokenContractAddress
+              : WMATICTestTokenContractAddress,
+          functionName: "approve",
+          params: {
+            spender: WMATICPoolContractAddress,
+            amount: ethers.utils.parseEther(firstSlotInput).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          console.log("approve", data);
+          //   console.log(
+          //     `First slot input in wei : `,
+          //     ethers.utils.parseEther(firstSlotInput.toString()).toString()
+          //   );
+        },
+      });
+      //   console.log(
+      //     `TOKEN 0 : `,
+      //     ethers.utils.parseEther(firstSlotInput).toString()
+      //   );
+      //   console.log(
+      //     `TOKEN 1 : `,
+      //     ethers.utils.parseEther(secondSlotOutput).toString()
+      //   );
+      //   console.log(Math.floor(secondSlotOutput).toString());
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress: WMATICPoolContractAddress,
+          functionName: "swap",
+          params:
+            slot1Symbol === "USDC"
+              ? {
+                  token0In: ethers.utils.parseEther(firstSlotInput).toString(),
+                  token1In: 0,
+                  token0OutMin: 0,
+                  token1OutMin: 0,
+                }
+              : {
+                  token0In: 0,
+                  token1In: ethers.utils.parseEther(firstSlotInput).toString(),
+                  token0OutMin: 0,
+                  token1OutMin: 0,
+                },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          //   console.log("swap", data);
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan")
+            } ) `
+          );
+          setPoolView(true);
+          setOPUSDC(false);
+          await data.wait(1);
+          successNotification(`Assets swapped `);
+          setFirstSlotInput(0);
         },
       });
     }
@@ -118,7 +271,10 @@ export function OPUSDCSwap() {
           readOnly={true}
         />
 
-        <button className="swapButton"> Swap </button>
+        <button className="swapButton" onClick={swapAssets}>
+          {" "}
+          Swap{" "}
+        </button>
       </div>
       <div className="infoPanel">
         <div className="typedOutWrapperInfo">
@@ -324,9 +480,25 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0 }} align="left">
                   WMATIC
                 </td>
-                <td style={{ paddingLeft: 0 }} align="right">
+                <td
+                  style={{ paddingLeft: 0 }}
+                  align="right"
+                  title={
+                    WMATICReserve > 0
+                      ? `~${parseFloat(WMATICReserve).toFixed(4)} WMATIC`
+                      : "-"
+                  }
+                >
                   {WMATICReserve > 0
-                    ? `~${parseFloat(WMATICReserve).toFixed(4)}`
+                    ? `~${
+                        parseFloat(WMATICReserve).toFixed(4).toString().length >
+                        13
+                          ? parseFloat(WMATICReserve)
+                              .toFixed(4)
+                              .toString()
+                              .substring(0, 13) + "..."
+                          : parseFloat(WMATICReserve).toFixed(4)
+                      }`
                     : "-"}
                 </td>
               </tr>
@@ -335,9 +507,25 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0 }} align="left">
                   USDC
                 </td>
-                <td style={{ paddingLeft: 0 }} align="right">
+                <td
+                  style={{ paddingLeft: 0 }}
+                  align="right"
+                  title={
+                    USDCReserve > 0
+                      ? `~${parseFloat(USDCReserve).toFixed(4)} USDC`
+                      : "-"
+                  }
+                >
                   {USDCReserve > 0
-                    ? `~${parseFloat(USDCReserve).toFixed(4)}`
+                    ? `~${
+                        parseFloat(USDCReserve).toFixed(4).toString().length >
+                        13
+                          ? parseFloat(USDCReserve)
+                              .toFixed(4)
+                              .toString()
+                              .substring(0, 13) + "..."
+                          : parseFloat(USDCReserve).toFixed(4)
+                      }`
                     : "-"}
                 </td>
               </tr>
@@ -357,7 +545,7 @@ export function PoolData() {
   );
 }
 
-export const OPUSDCMODAL = () => {
+export const OPUSDCMODAL = ({ setPoolView, setOPUSDC }) => {
   const [activeTab, setActiveTab] = useState(1);
   function handleTabClick(tab) {
     setActiveTab(tab);
@@ -398,7 +586,9 @@ export const OPUSDCMODAL = () => {
       </div>
       <br />
       <div className="tab-content">
-        {activeTab === 1 && <OPUSDCSwap />}
+        {activeTab === 1 && (
+          <OPUSDCSwap setPoolView={setPoolView} setOPUSDC={setOPUSDC} />
+        )}
         {activeTab === 2 && <OPUSDCDeposit />}
         {activeTab === 3 && <OPUSDCWithdraw />}
 

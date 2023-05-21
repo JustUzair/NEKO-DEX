@@ -6,8 +6,34 @@ const explorerAddress = `https://mumbai.polygonscan.com/address/`;
 import ierc20Abi from "../constants/ierc20Abi.json";
 import { BigNumber, ethers } from "ethers";
 import DEXAbi from "../constants/DEXAbi.json";
+import { useNotification } from "web3uikit";
 
-export function DAIUSDCSwap() {
+export function DAIUSDCSwap({ setPoolView, setDAIUSDC }) {
+  const dispatch = useNotification();
+  //****************************************************************/
+  //-----------------------NOTIFICATION-----------------------------
+  //****************************************************************/
+
+  const successNotification = msg => {
+    dispatch({
+      type: "success",
+      message: `${msg} Successfully! `,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+
+  const failureNotification = msg => {
+    dispatch({
+      type: "error",
+      message: `${msg} ( View console for more info )`,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+  //****************************************************************/
+  //--------------------END NOTIFICATION-----------------------------
+  //****************************************************************/
   const [slot1Symbol, setSlot1Symbol] = useState("DAI");
   const [slot2Symbol, setSlot2Symbol] = useState("USDC");
   const [firstSlotInput, setFirstSlotInput] = useState(0);
@@ -38,6 +64,12 @@ export function DAIUSDCSwap() {
           contractAddresses[chainId]["DAI"].length - 1
         ]
       : null;
+  const USDCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["USDC"][
+          contractAddresses[chainId]["USDC"].length - 1
+        ]
+      : null;
 
   const getBasedAssetPrice = async amount => {
     // alert(slot1Symbol);
@@ -66,6 +98,122 @@ export function DAIUSDCSwap() {
           const value = ethers.utils.formatUnits(data.toString(), "ether");
           //   console.log(`ETHER : ${ether}`);
           setSecondSlotOutput(parseFloat(value).toFixed(4));
+        },
+      });
+    }
+  };
+  const swapAssets = async () => {
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      //   console.log(
+      //     `${slot1Symbol} Address ${
+      //       slot1Symbol == "USDC"
+      //         ? USDCTestTokenContractAddress
+      //         : W
+      //     }`
+      //   );
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress:
+            slot1Symbol === "USDC"
+              ? USDCTestTokenContractAddress
+              : DAITestTokenContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          //   console.log(data);
+          //   console.log(
+          //     `FUNDS : ${ethers.utils.formatUnits(data.toString(), "ether")}`
+          //   );
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value <= 0);
+          if (value <= 0) {
+            failureNotification("You do not have enough funds of Asset 1");
+            return;
+          }
+          console.log("balance ", data.toString());
+        },
+      });
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress:
+            slot1Symbol === "USDC"
+              ? USDCTestTokenContractAddress
+              : DAITestTokenContractAddress,
+          functionName: "approve",
+          params: {
+            spender: DAIPoolContractAddress,
+            amount: ethers.utils.parseEther(firstSlotInput).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          console.log("approve", data);
+          console.log(
+            `First slot input in wei : `,
+            ethers.utils.parseEther(firstSlotInput.toString()).toString()
+          );
+        },
+      });
+      //   console.log(
+      //     `TOKEN 0 : `,
+      //     ethers.utils.parseEther(firstSlotInput).toString()
+      //   );
+      //   console.log(
+      //     `TOKEN 1 : `,
+      //     ethers.utils.parseEther(secondSlotOutput).toString()
+      //   );
+      //   console.log(Math.floor(secondSlotOutput).toString());
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress: DAIPoolContractAddress,
+          functionName: "swap",
+          params:
+            slot1Symbol === "USDC"
+              ? {
+                  token0In: ethers.utils.parseEther(firstSlotInput).toString(),
+                  token1In: 0,
+                  token0OutMin: 0,
+                  token1OutMin: 0,
+                }
+              : {
+                  token0In: 0,
+                  token1In: ethers.utils.parseEther(firstSlotInput).toString(),
+                  token0OutMin: 0,
+                  token1OutMin: 0,
+                },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          //   console.log("swap", data);
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan")
+            } ) `
+          );
+          setPoolView(true);
+          setDAIUSDC(false);
+          await data.wait(1);
+          successNotification(`Assets swapped `);
+          setFirstSlotInput(0);
         },
       });
     }
@@ -124,7 +272,10 @@ export function DAIUSDCSwap() {
           readOnly={true}
         />
 
-        <button className="swapButton"> Swap </button>
+        <button className="swapButton" onClick={swapAssets}>
+          {" "}
+          Swap{" "}
+        </button>
       </div>
       <div className="infoPanel">
         <div className="typedOutWrapperInfo">
@@ -286,9 +437,7 @@ export function PoolData() {
           <table>
             <tbody>
               <tr>
-                <td style={{ paddingLeft: 0 }} align="left">
-                  Pool
-                </td>
+                <td style={{ paddingLeft: 0 }} align="left"></td>
                 <td style={{ paddingLeft: 0 }} align="right">
                   {DAIPoolContractAddress ? (
                     <a
@@ -333,9 +482,20 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0 }} align="left">
                   DAI
                 </td>
-                <td style={{ paddingLeft: 0 }} align="right">
+                <td
+                  style={{ paddingLeft: 0 }}
+                  align="right"
+                  title={`~${parseFloat(DAIReserve).toFixed(4)} DAI`}
+                >
                   {DAIReserve > 0
-                    ? `~${parseFloat(DAIReserve).toFixed(4)}`
+                    ? `~${
+                        parseFloat(DAIReserve).toFixed(4).toString().length > 13
+                          ? parseFloat(DAIReserve)
+                              .toFixed(4)
+                              .toString()
+                              .substring(0, 13) + "..."
+                          : parseFloat(DAIReserve).toFixed(4)
+                      }`
                     : "-"}
                 </td>
               </tr>
@@ -344,9 +504,21 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0 }} align="left">
                   USDC
                 </td>
-                <td style={{ paddingLeft: 0 }} align="right">
+                <td
+                  style={{ paddingLeft: 0 }}
+                  align="right"
+                  title={`~${parseFloat(USDCReserve).toFixed(4)} USDC`}
+                >
                   {USDCReserve > 0
-                    ? `~${parseFloat(USDCReserve).toFixed(4)}`
+                    ? `~${
+                        parseFloat(USDCReserve).toFixed(4).toString().length >
+                        13
+                          ? parseFloat(USDCReserve)
+                              .toFixed(4)
+                              .toString()
+                              .substring(0, 13) + "..."
+                          : parseFloat(USDCReserve).toFixed(4)
+                      }`
                     : "-"}
                 </td>
               </tr>
@@ -366,7 +538,7 @@ export function PoolData() {
   );
 }
 
-export const DAIUSDCMODAL = () => {
+export const DAIUSDCMODAL = ({ setPoolView, setDAIUSDC }) => {
   const [activeTab, setActiveTab] = useState(1);
   function handleTabClick(tab) {
     setActiveTab(tab);
@@ -407,7 +579,9 @@ export const DAIUSDCMODAL = () => {
       </div>
       <br />
       <div className="tab-content">
-        {activeTab === 1 && <DAIUSDCSwap />}
+        {activeTab === 1 && (
+          <DAIUSDCSwap setPoolView={setPoolView} setDAIUSDC={setDAIUSDC} />
+        )}
         {activeTab === 2 && <DAIUSDCDeposit />}
         {activeTab === 3 && <DAIUSDCWithdraw />}
 
