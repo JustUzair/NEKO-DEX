@@ -7,7 +7,7 @@ import { useNotification } from "web3uikit";
 const explorerAddress = `https://mumbai.polygonscan.com/address/`;
 import DEXAbi from "../constants/DEXAbi.json";
 
-export function WETHUSDCSwap() {
+export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
   const dispatch = useNotification();
   //****************************************************************/
   //-----------------------NOTIFICATION-----------------------------
@@ -16,7 +16,7 @@ export function WETHUSDCSwap() {
   const successNotification = msg => {
     dispatch({
       type: "success",
-      message: `${msg} Successfully! (View in explorer after tx confirms)`,
+      message: `${msg} Successfully! `,
       title: `${msg}`,
       position: "topR",
     });
@@ -199,10 +199,14 @@ export function WETHUSDCSwap() {
           console.error(error);
           failureNotification(error.message);
         },
-        onSuccess: data => {
-          console.log("swap", data);
-          successNotification(`Assets swapped `);
+        onSuccess: async data => {
+          //   console.log("swap", data);
+          successNotification(`Assets swap job submitted `);
 
+          await data.wait(1);
+          successNotification(`Assets swapped `);
+          setPoolView(true);
+          setWETHUSDC(false);
           setFirstSlotInput(0);
         },
       });
@@ -251,6 +255,7 @@ export function WETHUSDCSwap() {
   useEffect(() => {
     getBasedAssetPrice(firstSlotInput);
   }, [isSwapped, firstSlotInput]);
+
   return (
     <>
       <h1
@@ -540,8 +545,9 @@ export function PoolData() {
   );
 }
 
-export const WETHUSDCMODAL = () => {
+export const WETHUSDCMODAL = ({ setPoolView, setWETHUSDC }) => {
   const [activeTab, setActiveTab] = useState(1);
+
   function handleTabClick(tab) {
     setActiveTab(tab);
   }
@@ -581,7 +587,9 @@ export const WETHUSDCMODAL = () => {
       </div>
       <br />
       <div className="tab-content">
-        {activeTab === 1 && <WETHUSDCSwap />}
+        {activeTab === 1 && (
+          <WETHUSDCSwap setPoolView={setPoolView} setWETHUSDC={setWETHUSDC} />
+        )}
         {activeTab === 2 && <WETHUSDCDeposit />}
         {activeTab === 3 && <WETHUSDCWithdraw />}
 

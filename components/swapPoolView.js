@@ -40,11 +40,11 @@ export default function SwapPoolView() {
           contractAddresses[chainId]["DAIPool"].length - 1
         ]
       : null;
-  const [WETHUSDC, setWETHUSDC] = useState();
-  const [WBTCUSDC, setWBTCUSDC] = useState();
-  const [OPUSDC, setOPUSDC] = useState();
+  const [WETHUSDC, setWETHUSDC] = useState(false);
+  const [WBTCUSDC, setWBTCUSDC] = useState(false);
+  const [OPUSDC, setOPUSDC] = useState(false);
 
-  const [DAIUSDC, setDAIUSDC] = useState();
+  const [DAIUSDC, setDAIUSDC] = useState(false);
   const [poolview, setPoolview] = useState(true);
 
   function viewWETHUSDC() {
@@ -316,7 +316,9 @@ export default function SwapPoolView() {
           </table>
         </div>
       )}
-      {WETHUSDC && <WETHUSDCMODAL />}
+      {WETHUSDC && (
+        <WETHUSDCMODAL setPoolView={setPoolview} setWETHUSDC={setWETHUSDC} />
+      )}
       {WBTCUSDC && <WBTCUSDCMODAL />}
       {OPUSDC && <OPUSDCMODAL />}
       {DAIUSDC && <DAIUSDCMODAL />}
