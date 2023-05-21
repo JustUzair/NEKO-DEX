@@ -6,9 +6,9 @@ export const Leaderboard = () => {
   const Buttons = () => {
     return (
       <div style={{ padding: "15px" }}>
-        {/* <button className="modalButton" onClick={() => setActiveTab(1)}>Leaderboard</button> */}
-        {/* <button className="modalButton" onClick={() => setActiveTab(2)}>Stake LP</button>
-                <button className="modalButton" onClick={() => setActiveTab(3)}>Unstake LP</button> */}
+        <button className="modalButton" onClick={() => setActiveTab(1)}>Leaderboard</button> 
+        <button className="modalButton" onClick={() => setActiveTab(2)}>Stake LP</button>
+                <button className="modalButton" onClick={() => setActiveTab(3)}>Unstake LP</button>
       </div>
     );
   };
@@ -224,23 +224,23 @@ export const Leaderboard = () => {
       </>
     );
   }
-  // if(activeTab == 2) {
-  //     return(
-  //     <>
-  //     <StakeLP/>
-  //     <Buttons/>
-  //     </>
-  //     )
+  if(activeTab == 2) {
+      return(
+      <>
+      <StakeLP/>
+      <Buttons/>
+      </>
+      )
 
-  // }
-  // if(activeTab == 3) {
-  //     return(
-  //     <>
-  //     <UnstakeLP/>
+  }
+  if(activeTab == 3) {
+      return(
+      <>
+      <UnstakeLP/>
 
-  //     <Buttons/>
-  //     </>
-  //     )
+      <Buttons/>
+      </>
+      )
 
-  // }
+  }
 };
