@@ -3,6 +3,9 @@ import React, { useState } from "react";
 export const Leaderboard = () => {
   const [activeTab, setActiveTab] = useState(1);
 
+  const [selectedOption, setSelectedOption] = useState('nekoWETHLP');
+
+
   const Buttons = () => {
     return (
       <div style={{ padding: "15px" }}>
@@ -13,73 +16,130 @@ export const Leaderboard = () => {
     );
   };
 
+  const handleSelectChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  let imageUrl;
+
+  switch (selectedOption) {
+    case 'nekoWETHLP':
+      imageUrl = 'https://i.ibb.co/CWfhL6J/image.png';
+      break;
+    case 'nekoWBTCLP':
+      imageUrl = 'https://i.ibb.co/YRYQ82y/image.png';
+      break;
+    case 'nekoMATICLP':
+      imageUrl = 'https://i.ibb.co/ZLW9d4x/image.png';
+      break;
+    case 'nekoDAILP':
+      imageUrl = 'https://i.ibb.co/26fPzxF/image.png';
+      break;
+    default:
+      imageUrl = 'path/to/default-image.jpg';
+      break;
+  }
+
   const StakeLP = () => {
     return (
+        <>
+        
+        <h1 style={{marginLeft:"15px", color:"white", textShadow:"4px 4px 4px black"}}>Stake LP</h1>
       <div style={{ display: "flex", justifyContent: "center" }}>
+       
         <div
           style={{
             padding: "15px",
             margin: "15px",
             border: "1px solid black",
             borderRadius: "6px",
-            maxWidth: "50%",
+            width: "50%",
+            objectPosition: "center"
           }}
         >
-          <h1>Stake LP</h1>
-          Stake any of your NEKO LP tokens to earn points!
-          <br />
+          <img style={{maxWidth:"100px", maxHeight: "75px", marginLeft:"100px"}} src={imageUrl} alt="Selected Image" />
+          <br/>
           {/* Choose which LP to stake in a dropdown Menu */}
-          <br />
-          <select>
-            <option value="WETHUSDC">WETHUSDC</option>
-            <option value="WBTCUSDC">WBTCUSDC</option>
-            <option value="OPUSDC">OPUSDC</option>
-            <option value="DAIUSDC">DAIUSDC</option>
+         
+          <select value={selectedOption}
+          onChange={handleSelectChange}
+          style={{borderRadius:"6px",padding:"15px",background:"black", color:"white", marginLeft:"75px"}}>
+            <option value="nekoWETHLP">nekoWETHLP</option>
+            <option value="nekoWBTCLP">nekoWBTCLP</option>
+            <option value="nekoMATICLP">nekoMATICLP</option>
+            <option value="nekoDAILP">nekoDAILP</option>
           </select>
+          
           <br></br>
           <br></br>
-          <input type="text" placeholder="Amount to Stake"></input>
-          <br /> <button>Stake</button>
-          <br></br>
-          <br></br>
+          
+          <input style={{marginLeft:"15px"}}className="asset" type="text" placeholder="Amount to Stake"></input>
+          <br /> <button style={{marginLeft:"15px"}} className="swapButton">Stake</button>
+          
         </div>
         <Stakes />
+
+        
       </div>
+      <div className="infoPanelLeaderboard">
+          <div className="typedOutWrapperLeaderboard">
+            <div className="typedOutInfo">
+            ⌛ Stake your LP Tokens to gain a <br/> spot on the leaderboard! ➕ 
+            </div>
+          </div>
+        </div>
+      </>
     );
   };
 
   const UnstakeLP = () => {
     return (
+        <>
+        <h1 style={{marginLeft:"15px", color:"white", textShadow:"4px 4px 4px black"}}>Unstake LP</h1>
       <div style={{ display: "flex", justifyContent: "center" }}>
+       
         <div
           style={{
             padding: "15px",
             margin: "15px",
             border: "1px solid black",
             borderRadius: "6px",
-            maxWidth: "50%",
+            width: "50%",
+            objectPosition: "center"
           }}
         >
-          <h1>Unstake LP</h1>
-          Unstake your NEKO LP tokens
-          <br />
-          <br /> <br />
-          {/* Choose which LP to unstake in a dropdown Menu */}
-          <select>
-            <option value="WETHUSDC">WETHUSDC</option>
-            <option value="WBTCUSDC">WBTCUSDC</option>
-            <option value="OPUSDC">OPUSDC</option>
-            <option value="DAIUSDC">DAIUSDC</option>
+          <img style={{maxWidth:"100px", maxHeight: "75px", marginLeft:"100px"}} src={imageUrl} alt="Selected Image" />
+          <br/>
+          {/* Choose which LP to stake in a dropdown Menu */}
+         
+          <select value={selectedOption}
+          onChange={handleSelectChange}
+          style={{borderRadius:"6px",padding:"15px",background:"black", color:"white", marginLeft:"75px"}}>
+            <option value="nekoWETHLP">nekoWETHLP</option>
+            <option value="nekoWBTCLP">nekoWBTCLP</option>
+            <option value="nekoMATICLP">nekoMATICLP</option>
+            <option value="nekoDAILP">nekoDAILP</option>
           </select>
+          
           <br></br>
           <br></br>
-          <input type="text" placeholder="Amount to Unstake"></input>
-          <button>Unstake</button>
-          <br></br>
-          <br></br>
+          
+          <input style={{marginLeft:"15px"}}className="asset" type="text" placeholder="Amount to Unstake"></input>
+          <br /> <button style={{marginLeft:"15px"}} className="swapButton">Unstake</button>
+        
         </div>
         <Stakes />
+
+        
       </div>
+      <div className="infoPanelLeaderboard">
+          <div className="typedOutWrapperLeaderboard">
+            <div className="typedOutInfo">
+            ⏰ Unstake your LP Tokens and <br/> stop gaining points ❌
+            </div>
+          </div>
+        </div>
+      </>
     );
   };
 
@@ -88,10 +148,13 @@ export const Leaderboard = () => {
       <div
         style={{
           padding: "15px",
+          paddingTop: "0px",
           margin: "15px",
           border: "1px solid black",
           borderRadius: "6px",
           maxWidth: "50%",
+          color:"white", 
+          textShadow:"4px 4px 4px black"
         }}
       >
         <h4>Your LP Tokens</h4>
@@ -103,22 +166,22 @@ export const Leaderboard = () => {
             <th>Staked</th>
           </tr>
           <tr>
-            <td>WETHUSDC</td>
+            <td>nekoWETHLP</td>
             <td>1000</td>
             <td>1000</td>
           </tr>
           <tr>
-            <td>WBTCUSDC</td>
+            <td>nekoWBTCLP</td>
             <td>1000</td>
             <td>1000</td>
           </tr>
           <tr>
-            <td>MATICUSDC</td>
+            <td>nekoMATICLP</td>
             <td>1000</td>
             <td>1000</td>
           </tr>
           <tr>
-            <td>DAIUSDC</td>
+            <td>nekoDAILP</td>
             <td>1000</td>
             <td>1000</td>
           </tr>
@@ -131,7 +194,7 @@ export const Leaderboard = () => {
     return (
       <>
         <div style={{ padding: "15px", margin: "15px", borderRadius: "6px" }}>
-          <div style={{ fontSize: "30px" }}>Leaderboard </div>
+          <div style={{ fontSize: "30px", marginBottom:"15px", color:"white", textShadow:"4px 4px 4px black"}}>Leaderboard </div>
 
           {/* <div style={{fontSize: "10px"
               ,width:"150px",

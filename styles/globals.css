@@ -649,6 +649,10 @@ th {
   margin-left: 10px;
 }
 
+.modalButton:hover {
+  background: rgba(170, 51, 106, 0.8);
+}
+
 .infoPanel {
   position: absolute;
   margin-top: -120px;
