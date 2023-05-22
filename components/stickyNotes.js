@@ -96,7 +96,7 @@ export default function StickyNotes() {
   const NewNote = () => {
     return (
       <>
-        <h1> Write a new note</h1>
+        <h1 style={{color:"white"}}> Write a new note</h1>
         {/* amount to donate */}
         <label> Amount to donate </label>
         <input
@@ -227,13 +227,16 @@ export default function StickyNotes() {
   }, [account]);
   return (
     <>
+    
       {StickyNotesContractAddress != null ? (
         <>
           {/* {stickyNotes && <Notes />} */}
           {stickyNotes && (
             <div className="sticky-notes--container">
+              
               {notes.length > 0 ? (
                 notes.map((item, index) => (
+                  <>
                   <div
                     key={index}
                     className="note"
@@ -260,7 +263,17 @@ export default function StickyNotes() {
                     >
                       {item.message}
                     </span>
+                    
                   </div>
+                  <div className="infoPanel">
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+          💌 You can leave a message <br/> on a sticky note by donating <br/> $5 or more.
+          </div>
+        </div>
+      </div>
+                  </>
+                  
                 ))
               ) : (
                 <>
@@ -294,8 +307,9 @@ export default function StickyNotes() {
           )}
           {!stickyNotes && (
             // New Note
-            <>
-              <h1> Write a new note</h1>
+            <div style={{marginLeft:"15px"}}>
+              
+              <h1 style={{color: "white", textShadow: "4px 4px 4px black"}}> Write a new note</h1>
               {/* amount to donate */}
               <label> Amount to donate </label>
               <br />
@@ -321,8 +335,8 @@ export default function StickyNotes() {
               <br />
               <br />
               <br />
-              <button onClick={postStickyNote}>Donate</button>
-            </>
+              <button style={{padding:"15px"}} className="modalButton" onClick={postStickyNote}>Donate</button>
+            </div>
           )}
           <button
             onClick={() => setStickyNotes(!stickyNotes)}
@@ -331,6 +345,7 @@ export default function StickyNotes() {
               bottom: "26%",
               left: "33%",
             }}
+            className="modalButton"
           >
             {" "}
             {stickyNotes ? "New Note" : "Back"}{" "}
