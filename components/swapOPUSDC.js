@@ -103,6 +103,8 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
   const swapAssets = async () => {
     if (!isWeb3Enabled) enableWeb3();
     if (account) {
+      let enoughBalance = false;
+
       //   console.log(
       //     `${slot1Symbol} Address ${
       //       slot1Symbol == "USDC"
@@ -133,14 +135,17 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
           //   );
           const value = ethers.utils.formatUnits(data.toString(), "ether");
           //   console.log(`ETHER : ${ether}`);
-          console.log(value <= 0);
-          if (value <= 0) {
+          console.log(value <= firstSlotInput);
+          if (value <= firstSlotInput) {
             failureNotification("You do not have enough funds of Asset 1");
             return;
           }
+          enoughBalance = true;
+
           //   console.log("balance ", data.toString());
         },
       });
+      if (!enoughBalance) return;
       await runContractFunction({
         params: {
           abi: ierc20Abi,

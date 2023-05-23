@@ -103,6 +103,7 @@ export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
   const swapAssets = async () => {
     if (!isWeb3Enabled) enableWeb3();
     if (account) {
+      let enoughBalance = false;
       //   console.log(
       //     `${slot1Symbol} Address ${
       //       slot1Symbol == "USDC"
@@ -133,14 +134,16 @@ export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
           //   );
           const value = ethers.utils.formatUnits(data.toString(), "ether");
           //   console.log(`ETHER : ${ether}`);
-          console.log(value <= 0);
-          if (value <= 0) {
+          console.log(value <= firstSlotInput);
+          if (value <= firstSlotInput) {
             failureNotification("You do not have enough funds of Asset 1");
             return;
           }
+          enoughBalance = true;
           console.log("balance ", data.toString());
         },
       });
+      if (!enoughBalance) return;
       await runContractFunction({
         params: {
           abi: ierc20Abi,
@@ -292,6 +295,14 @@ export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
 }
 
 export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
+  const [WETHDepositAmount, setWETHDepositAmount] = useState(0);
+  const [USDCDepositAmount, setUSDCDepositAmount] = useState(0);
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
+
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
   const ETHPoolContractAddress =
     chainId in contractAddresses
       ? contractAddresses[chainId]["ETHPool"][
@@ -335,108 +346,124 @@ export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
   //****************************************************************/
   //--------------------END NOTIFICATION-----------------------------
   //****************************************************************/
-  //   const addLiquidityToPool = async () => {
-  //     if (!isWeb3Enabled) enableWeb3();
-  //     if (account) {
-  //       await runContractFunction({
-  //         params: {
-  //           abi: DEXAbi,
-  //           contractAddress: USDCTestTokenContractAddress,
-  //           functionName: "balanceOf",
-  //           params: {
-  //             account,
-  //           },
-  //         },
-  //         onError: error => {
-  //           console.error(error);
-  //           failureNotification(error.message);
-  //         },
-  //         onSuccess: data => {
-  //           const value = ethers.utils.formatUnits(data.toString(), "ether");
-  //           //   console.log(`ETHER : ${ether}`);
-  //           console.log(value <= 0);
-  //           if (value <= 0) {
-  //             failureNotification("You do not have enough funds of Asset 1");
-  //             return;
-  //           }
-  //           console.log("balance usdc : ", data.toString());
-  //         },
-  //       });
-  //       await runContractFunction({
-  //         params: {
-  //           abi: DEXAbi,
-  //           contractAddress:
-  //             slot1Symbol === "USDC"
-  //               ? USDCTestTokenContractAddress
-  //               : WETHTestTokenContractAddress,
-  //           functionName: "approve",
-  //           params: {
-  //             spender: ETHPoolContractAddress,
-  //             amount: ethers.utils.parseEther(firstSlotInput).toString(),
-  //           },
-  //         },
-  //         onError: error => {
-  //           console.error(error);
-  //           failureNotification(error.message);
-  //         },
-  //         onSuccess: data => {
-  //           console.log("approve", data);
-  //           console.log(
-  //             `First slot input in wei : `,
-  //             ethers.utils.parseEther(firstSlotInput.toString()).toString()
-  //           );
-  //         },
-  //       });
-  //       //   console.log(
-  //       //     `TOKEN 0 : `,
-  //       //     ethers.utils.parseEther(firstSlotInput).toString()
-  //       //   );
-  //       //   console.log(
-  //       //     `TOKEN 1 : `,
-  //       //     ethers.utils.parseEther(secondSlotOutput).toString()
-  //       //   );
-  //       //   console.log(Math.floor(secondSlotOutput).toString());
-  //       await runContractFunction({
-  //         params: {
-  //           abi: DEXAbi,
-  //           contractAddress: ETHPoolContractAddress,
-  //           functionName: "swap",
-  //           params:
-  //             slot1Symbol === "USDC"
-  //               ? {
-  //                   token0In: ethers.utils.parseEther(firstSlotInput).toString(),
-  //                   token1In: 0,
-  //                   token0OutMin: 0,
-  //                   token1OutMin: 0,
-  //                 }
-  //               : {
-  //                   token0In: 0,
-  //                   token1In: ethers.utils.parseEther(firstSlotInput).toString(),
-  //                   token0OutMin: 0,
-  //                   token1OutMin: 0,
-  //                 },
-  //         },
-  //         onError: error => {
-  //           console.error(error);
-  //           failureNotification(error.message);
-  //         },
-  //         onSuccess: async data => {
-  //           //   console.log("swap", data);
-  //           successNotification(
-  //             `TX : ${data.hash} (View on ${
-  //               (chainId == 80001 && "Mumbai Polygonscan") ||
-  //               (chainId == 137 && "Polygonscan")
-  //             } ) `
-  //           );
-  //           setPoolView(true);
-  //           setWETHUSDC(false);
-  //           await data.wait(1);
-  //           successNotification(`Assets swapped `);
-  //           setFirstSlotInput(0);
-  //         },
-  //       });
-  //     }
-  //   };
+  const addLiquidityToPool = async () => {
+    if (WETHDepositAmount <= 0 || USDCDepositAmount <= 0) {
+      failureNotification(
+        "Values of both the assets should be greater than 0!!"
+      );
+      return;
+    }
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: USDCTestTokenContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value <= USDCDepositAmount);
+          if (value <= USDCDepositAmount) {
+            failureNotification("You do not have enough funds of USDC");
+            return;
+          }
+          console.log("balance usdc : ", data.toString());
+        },
+      });
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: WETHTestTokenContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value <= WETHDepositAmount);
+          if (value <= WETHDepositAmount) {
+            failureNotification("You do not have enough funds of WETH");
+            return;
+          }
+          console.log("balance ether : ", data.toString());
+        },
+      });
+
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: WETHTestTokenContractAddress,
+          functionName: "approve",
+          params: {
+            spender: ETHPoolContractAddress,
+            amount: ethers.utils.parseEther(WETHDepositAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          console.log("approve", data);
+        },
+      });
+
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress: ETHPoolContractAddress,
+          functionName: "swap",
+          params:
+            slot1Symbol === "USDC"
+              ? {
+                  token0In: ethers.utils.parseEther(firstSlotInput).toString(),
+                  token1In: 0,
+                  token0OutMin: 0,
+                  token1OutMin: 0,
+                }
+              : {
+                  token0In: 0,
+                  token1In: ethers.utils.parseEther(firstSlotInput).toString(),
+                  token0OutMin: 0,
+                  token1OutMin: 0,
+                },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          //   console.log("swap", data);
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan")
+            } ) `
+          );
+          setPoolView(true);
+          setWETHUSDC(false);
+          await data.wait(1);
+          successNotification(`Assets swapped `);
+          setFirstSlotInput(0);
+        },
+      });
+    }
+  };
   return (
     <>
       <h1
@@ -451,7 +478,14 @@ export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
           Deposit{" "}
         </div>
 
-        <input className="asset" type="number" />
+        <input
+          className="asset"
+          type="number"
+          onChange={e => {
+            setWETHDepositAmount(e.target.value);
+          }}
+          value={WETHDepositAmount}
+        />
         <div className="selectAsset1">
           WETH
           <img
@@ -467,7 +501,14 @@ export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
           />
         </div>
 
-        <input className="asset" type="number" />
+        <input
+          className="asset"
+          type="number"
+          onChange={e => {
+            setUSDCDepositAmount(e.target.value);
+          }}
+          value={USDCDepositAmount}
+        />
 
         <button className="swapButton"> Deposit </button>
       </div>
