@@ -293,12 +293,12 @@ export default function StickyNotes() {
                   >
                     <span
                       style={{
-                        background: "#FF494A",
+                        
                         padding: "10px 25px",
                         borderRadius: "20px",
                       }}
                     >
-                      No donations yet
+                      loading...
                     </span>
                   </div>
                 </>

@@ -2,6 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { Leaderboard } from "./leaderboard.js";
+import { AaveStake } from "./aaveStake.js";
 
 import SwapPoolView from "./swapPoolView.js";
 import StickyBoard from "./stickyNotes.js";
@@ -245,7 +246,7 @@ export default function Game() {
         ) {
           setShowRoom1(false);
           setShowRoom2(true);
-          setInnerBoxPosition({ top: 400, left: 60 });
+          setInnerBoxPosition({ top: 230, left: 80 });
           console.log("leave room 1");
         }
         // if (
@@ -429,17 +430,9 @@ export default function Game() {
           <div className="table2" />
 
           <div className="leaveRoom1">
-            <span>
-              Room - 2{" "}
-              <span
-                style={{
-                  fontSize: "1.8rem",
-                  fontWeight: "bold",
-                }}
-              >
-                &#11167;
-              </span>
-            </span>
+   
+            
+            
           </div>
         </div>
 
@@ -501,7 +494,7 @@ export default function Game() {
           alt="neko"
         /> */}
 
-        <Image className="worker" src={worker} alt="worker" />
+        {/* <Image className="worker" src={worker} alt="worker" /> */}
       </div>
     );
   };
@@ -513,8 +506,10 @@ export default function Game() {
     const BOX_WIDTH = 800;
 
     const [nekoText, setNekoText] = useState(false);
-
+    const [showStaking, setShowStaking] = useState(false);
     const [showNeko, setShowNeko] = useState(false);
+    const [inModal, setInModal] = useState(false);
+    const [stakeText, setStakeText] = useState(false);
 
     useEffect(() => {
       function handleKeyPress(event) {
@@ -535,7 +530,7 @@ export default function Game() {
           case KEY_CODES.LEFT:
             setInnerBoxPosition({
               top,
-              left: left - 10,
+              left: Math.max(minLeft, left - 10),
             });
             setDirection("left");
             setIsIdle(false);
@@ -569,6 +564,11 @@ export default function Game() {
       setShowNeko(true);
     }
 
+    function Stake() {
+      setStakeText(false);
+      setShowStaking(true);
+    }
+
     useEffect(() => {
       function checkCollision() {
         const innerBoxRect = document
@@ -577,9 +577,13 @@ export default function Game() {
         const leaveRoom2 = document
           .querySelector(".leaveRoom2")
           .getBoundingClientRect();
+        const aaveStake = document
+        .querySelector(".aaveStake")
+        .getBoundingClientRect();
 
-          const catRect = document.querySelector(".neko").getBoundingClientRect();
-
+        const catRect = document.querySelector(".neko").getBoundingClientRect();
+        const stakeRect = document.querySelector(".aaveStake").getBoundingClientRect();
+        
         if (
           innerBoxRect.left + 50 < leaveRoom2.right &&
           innerBoxRect.right < leaveRoom2.left + 170 &&
@@ -588,7 +592,7 @@ export default function Game() {
         ) {
           setShowRoom2(false);
           setShowRoom1(true);
-          setInnerBoxPosition({ top: 400, left: 600 });
+          setInnerBoxPosition({ top: 230, left: 600 });
           console.log("leave room 2");
         }
 
@@ -612,26 +616,49 @@ export default function Game() {
           setNekoText(false);
           setShowNeko(false);
         }
+
+        if (
+          innerBoxRect.left < stakeRect.right &&
+          innerBoxRect.right > stakeRect.left &&
+          innerBoxRect.top < stakeRect.bottom &&
+          innerBoxRect.bottom > stakeRect.top
+        ) {
+          setStakeText(true);
+        }
+        if (
+          !(
+            innerBoxRect.left < stakeRect.right &&
+            innerBoxRect.right > stakeRect.left &&
+            innerBoxRect.top < stakeRect.bottom &&
+            innerBoxRect.bottom > stakeRect.top
+          )
+        ) {
+          setStakeText(false);
+          setShowStaking(false);
+        }
+
+        
       }
-
-
 
       checkCollision();
     }, [innerBoxPosition]);
 
     return (
       <div className="container">
+
+
+
         <div className="box2" style={{ height: BOX_HEIGHT, width: BOX_WIDTH }}>
           <div className="leaveRoom2">
             <span>
-              Room - 1{" "}
+       
               <span
                 style={{
                   fontSize: "1.8rem",
                   fontWeight: "bold",
                 }}
               >
-                &#11167;
+               
               </span>
             </span>
           </div>
@@ -649,6 +676,9 @@ export default function Game() {
               backgroundPosition: "0 -10px",
             }}
           ></div>
+
+
+          <div className="aaveStake"/>
 
 {nekoText && (
             <div className="textBox">
@@ -691,7 +721,32 @@ export default function Game() {
           alt="neko"
         />
 
-          <div className="bottom-right-div"></div>
+        {showStaking && <><button
+                  className="modalButton"
+                  onClick={() => setShowStaking(false)}
+                  style={{position:"absolute", top:"0px", right:"0px",zIndex:"999"}}
+                >
+                  Close
+                </button> <AaveStake/>
+                  
+                </>
+        }
+
+        {stakeText && (
+            <div className="textBox">
+              <div className="typedOutWrapper">
+                <div className="typedOut"> Look at the staking screen?</div>{" "}
+              </div>
+              <div className="textSelect" onClick={() => Stake()}>
+                {" "}
+                Okay{" "}
+              </div>
+              <div className="textSelect2" onClick={() => setStakeText(false)}>
+                {" "}
+                No thanks{" "}
+              </div>{" "}
+            </div>
+          )}
         </div>
       </div>
     );
