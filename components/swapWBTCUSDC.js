@@ -294,7 +294,210 @@ export function WBTCUSDCSwap({ setPoolView, setWBTCUSDC }) {
   );
 }
 
-export function WBTCUSDCDeposit() {
+export function WBTCUSDCDeposit({ setPoolView, setWBTCUSDC }) {
+  const [WBTCDepositAmount, setWBTCDepositAmount] = useState(0);
+  const [USDCDepositAmount, setUSDCDepositAmount] = useState(0);
+  const [nekoWBTCLPBalance, setNekoWBTCLPBalance] = useState(0);
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
+
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const WBTCPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WBTCPool"][
+          contractAddresses[chainId]["WBTCPool"].length - 1
+        ]
+      : null;
+  const WBTCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WBTC"][
+          contractAddresses[chainId]["WBTC"].length - 1
+        ]
+      : null;
+  const USDCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["USDC"][
+          contractAddresses[chainId]["USDC"].length - 1
+        ]
+      : null;
+  const dispatch = useNotification();
+  //****************************************************************/
+  //-----------------------NOTIFICATION-----------------------------
+  //****************************************************************/
+
+  const successNotification = msg => {
+    dispatch({
+      type: "success",
+      message: `${msg} Successfully! `,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+
+  const failureNotification = msg => {
+    dispatch({
+      type: "error",
+      message: `${msg} ( View console for more info )`,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+  //****************************************************************/
+  //--------------------END NOTIFICATION-----------------------------
+  //****************************************************************/
+  const addLiquidityToPool = async () => {
+    if (WBTCDepositAmount <= 0 || USDCDepositAmount <= 0) {
+      failureNotification(
+        "Values of both the assets should be greater than 0!!"
+      );
+      return;
+    }
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: USDCTestTokenContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value <= USDCDepositAmount);
+          if (value <= USDCDepositAmount) {
+            failureNotification("You do not have enough funds of USDC");
+            return;
+          }
+          console.log("balance usdc : ", data.toString());
+        },
+      });
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: WBTCTestTokenContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value <= WBTCDepositAmount);
+          if (value <= WBTCDepositAmount) {
+            failureNotification("You do not have enough funds of WBTC");
+            return;
+          }
+          console.log("balance ether : ", data.toString());
+        },
+      });
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: WBTCTestTokenContractAddress,
+          functionName: "approve",
+          params: {
+            spender: WBTCPoolContractAddress,
+            amount: ethers.utils.parseEther(WBTCDepositAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          console.log("approve wbtc", data);
+        },
+      });
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: USDCTestTokenContractAddress,
+          functionName: "approve",
+          params: {
+            spender: WBTCPoolContractAddress,
+            amount: ethers.utils.parseEther(USDCDepositAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          console.log("approve usdc", data);
+        },
+      });
+
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress: WBTCPoolContractAddress,
+          functionName: "addLiquidity",
+          params: {
+            token0Amount: ethers.utils.parseEther(USDCDepositAmount).toString(),
+            token1Amount: ethers.utils.parseEther(WBTCDepositAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          //   console.log("swap", data);
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan")
+            } ) `
+          );
+          setPoolView(true);
+          setWBTCUSDC(false);
+          await data.wait(1);
+          successNotification(`Assets Deposited `);
+        },
+      });
+    }
+  };
+  const getDEXLPBalanceOfUser = async () => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: WBTCPoolContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          setNekoWBTCLPBalance(value);
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    getDEXLPBalanceOfUser();
+  }, [account]);
   return (
     <>
       <h1
@@ -309,7 +512,14 @@ export function WBTCUSDCDeposit() {
           Deposit{" "}
         </div>
 
-        <input className="asset" type="number" />
+        <input
+          className="asset"
+          type="number"
+          onChange={e => {
+            setWBTCDepositAmount(e.target.value);
+          }}
+          value={WBTCDepositAmount}
+        />
         <div className="selectAsset1">
           WBTC
           <img
@@ -325,9 +535,29 @@ export function WBTCUSDCDeposit() {
           />
         </div>
 
-        <input className="asset" type="number" />
-
-        <button className="swapButton"> Deposit </button>
+        <input
+          className="asset"
+          type="number"
+          onChange={e => {
+            setUSDCDepositAmount(e.target.value);
+          }}
+          value={USDCDepositAmount}
+        />
+        <span
+          style={{
+            fontSize: "11.5px",
+            marginLeft: "10px",
+            fontWeight: "600",
+          }}
+          title={nekoWBTCLPBalance}
+        >
+          Your Neko WBTC LP Balance : ~
+          {parseFloat(nekoWBTCLPBalance).toFixed(4)}
+        </span>
+        <button className="swapButton" onClick={addLiquidityToPool}>
+          {" "}
+          Deposit{" "}
+        </button>
       </div>
       <div className="infoPanel">
         <div className="typedOutWrapperInfo">
@@ -358,7 +588,7 @@ export function WBTCUSDCWithdraw() {
       <div className="infoPanel">
         <div className="typedOutWrapperInfo">
           <div className="typedOutInfo">
-            📤 Stop accumulating fees and <br /> claim your WETH and USDC.
+            📤 Stop accumulating fees and <br /> claim your WBTC and USDC.
           </div>
         </div>
       </div>
@@ -588,7 +818,12 @@ export const WBTCUSDCMODAL = ({ setPoolView, setWBTCUSDC }) => {
         {activeTab === 1 && (
           <WBTCUSDCSwap setPoolView={setPoolView} setWBTCUSDC={setWBTCUSDC} />
         )}
-        {activeTab === 2 && <WBTCUSDCDeposit />}
+        {activeTab === 2 && (
+          <WBTCUSDCDeposit
+            setPoolView={setPoolView}
+            setWBTCUSDC={setWBTCUSDC}
+          />
+        )}
         {activeTab === 3 && <WBTCUSDCWithdraw />}
 
         <PoolData />

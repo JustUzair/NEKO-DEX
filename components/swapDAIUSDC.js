@@ -293,7 +293,210 @@ export function DAIUSDCSwap({ setPoolView, setDAIUSDC }) {
   );
 }
 
-export function DAIUSDCDeposit() {
+export function DAIUSDCDeposit({ setPoolView, setDAIUSDC }) {
+  const [DAIDepositAmount, setDAIDepositAmount] = useState(0);
+  const [USDCDepositAmount, setUSDCDepositAmount] = useState(0);
+  const [nekoDAILPBalance, setNekoDAILPBalance] = useState(0);
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
+
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const DAIPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["DAIPool"][
+          contractAddresses[chainId]["DAIPool"].length - 1
+        ]
+      : null;
+  const DAITestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["DAI"][
+          contractAddresses[chainId]["DAI"].length - 1
+        ]
+      : null;
+  const USDCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["USDC"][
+          contractAddresses[chainId]["USDC"].length - 1
+        ]
+      : null;
+  const dispatch = useNotification();
+  //****************************************************************/
+  //-----------------------NOTIFICATION-----------------------------
+  //****************************************************************/
+
+  const successNotification = msg => {
+    dispatch({
+      type: "success",
+      message: `${msg} Successfully! `,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+
+  const failureNotification = msg => {
+    dispatch({
+      type: "error",
+      message: `${msg} ( View console for more info )`,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+  //****************************************************************/
+  //--------------------END NOTIFICATION-----------------------------
+  //****************************************************************/
+  const addLiquidityToPool = async () => {
+    if (DAIDepositAmount <= 0 || USDCDepositAmount <= 0) {
+      failureNotification(
+        "Values of both the assets should be greater than 0!!"
+      );
+      return;
+    }
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: USDCTestTokenContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value <= USDCDepositAmount);
+          if (value <= USDCDepositAmount) {
+            failureNotification("You do not have enough funds of USDC");
+            return;
+          }
+          console.log("balance usdc : ", data.toString());
+        },
+      });
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: DAITestTokenContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value <= DAIDepositAmount);
+          if (value <= DAIDepositAmount) {
+            failureNotification("You do not have enough funds of WETH");
+            return;
+          }
+          console.log("balance ether : ", data.toString());
+        },
+      });
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: DAITestTokenContractAddress,
+          functionName: "approve",
+          params: {
+            spender: DAIPoolContractAddress,
+            amount: ethers.utils.parseEther(DAIDepositAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          console.log("approve weth", data);
+        },
+      });
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: USDCTestTokenContractAddress,
+          functionName: "approve",
+          params: {
+            spender: DAIPoolContractAddress,
+            amount: ethers.utils.parseEther(USDCDepositAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          console.log("approve usdc", data);
+        },
+      });
+
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress: DAIPoolContractAddress,
+          functionName: "addLiquidity",
+          params: {
+            token0Amount: ethers.utils.parseEther(USDCDepositAmount).toString(),
+            token1Amount: ethers.utils.parseEther(DAIDepositAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          //   console.log("swap", data);
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan")
+            } ) `
+          );
+          setPoolView(true);
+          setDAIUSDC(false);
+          await data.wait(1);
+          successNotification(`Assets Deposited `);
+        },
+      });
+    }
+  };
+  const getDEXLPBalanceOfUser = async () => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: DAIPoolContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          setNekoDAILPBalance(value);
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    getDEXLPBalanceOfUser();
+  }, [account]);
   return (
     <>
       <h1
@@ -308,7 +511,14 @@ export function DAIUSDCDeposit() {
           Deposit{" "}
         </div>
 
-        <input className="asset" type="number" />
+        <input
+          className="asset"
+          type="number"
+          onChange={e => {
+            setDAIDepositAmount(e.target.value);
+          }}
+          value={DAIDepositAmount}
+        />
         <div className="selectAsset1">
           DAI
           <img
@@ -324,9 +534,28 @@ export function DAIUSDCDeposit() {
           />
         </div>
 
-        <input className="asset" type="number" />
-
-        <button className="swapButton"> Deposit </button>
+        <input
+          className="asset"
+          type="number"
+          onChange={e => {
+            setUSDCDepositAmount(e.target.value);
+          }}
+          value={USDCDepositAmount}
+        />
+        <span
+          style={{
+            fontSize: "11.5px",
+            marginLeft: "10px",
+            fontWeight: "600",
+          }}
+          title={nekoDAILPBalance}
+        >
+          Your Neko DAI LP Balance : ~{parseFloat(nekoDAILPBalance).toFixed(4)}
+        </span>
+        <button className="swapButton" onClick={addLiquidityToPool}>
+          {" "}
+          Deposit{" "}
+        </button>
       </div>
       <div className="infoPanel">
         <div className="typedOutWrapperInfo">
@@ -442,7 +671,10 @@ export function PoolData() {
           <table>
             <tbody>
               <tr>
-                <td style={{ paddingLeft: 0 }} align="left"></td>
+                <td style={{ paddingLeft: 0 }} align="left">
+                  {" "}
+                  Pool
+                </td>
                 <td style={{ paddingLeft: 0 }} align="right">
                   {DAIPoolContractAddress ? (
                     <a
@@ -587,7 +819,9 @@ export const DAIUSDCMODAL = ({ setPoolView, setDAIUSDC }) => {
         {activeTab === 1 && (
           <DAIUSDCSwap setPoolView={setPoolView} setDAIUSDC={setDAIUSDC} />
         )}
-        {activeTab === 2 && <DAIUSDCDeposit />}
+        {activeTab === 2 && (
+          <DAIUSDCDeposit setPoolView={setPoolView} setDAIUSDC={setDAIUSDC} />
+        )}
         {activeTab === 3 && <DAIUSDCWithdraw />}
 
         <PoolData />
