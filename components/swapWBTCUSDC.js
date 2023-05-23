@@ -114,7 +114,7 @@ export function WBTCUSDCSwap({ setPoolView, setWBTCUSDC }) {
       //   );
       await runContractFunction({
         params: {
-          abi: DEXAbi,
+          abi: ierc20Abi,
           contractAddress:
             slot1Symbol === "USDC"
               ? USDCTestTokenContractAddress
@@ -145,7 +145,7 @@ export function WBTCUSDCSwap({ setPoolView, setWBTCUSDC }) {
       });
       await runContractFunction({
         params: {
-          abi: DEXAbi,
+          abi: ierc20Abi,
           contractAddress:
             slot1Symbol === "USDC"
               ? USDCTestTokenContractAddress

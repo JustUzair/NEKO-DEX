@@ -112,7 +112,7 @@ export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
       //   );
       await runContractFunction({
         params: {
-          abi: DEXAbi,
+          abi: ierc20Abi,
           contractAddress:
             slot1Symbol === "USDC"
               ? USDCTestTokenContractAddress
@@ -143,7 +143,7 @@ export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
       });
       await runContractFunction({
         params: {
-          abi: DEXAbi,
+          abi: ierc20Abi,
           contractAddress:
             slot1Symbol === "USDC"
               ? USDCTestTokenContractAddress
@@ -291,7 +291,152 @@ export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
   );
 }
 
-export function WETHUSDCDeposit() {
+export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
+  const ETHPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["ETHPool"][
+          contractAddresses[chainId]["ETHPool"].length - 1
+        ]
+      : null;
+  const WETHTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WETH"][
+          contractAddresses[chainId]["WETH"].length - 1
+        ]
+      : null;
+  const USDCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["USDC"][
+          contractAddresses[chainId]["USDC"].length - 1
+        ]
+      : null;
+  const dispatch = useNotification();
+  //****************************************************************/
+  //-----------------------NOTIFICATION-----------------------------
+  //****************************************************************/
+
+  const successNotification = msg => {
+    dispatch({
+      type: "success",
+      message: `${msg} Successfully! `,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+
+  const failureNotification = msg => {
+    dispatch({
+      type: "error",
+      message: `${msg} ( View console for more info )`,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+  //****************************************************************/
+  //--------------------END NOTIFICATION-----------------------------
+  //****************************************************************/
+  //   const addLiquidityToPool = async () => {
+  //     if (!isWeb3Enabled) enableWeb3();
+  //     if (account) {
+  //       await runContractFunction({
+  //         params: {
+  //           abi: DEXAbi,
+  //           contractAddress: USDCTestTokenContractAddress,
+  //           functionName: "balanceOf",
+  //           params: {
+  //             account,
+  //           },
+  //         },
+  //         onError: error => {
+  //           console.error(error);
+  //           failureNotification(error.message);
+  //         },
+  //         onSuccess: data => {
+  //           const value = ethers.utils.formatUnits(data.toString(), "ether");
+  //           //   console.log(`ETHER : ${ether}`);
+  //           console.log(value <= 0);
+  //           if (value <= 0) {
+  //             failureNotification("You do not have enough funds of Asset 1");
+  //             return;
+  //           }
+  //           console.log("balance usdc : ", data.toString());
+  //         },
+  //       });
+  //       await runContractFunction({
+  //         params: {
+  //           abi: DEXAbi,
+  //           contractAddress:
+  //             slot1Symbol === "USDC"
+  //               ? USDCTestTokenContractAddress
+  //               : WETHTestTokenContractAddress,
+  //           functionName: "approve",
+  //           params: {
+  //             spender: ETHPoolContractAddress,
+  //             amount: ethers.utils.parseEther(firstSlotInput).toString(),
+  //           },
+  //         },
+  //         onError: error => {
+  //           console.error(error);
+  //           failureNotification(error.message);
+  //         },
+  //         onSuccess: data => {
+  //           console.log("approve", data);
+  //           console.log(
+  //             `First slot input in wei : `,
+  //             ethers.utils.parseEther(firstSlotInput.toString()).toString()
+  //           );
+  //         },
+  //       });
+  //       //   console.log(
+  //       //     `TOKEN 0 : `,
+  //       //     ethers.utils.parseEther(firstSlotInput).toString()
+  //       //   );
+  //       //   console.log(
+  //       //     `TOKEN 1 : `,
+  //       //     ethers.utils.parseEther(secondSlotOutput).toString()
+  //       //   );
+  //       //   console.log(Math.floor(secondSlotOutput).toString());
+  //       await runContractFunction({
+  //         params: {
+  //           abi: DEXAbi,
+  //           contractAddress: ETHPoolContractAddress,
+  //           functionName: "swap",
+  //           params:
+  //             slot1Symbol === "USDC"
+  //               ? {
+  //                   token0In: ethers.utils.parseEther(firstSlotInput).toString(),
+  //                   token1In: 0,
+  //                   token0OutMin: 0,
+  //                   token1OutMin: 0,
+  //                 }
+  //               : {
+  //                   token0In: 0,
+  //                   token1In: ethers.utils.parseEther(firstSlotInput).toString(),
+  //                   token0OutMin: 0,
+  //                   token1OutMin: 0,
+  //                 },
+  //         },
+  //         onError: error => {
+  //           console.error(error);
+  //           failureNotification(error.message);
+  //         },
+  //         onSuccess: async data => {
+  //           //   console.log("swap", data);
+  //           successNotification(
+  //             `TX : ${data.hash} (View on ${
+  //               (chainId == 80001 && "Mumbai Polygonscan") ||
+  //               (chainId == 137 && "Polygonscan")
+  //             } ) `
+  //           );
+  //           setPoolView(true);
+  //           setWETHUSDC(false);
+  //           await data.wait(1);
+  //           successNotification(`Assets swapped `);
+  //           setFirstSlotInput(0);
+  //         },
+  //       });
+  //     }
+  //   };
   return (
     <>
       <h1
@@ -405,7 +550,7 @@ export function PoolData() {
         },
         onSuccess: data => {
           const ether = ethers.utils.formatUnits(data.toString(), "ether");
-          //   console.log(`ETHER : ${ether}`);
+          console.log(`ETHER : ${ether}`);
           setETHReserve(ether);
         },
       });
@@ -594,7 +739,12 @@ export const WETHUSDCMODAL = ({ setPoolView, setWETHUSDC }) => {
         {activeTab === 1 && (
           <WETHUSDCSwap setPoolView={setPoolView} setWETHUSDC={setWETHUSDC} />
         )}
-        {activeTab === 2 && <WETHUSDCDeposit />}
+        {activeTab === 2 && (
+          <WETHUSDCDeposit
+            setPoolView={setPoolView}
+            setWETHUSDC={setWETHUSDC}
+          />
+        )}
         {activeTab === 3 && <WETHUSDCWithdraw />}
 
         <PoolData />

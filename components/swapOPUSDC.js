@@ -112,7 +112,7 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
       //   );
       await runContractFunction({
         params: {
-          abi: DEXAbi,
+          abi: ierc20Abi,
           contractAddress:
             slot1Symbol === "USDC"
               ? USDCTestTokenContractAddress
@@ -143,7 +143,7 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
       });
       await runContractFunction({
         params: {
-          abi: DEXAbi,
+          abi: ierc20Abi,
           contractAddress:
             slot1Symbol === "USDC"
               ? USDCTestTokenContractAddress

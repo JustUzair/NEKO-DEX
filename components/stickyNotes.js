@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import contractAddresses from "../constants/networkMappings.json";
 import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 import { useNotification } from "web3uikit";
-import testTokenAbi from "../constants/TestTokenAbi.json";
+import ierc20Abi from "../constants/ierc20Abi.json";
 import stickyNotesAbi from "../constants/StickyNotesAbi.json";
 
 export default function StickyNotes() {
@@ -96,7 +96,7 @@ export default function StickyNotes() {
   const NewNote = () => {
     return (
       <>
-        <h1 style={{color:"white"}}> Write a new note</h1>
+        <h1 style={{ color: "white" }}> Write a new note</h1>
         {/* amount to donate */}
         <label> Amount to donate </label>
         <input
@@ -157,7 +157,7 @@ export default function StickyNotes() {
       // approve
       await runContractFunction({
         params: {
-          abi: testTokenAbi,
+          abi: ierc20Abi,
           contractAddress: USDCTestTokenContractAddress,
           functionName: "approve",
           params: { spender: StickyNotesContractAddress, amount: amount },
@@ -227,53 +227,50 @@ export default function StickyNotes() {
   }, [account]);
   return (
     <>
-    
       {StickyNotesContractAddress != null ? (
         <>
           {/* {stickyNotes && <Notes />} */}
           {stickyNotes && (
             <div className="sticky-notes--container">
-              
               {notes.length > 0 ? (
                 notes.map((item, index) => (
                   <>
-                  <div
-                    key={index}
-                    className="note"
-                    style={{
-                      backgroundColor: `${getRandomColorCode()}`,
-                    }}
-                  >
-                    {item.donorAddress.substr(0, 4)}...
-                    {item.donorAddress.substr(-4)} <br />
-                    <span
+                    <div
+                      key={index}
+                      className="note"
                       style={{
-                        fontWeight: "600",
+                        backgroundColor: `${getRandomColorCode()}`,
                       }}
                     >
-                      ${item.donationAmount}
-                    </span>
-                    <br />
-                    <span
-                      style={{
-                        wordWrap: "break-word",
-                        fontSize: "14px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      {item.message}
-                    </span>
-                    
-                  </div>
-                  <div className="infoPanel">
-        <div className="typedOutWrapperInfo">
-          <div className="typedOutInfo">
-          💌 You can leave a message <br/> on a sticky note by donating <br/> $5 or more.
-          </div>
-        </div>
-      </div>
+                      {item.donorAddress.substr(0, 4)}...
+                      {item.donorAddress.substr(-4)} <br />
+                      <span
+                        style={{
+                          fontWeight: "600",
+                        }}
+                      >
+                        ${item.donationAmount}
+                      </span>
+                      <br />
+                      <span
+                        style={{
+                          wordWrap: "break-word",
+                          fontSize: "14px",
+                          fontWeight: "500",
+                        }}
+                      >
+                        {item.message}
+                      </span>
+                    </div>
+                    <div className="infoPanel">
+                      <div className="typedOutWrapperInfo">
+                        <div className="typedOutInfo">
+                          💌 You can leave a message <br /> on a sticky note by
+                          donating <br /> $5 or more.
+                        </div>
+                      </div>
+                    </div>
                   </>
-                  
                 ))
               ) : (
                 <>
@@ -293,7 +290,6 @@ export default function StickyNotes() {
                   >
                     <span
                       style={{
-                        
                         padding: "10px 25px",
                         borderRadius: "20px",
                       }}
@@ -307,9 +303,11 @@ export default function StickyNotes() {
           )}
           {!stickyNotes && (
             // New Note
-            <div style={{marginLeft:"15px"}}>
-              
-              <h1 style={{color: "white", textShadow: "4px 4px 4px black"}}> Write a new note</h1>
+            <div style={{ marginLeft: "15px" }}>
+              <h1 style={{ color: "white", textShadow: "4px 4px 4px black" }}>
+                {" "}
+                Write a new note
+              </h1>
               {/* amount to donate */}
               <label> Amount to donate </label>
               <br />
@@ -335,7 +333,13 @@ export default function StickyNotes() {
               <br />
               <br />
               <br />
-              <button style={{padding:"15px"}} className="modalButton" onClick={postStickyNote}>Donate</button>
+              <button
+                style={{ padding: "15px" }}
+                className="modalButton"
+                onClick={postStickyNote}
+              >
+                Donate
+              </button>
             </div>
           )}
           <button
