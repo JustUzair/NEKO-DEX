@@ -47,24 +47,30 @@ export default function SwapPoolView() {
   const [DAIUSDC, setDAIUSDC] = useState(false);
   const [poolview, setPoolView] = useState(true);
 
+  const [showPoolInfo, setShowPoolInfo] = useState(true);
+
   function viewWETHUSDC() {
     setWETHUSDC(true);
     setPoolView(false);
+    setShowPoolInfo(false);
   }
 
   function viewWBTCUSDC() {
     setWBTCUSDC(true);
     setPoolView(false);
+    setShowPoolInfo(false);
   }
 
   function viewOPUSDC() {
     setOPUSDC(true);
     setPoolView(false);
+    setShowPoolInfo(false);
   }
 
   function viewDAIUSDC() {
     setDAIUSDC(true);
     setPoolView(false);
+    setShowPoolInfo(false);
   }
 
   function viewNone() {
@@ -73,6 +79,7 @@ export default function SwapPoolView() {
     setOPUSDC(false);
     setWBTCUSDC(false);
     setPoolView(true);
+    setShowPoolInfo(false);
   }
 
   return isValidChain ? (
@@ -81,7 +88,7 @@ export default function SwapPoolView() {
       {poolview && (
         <div className="poolView">
           <h1 style={{ color: "white", textShadow: "4px 4px 4px black" }}>
-            Menu
+            NEKO CAFE MENU
             <div
               style={{
                 marginLeft: "50px",
@@ -91,7 +98,7 @@ export default function SwapPoolView() {
             >
               TVL : $15,403,431.20
             </div>
-            <div
+            {/* <div
               style={{
                 display: "inline-block",
                 fontSize: "12px",
@@ -99,7 +106,7 @@ export default function SwapPoolView() {
               }}
             >
               0.03% of all swaps are donated ✨🐱‍🚀
-            </div>
+            </div> */}
           </h1>
 
           <table>
@@ -333,6 +340,14 @@ export default function SwapPoolView() {
           Back
         </button>
       )}
+         {showPoolInfo &&   <div style={{marginTop:"-450px",marginLeft:"500px"}} className="infoPanel">
+        <div className="typedOutWrapperInfo">
+          <div className="typedOutInfo">
+            🔀 Swap tokens in any of our<br/> pools.
+          </div>
+        </div>
+      </div>
+}
     </>
   ) : (
     <>
