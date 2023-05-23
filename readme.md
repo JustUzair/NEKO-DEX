@@ -1,18 +1,13 @@
 # TO DO
 
-`NEKO_DEX.sol`
-1) make a getter function to calculate the amount of LP tokens to be minted.
-2) make a getter function to calcualte the maount of assets to send when burning LP tokens.
-
-`LEADERBOARD`
-1) fix for loop to be more efficient, (remove checking all owners, just check to see if user has a number)
-
 `game.js`
-1) move leaderboard to room 2
-2) move divs for stickynotes and div for DEX. Also set up appropriate borders for the player to not walk through.
-3) add staking contract to room 2
-4) add cats that walk around
+
+1) add aave staking to room 2
+2) add cats that walk around
+3) add estimatee for depositing and withdrawing (requires redeployment of pools to updated contract) <b/> 
+example: if depositing, see estimate of how many LP tokens to be minted <b/>
+if removing liquidity, see the estimated token0 and token1 to be sent
+4) leaderboard contract implementation
 
 `art`
 1) 2nd room
-2) New character sprites (animations for walking up, down, right, left, and idle)
