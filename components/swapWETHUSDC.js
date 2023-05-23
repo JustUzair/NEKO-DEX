@@ -297,6 +297,7 @@ export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
 export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
   const [WETHDepositAmount, setWETHDepositAmount] = useState(0);
   const [USDCDepositAmount, setUSDCDepositAmount] = useState(0);
+  const [nekoETHLPBalance, setNekoETHLPBalance] = useState(0);
   const { runContractFunction } = useWeb3Contract();
   const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
     useMoralis();
@@ -403,7 +404,6 @@ export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
           console.log("balance ether : ", data.toString());
         },
       });
-
       await runContractFunction({
         params: {
           abi: ierc20Abi,
@@ -419,7 +419,25 @@ export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
           failureNotification(error.message);
         },
         onSuccess: data => {
-          console.log("approve", data);
+          console.log("approve weth", data);
+        },
+      });
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: USDCTestTokenContractAddress,
+          functionName: "approve",
+          params: {
+            spender: ETHPoolContractAddress,
+            amount: ethers.utils.parseEther(USDCDepositAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          console.log("approve usdc", data);
         },
       });
 
@@ -427,21 +445,11 @@ export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
         params: {
           abi: DEXAbi,
           contractAddress: ETHPoolContractAddress,
-          functionName: "swap",
-          params:
-            slot1Symbol === "USDC"
-              ? {
-                  token0In: ethers.utils.parseEther(firstSlotInput).toString(),
-                  token1In: 0,
-                  token0OutMin: 0,
-                  token1OutMin: 0,
-                }
-              : {
-                  token0In: 0,
-                  token1In: ethers.utils.parseEther(firstSlotInput).toString(),
-                  token0OutMin: 0,
-                  token1OutMin: 0,
-                },
+          functionName: "addLiquidity",
+          params: {
+            token0Amount: ethers.utils.parseEther(USDCDepositAmount).toString(),
+            token1Amount: ethers.utils.parseEther(WETHDepositAmount).toString(),
+          },
         },
         onError: error => {
           console.error(error);
@@ -458,12 +466,38 @@ export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
           setPoolView(true);
           setWETHUSDC(false);
           await data.wait(1);
-          successNotification(`Assets swapped `);
-          setFirstSlotInput(0);
+          successNotification(`Assets Deposited `);
         },
       });
     }
   };
+  const getDEXLPBalanceOfUser = async () => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: ETHPoolContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          setNekoETHLPBalance(value);
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    getDEXLPBalanceOfUser();
+  }, [account]);
   return (
     <>
       <h1
@@ -509,8 +543,20 @@ export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
           }}
           value={USDCDepositAmount}
         />
-
-        <button className="swapButton"> Deposit </button>
+        <span
+          style={{
+            fontSize: "11.5px",
+            marginLeft: "10px",
+            fontWeight: "600",
+          }}
+          title={nekoETHLPBalance}
+        >
+          Your Neko ETH LP Balance : ~{parseFloat(nekoETHLPBalance).toFixed(4)}
+        </span>
+        <button className="swapButton" onClick={addLiquidityToPool}>
+          {" "}
+          Deposit{" "}
+        </button>
       </div>
 
       <div className="infoPanel">

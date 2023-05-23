@@ -22,7 +22,6 @@ body {
   position: relative;
   background: url("https://i.ibb.co/ZKKVwP8/exportdex.png");
   background-size: cover;
-
 }
 
 .box2 {
@@ -61,7 +60,7 @@ body {
 }
 
 .bottom-right-div {
-  border:1px solid black;
+  border: 1px solid black;
 }
 
 .obstacle {
@@ -81,7 +80,7 @@ body {
 .modal {
   position: absolute;
   top: 0;
-  margin-top:-100px;
+  margin-top: -100px;
   height: 100%;
   width: 100%;
   display: flex;
@@ -126,8 +125,8 @@ body {
   height: 170px;
   display: flex;
   justify-content: center;
-  background-color: rgba(0,0,0,0.7);
-  color:white;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
   border: 2px solid white;
   z-index: 6;
 }
@@ -140,7 +139,7 @@ body {
   height: 170px;
   display: flex;
   justify-content: center;
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0, 0, 0, 0.7);
   border: 2px solid black;
   z-index: 8;
 }
@@ -152,7 +151,7 @@ body {
   border: 1px solid white;
   height: 30px;
   width: 100px;
-  color:white;
+  color: white;
   text-align: center;
   line-height: 1.8;
 }
@@ -161,7 +160,7 @@ body {
   position: absolute;
   top: 120px;
   border: 1px solid white;
-  color:white;
+  color: white;
   height: 30px;
   width: 100px;
   margin-left: 410px;
@@ -174,11 +173,12 @@ body {
   text-shadow: 2px 2px black;
   border: 2px solid black;
   width: 40%;
-  height: 200px;
+  height: 100%;
   border-radius: 5px;
   margin: 10px;
   animation: fadeIn 0.5s;
   background: rgba(170, 51, 106, 0.7);
+  padding-bottom: 10px;
 }
 
 .asset {
@@ -237,7 +237,7 @@ input[type="number"] {
   max-height: 40px;
   position: absolute;
   top: 200px;
-  left:300px;
+  left: 300px;
 
   border: 2px solid green;
 }
@@ -421,7 +421,6 @@ th {
   display: inline-block;
   margin-left: -300px;
   margin-top: 35px;
- 
 }
 
 .typedOut {
@@ -588,7 +587,7 @@ th {
   right: 100px;
   top: 70px;
   height: 108px;
-   /* border: 1px solid #fff; */
+  /* border: 1px solid #fff; */
   /*background: #0a0a0a;
   color: white;
   display: flex; */
@@ -605,8 +604,6 @@ th {
   left: 60px;
   top: 100px;
   height: 100px;
-
-
 
   display: flex;
   justify-content: center;
@@ -792,11 +789,10 @@ th {
   color: #f6aaf1;
 }
 
-
 .aaveStake {
   height: 100px;
   width: 100px;
   border: 2px solid red;
-  margin-top:450px;
+  margin-top: 450px;
   margin-left: 600px;
 }
