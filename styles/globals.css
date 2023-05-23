@@ -20,7 +20,9 @@ body {
 
 .box {
   position: relative;
-  background: url("https://i.ibb.co/fp2FyZz/background.png");
+  background: url("https://i.ibb.co/Y8SJQ9H/exportdex.png");
+  background-size: cover;
+
 }
 
 .box2 {
@@ -35,6 +37,7 @@ body {
   z-index: 5;
   background-repeat: none;
   background-size: cover;
+  border: 5px solid red;
 }
 
 .table1 {
@@ -58,24 +61,41 @@ body {
 }
 
 .bottom-right-div {
+  border:1px solid black;
 }
 
 .obstacle {
   position: absolute;
-  top: 150px;
+  top: 250px;
   left: 115px;
+  border: white 2px solid;
 }
 
 .board {
   position: absolute;
-  top: 100px;
-  left: 530px;
+  top: 150px;
+  left: 320px;
+  border: 2px solid black;
 }
 
 .modal {
   position: absolute;
   top: 0;
-  left: 0;
+  margin-top:-100px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 6;
+  animation: fadeIn 0.5s;
+}
+
+.modalRoom2 {
+  position: absolute;
+  top: 0;
+  margin-top: 100px;
   height: 100%;
   width: 100%;
   display: flex;
@@ -214,8 +234,10 @@ input[type="number"] {
   max-width: 30px;
   max-height: 40px;
   position: absolute;
-  margin-bottom: 350px;
-  margin-right: 90px;
+  top: 100px;
+  left:100px;
+
+  border: 2px solid green;
 }
 
 .worker {
@@ -560,16 +582,16 @@ th {
 
 .leaveRoom1 {
   position: absolute;
-  right: -78px;
-  top: 0;
-  height: 598px;
+  right: 100px;
+  top: 100px;
+  height: 108px;
   border: 1px solid #fff;
   background: #0a0a0a;
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 105px;
+  width: 80px;
   font-weight: bold;
 }
 .leaveRoom1 span {

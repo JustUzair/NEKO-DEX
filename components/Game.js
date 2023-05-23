@@ -107,9 +107,9 @@ export default function Game() {
 
     const [showDEXText, setShowDEXText] = useState(false);
     const [showBoardText, setShowBoardText] = useState(false);
-    const [nekoText, setNekoText] = useState(false);
+    // const [nekoText, setNekoText] = useState(false);
 
-    const [showNeko, setShowNeko] = useState(false);
+    // const [showNeko, setShowNeko] = useState(false);
 
     const [usingModal, setUsingModal] = useState(false);
 
@@ -122,8 +122,8 @@ export default function Game() {
         const { top, left } = innerBoxPosition;
         const maxTop = BOX_HEIGHT - INNER_BOX_SIZE;
         const maxLeft = BOX_WIDTH - INNER_BOX_SIZE;
-        const minTop = 0;
-        const minLeft = 0;
+        const minTop = 30; // 30 is the height of the top bar
+        const minLeft = 0; // 0 is the left position of the left bar
 
         if (!usingModal) {
           switch (keyCode) {
@@ -191,7 +191,7 @@ export default function Game() {
           .querySelector(".leaveRoom1")
           .getBoundingClientRect();
 
-        const catRect = document.querySelector(".neko").getBoundingClientRect();
+        // const catRect = document.querySelector(".neko").getBoundingClientRect();
 
         if (
           !showDEX &&
@@ -248,25 +248,25 @@ export default function Game() {
           setInnerBoxPosition({ top: 400, left: 60 });
           console.log("leave room 1");
         }
-        if (
-          innerBoxRect.left < catRect.right &&
-          innerBoxRect.right > catRect.left &&
-          innerBoxRect.top < catRect.bottom &&
-          innerBoxRect.bottom > catRect.top
-        ) {
-          setNekoText(true);
-        }
-        if (
-          !(
-            innerBoxRect.left < catRect.right &&
-            innerBoxRect.right > catRect.left &&
-            innerBoxRect.top < catRect.bottom &&
-            innerBoxRect.bottom > catRect.top
-          )
-        ) {
-          setNekoText(false);
-          setShowNeko(false);
-        }
+        // if (
+        //   innerBoxRect.left < catRect.right &&
+        //   innerBoxRect.right > catRect.left &&
+        //   innerBoxRect.top < catRect.bottom &&
+        //   innerBoxRect.bottom > catRect.top
+        // ) {
+        //   setNekoText(true);
+        // }
+        // if (
+        //   !(
+        //     innerBoxRect.left < catRect.right &&
+        //     innerBoxRect.right > catRect.left &&
+        //     innerBoxRect.top < catRect.bottom &&
+        //     innerBoxRect.bottom > catRect.top
+        //   )
+        // ) {
+        //   setNekoText(false);
+        //   setShowNeko(false);
+        // }
         if (
           !showDEX &&
           !showBoard &&
@@ -314,10 +314,10 @@ export default function Game() {
       setShowBoardText(false);
     }
 
-    function Neko() {
-      setNekoText(false);
-      setShowNeko(true);
-    }
+    // function Neko() {
+    //   setNekoText(false);
+    //   setShowNeko(true);
+    // }
 
     const DisplayControls = () => {
       return (
@@ -408,7 +408,7 @@ export default function Game() {
             </div>
           )}
 
-          {nekoText && (
+          {/* {nekoText && (
             <div className="textBox">
               <div className="typedOutWrapper">
                 <div className="typedOut"> View the leaderboard?</div>{" "}
@@ -422,7 +422,7 @@ export default function Game() {
                 No thanks{" "}
               </div>{" "}
             </div>
-          )}
+          )} */}
 
           <div className="table1" />
 
@@ -477,7 +477,7 @@ export default function Game() {
           </>
         )}
 
-        {showNeko && (
+        {/* {showNeko && (
           <>
             <div className="modal">
               <div className="modal-content">
@@ -491,15 +491,15 @@ export default function Game() {
               </div>
             </div>
           </>
-        )}
+        )} */}
 
-        <Image
+        {/* <Image
           className="neko"
           src="https://66.media.tumblr.com/tumblr_ma11pbpN0j1rfjowdo1_500.gif"
           width={400}
           height={500}
           alt="neko"
-        />
+        /> */}
 
         <Image className="worker" src={worker} alt="worker" />
       </div>
@@ -511,6 +511,10 @@ export default function Game() {
   const Room2 = () => {
     const BOX_HEIGHT = 600;
     const BOX_WIDTH = 800;
+
+    const [nekoText, setNekoText] = useState(false);
+
+    const [showNeko, setShowNeko] = useState(false);
 
     useEffect(() => {
       function handleKeyPress(event) {
@@ -551,12 +555,19 @@ export default function Game() {
         }
       }
 
+      
+
       window?.addEventListener("keydown", handleKeyPress);
 
       return () => {
         window?.removeEventListener("keydown", handleKeyPress);
       };
     }, [innerBoxPosition]);
+
+    function Neko() {
+      setNekoText(false);
+      setShowNeko(true);
+    }
 
     useEffect(() => {
       function checkCollision() {
@@ -566,6 +577,8 @@ export default function Game() {
         const leaveRoom2 = document
           .querySelector(".leaveRoom2")
           .getBoundingClientRect();
+
+          const catRect = document.querySelector(".neko").getBoundingClientRect();
 
         if (
           innerBoxRect.left + 50 < leaveRoom2.right &&
@@ -578,7 +591,30 @@ export default function Game() {
           setInnerBoxPosition({ top: 400, left: 600 });
           console.log("leave room 2");
         }
+
+
+        if (
+          innerBoxRect.left < catRect.right &&
+          innerBoxRect.right > catRect.left &&
+          innerBoxRect.top < catRect.bottom &&
+          innerBoxRect.bottom > catRect.top
+        ) {
+          setNekoText(true);
+        }
+        if (
+          !(
+            innerBoxRect.left < catRect.right &&
+            innerBoxRect.right > catRect.left &&
+            innerBoxRect.top < catRect.bottom &&
+            innerBoxRect.bottom > catRect.top
+          )
+        ) {
+          setNekoText(false);
+          setShowNeko(false);
+        }
       }
+
+
 
       checkCollision();
     }, [innerBoxPosition]);
@@ -600,6 +636,8 @@ export default function Game() {
             </span>
           </div>
 
+          
+
           <div
             className={`inner-box ${direction}`}
             style={{
@@ -611,6 +649,47 @@ export default function Game() {
               backgroundPosition: "0 -10px",
             }}
           ></div>
+
+{nekoText && (
+            <div className="textBox">
+              <div className="typedOutWrapper">
+                <div className="typedOut"> View the leaderboard?</div>{" "}
+              </div>
+              <div className="textSelect" onClick={() => Neko()}>
+                {" "}
+                Okay{" "}
+              </div>
+              <div className="textSelect2" onClick={() => setNekoText(false)}>
+                {" "}
+                No thanks{" "}
+              </div>{" "}
+            </div>
+          )}
+
+{showNeko && (
+          <>
+          
+            <div style={{marginTop:"0px"}}className="modal">
+              <div className="modal-content">
+                <Leaderboard />
+                <button
+                  className="modalButton"
+                  onClick={() => setShowNeko(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+
+        <Image
+          className="neko"
+          src="https://66.media.tumblr.com/tumblr_ma11pbpN0j1rfjowdo1_500.gif"
+          width={400}
+          height={500}
+          alt="neko"
+        />
 
           <div className="bottom-right-div"></div>
         </div>
