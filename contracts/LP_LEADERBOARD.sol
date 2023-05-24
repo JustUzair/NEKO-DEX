@@ -78,7 +78,7 @@ contract LP_LEADERBOARD {
         require(isLPToken(_token), "Not an approved token");
         require(_amount > 0, "deposit amount must be more than 0");
         require(userLockedBalances[msg.sender][_token] == 0,"already locked");
-        require(userLocks[msg.sender][_token].unlockTime == 0, "already locked"); //redundant but yolo
+        // require(userLocks[msg.sender][_token].unlockTime == 0, "already locked"); //redundant but yolo
         if(addressToUserId[msg.sender] != 0){
             require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "tx failed");
             userLockedBalances[msg.sender][_token] += _amount;
@@ -101,7 +101,7 @@ contract LP_LEADERBOARD {
         require(isLPToken(_token),"address is invalid!"); /// @notice check if token is approved
         uint256 amount = userLockedBalances[msg.sender][_token]; /// @notice get amount of tokens locked
         require(IERC20(_token).transfer(msg.sender, amount),"transfer failed"); /// @notice transfer tokens to user
-        userLocks[msg.sender][_token].unlockTime = block.timestamp; /// @notice set unlock time
+        // userLocks[msg.sender][_token].unlockTime = block.timestamp; /// @notice set unlock time
         uint256 lockTime = userLocks[msg.sender][_token].lockTime; /// @notice get lock time
         uint256 unlockTime = block.timestamp; /// @notice get unlock time
         /// score is calculated by subtracting the unlock time from the lock time, then multiplying by the amount of tokens locked, then dividing by 10 ** 16
@@ -158,6 +158,8 @@ contract LP_LEADERBOARD {
         return scores;
     }
 
-    
+    function getIndividualLockedBalance(address _tokenAddress) public view returns (uint256) {
+        return userLockedBalances[msg.sender][_tokenAddress];
+    }
 
 }
