@@ -31,7 +31,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract LP_LEADERBOARD {
     mapping(address => mapping(address => uint256)) public userLockedBalances; /// @notice user address -> token -> amount
-    mapping(address => mapping(address => lock)) public userLocks; //user address -> token -> lock
+    mapping(address => mapping(address => uint256)) public userLockTimes;  //user address -> token -> lock time
     mapping(uint256 => address) public userIdToAddress; /// @notice userId -> user address
     mapping(address => uint256) public addressToUserId; /// @notice user address -> userId
     uint256 public userIdCounter; /// @notice counter for userIds
@@ -47,11 +47,7 @@ contract LP_LEADERBOARD {
         uint256 score; // user score
     }
 
-    /// @notice lock struct
-    struct lock {
-        uint256 lockTime;// time of lock
-        uint256 unlockTime; // time of unlock
-    }
+
     
     /// @notice constructor
     /// @param _LPTokens array of approved LP tokens
@@ -82,7 +78,7 @@ contract LP_LEADERBOARD {
         if(addressToUserId[msg.sender] != 0){
             require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "tx failed");
             userLockedBalances[msg.sender][_token] += _amount;
-            userLocks[msg.sender][_token].lockTime = block.timestamp;
+            userLockTimes[msg.sender][_token] = block.timestamp;
         }
         else {
             require(IERC20(_token).transferFrom(msg.sender, address(this), _amount), "tx failed");
@@ -90,7 +86,7 @@ contract LP_LEADERBOARD {
             addressToUserId[msg.sender] = userIdCounter_;
             userIdToAddress[userIdCounter_] = msg.sender;
             userLockedBalances[msg.sender][_token]+=_amount;
-            userLocks[msg.sender][_token].lockTime = block.timestamp;
+            userLockTimes[msg.sender][_token] = block.timestamp;
         }
     }
 
@@ -102,7 +98,7 @@ contract LP_LEADERBOARD {
         uint256 amount = userLockedBalances[msg.sender][_token]; /// @notice get amount of tokens locked
         require(IERC20(_token).transfer(msg.sender, amount),"transfer failed"); /// @notice transfer tokens to user
         // userLocks[msg.sender][_token].unlockTime = block.timestamp; /// @notice set unlock time
-        uint256 lockTime = userLocks[msg.sender][_token].lockTime; /// @notice get lock time
+        uint256 lockTime = userLockTimes[msg.sender][_token] = block.timestamp; /// @notice get lock time
         uint256 unlockTime = block.timestamp; /// @notice get unlock time
         /// score is calculated by subtracting the unlock time from the lock time, then multiplying by the amount of tokens locked, then dividing by 10 ** 16
         /// (lock time * amount of tokens locked) / 10 ** 16
@@ -119,7 +115,7 @@ contract LP_LEADERBOARD {
         uint256 estimatedScore = userScores[msg.sender].score;
         for(uint i; i < LPTokens.length; i++){
             address token = LPTokens[i];
-            uint256 lockTime = userLocks[msg.sender][token].lockTime;
+            uint256 lockTime = userLockTimes[msg.sender][token];
             estimatedScore += userLockedBalances[msg.sender][token] * (block.timestamp - lockTime);
         }
        
@@ -138,8 +134,8 @@ contract LP_LEADERBOARD {
             uint256 totalScore;
             for (uint256 j = 0; j < LPTokens.length; j++) {
                 address token = LPTokens[j];
-                uint256 lockTime = userLocks[user][token].lockTime;
-                totalScore += userLockedBalances[user][token] * (block.timestamp - lockTime);
+                uint256 lockTime = userLockTimes[msg.sender][token];
+                totalScore += (userLockedBalances[user][token] * (block.timestamp - lockTime)) / 10 ** 16;
             }
             scores[i - 1] = userScore(user, totalScore);
         }
@@ -155,7 +151,7 @@ contract LP_LEADERBOARD {
             }
         }
 
-        return scores;
+        return scores ;
     }
 
     function getIndividualLockedBalance(address _tokenAddress) public view returns (uint256) {
