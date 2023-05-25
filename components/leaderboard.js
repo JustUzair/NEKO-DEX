@@ -72,8 +72,9 @@ export const Leaderboard = () => {
           
           <br></br>
           <br></br>
+
+          <input style={{marginLeft:"15px"}}className="asset" type="text" placeholder="Amount to Unstake"></input>
           
-          <input style={{marginLeft:"15px"}}className="asset" type="text" placeholder="Amount to Stake"></input>
           <br /> <button style={{marginLeft:"15px"}} className="swapButton">Stake</button>
           
         </div>
@@ -122,10 +123,8 @@ export const Leaderboard = () => {
           </select>
           
           <br></br>
-          <br></br>
-          
-          <input style={{marginLeft:"15px"}}className="asset" type="text" placeholder="Amount to Unstake"></input>
-          <br /> <button style={{marginLeft:"15px"}} className="swapButton">Unstake</button>
+          <br></br> 
+          <br /> <button style={{marginLeft:"15px"}} className="swapButton">Unstake all</button>
         
         </div>
         <Stakes />
