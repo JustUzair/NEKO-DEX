@@ -571,7 +571,166 @@ export function WBTCUSDCDeposit({ setPoolView, setWBTCUSDC }) {
   );
 }
 
-export function WBTCUSDCWithdraw() {
+export function WBTCUSDCWithdraw({ setPoolView, setWBTCUSDC }) {
+  const [nekoBTCLPWithdrawAmount, setNekoBTCLPWithdrawAmount] = useState(0);
+  const [nekoBTCLPBalance, setNekoBTCLPBalance] = useState(0);
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
+
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const WBTCPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WBTCPool"][
+          contractAddresses[chainId]["WBTCPool"].length - 1
+        ]
+      : null;
+  const WBTCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WBTC"][
+          contractAddresses[chainId]["WBTC"].length - 1
+        ]
+      : null;
+
+  const dispatch = useNotification();
+  //****************************************************************/
+  //-----------------------NOTIFICATION-----------------------------
+  //****************************************************************/
+
+  const successNotification = msg => {
+    dispatch({
+      type: "success",
+      message: `${msg} Successfully! `,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+
+  const failureNotification = msg => {
+    dispatch({
+      type: "error",
+      message: `${msg} ( View console for more info )`,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+  //****************************************************************/
+  //--------------------END NOTIFICATION-----------------------------
+  //****************************************************************/
+  const withdrawLiquidityFromPool = async () => {
+    if (nekoBTCLPWithdrawAmount <= 0) {
+      failureNotification(
+        "Values of the lp tokens to withdraw should be greater than 0!!"
+      );
+      return;
+    }
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      let enoughLiquidity = false;
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: WBTCPoolContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value < nekoBTCLPWithdrawAmount);
+          if (value < nekoBTCLPWithdrawAmount) {
+            failureNotification("You do not have enough funds of WETH LP");
+            return;
+          }
+          enoughLiquidity = true;
+          console.log("balance ether : ", data.toString());
+        },
+      });
+      if (!enoughLiquidity) return;
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: WBTCPoolContractAddress,
+          functionName: "approve",
+          params: {
+            spender: WBTCPoolContractAddress,
+            amount: ethers.utils.parseEther(nekoBTCLPWithdrawAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          console.log("approve lp", data);
+        },
+      });
+
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress: WBTCPoolContractAddress,
+          functionName: "removeLiquidity",
+          params: {
+            liquidity: ethers.utils
+              .parseEther(nekoBTCLPWithdrawAmount)
+              .toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          //   console.log("swap", data);
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan")
+            } ) `
+          );
+          setPoolView(true);
+          setWBTCUSDC(false);
+          await data.wait(1);
+          successNotification(`Assets Withdrawn `);
+        },
+      });
+    }
+  };
+  const getDEXLPBalanceOfUser = async () => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: WBTCPoolContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          setNekoBTCLPBalance(value);
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    getDEXLPBalanceOfUser();
+  }, [account]);
   return (
     <>
       <div className="swapBox">
@@ -580,10 +739,49 @@ export function WBTCUSDCWithdraw() {
           Withdraw{" "}
         </div>
 
-        <input className="asset" type="number" />
+        <input
+          className="asset"
+          type="number"
+          onChange={e => {
+            setNekoBTCLPWithdrawAmount(e.target.value);
+          }}
+          value={nekoBTCLPWithdrawAmount}
+        />
         <div className="selectAsset1">LP Tokens</div>
+        <span
+          style={{
+            fontSize: "11.5px",
+            marginLeft: "10px",
+            fontWeight: "600",
+            cursor: "pointer",
+          }}
+          title={nekoBTCLPBalance}
+        >
+          WBTC LP Balance : ~{parseFloat(nekoBTCLPBalance).toFixed(2)}
+        </span>
 
-        <button className="swapButton"> Withdraw </button>
+        <span
+          style={{
+            fontSize: "11.5px",
+            marginLeft: "10px",
+            fontWeight: "600",
+            cursor: "pointer",
+            background: "blueviolet",
+            padding: "3px 5px",
+            borderRadius: "4px",
+            color: "white",
+          }}
+          title={nekoBTCLPBalance}
+          onClick={e => {
+            setNekoBTCLPWithdrawAmount(nekoBTCLPBalance);
+          }}
+        >
+          Withdraw All ?
+        </span>
+        <button className="swapButton" onClick={withdrawLiquidityFromPool}>
+          {" "}
+          Withdraw{" "}
+        </button>
       </div>
       <div className="infoPanel">
         <div className="typedOutWrapperInfo">
@@ -824,7 +1022,12 @@ export const WBTCUSDCMODAL = ({ setPoolView, setWBTCUSDC }) => {
             setWBTCUSDC={setWBTCUSDC}
           />
         )}
-        {activeTab === 3 && <WBTCUSDCWithdraw />}
+        {activeTab === 3 && (
+          <WBTCUSDCWithdraw
+            setPoolView={setPoolView}
+            setWBTCUSDC={setWBTCUSDC}
+          />
+        )}
 
         <PoolData />
       </div>

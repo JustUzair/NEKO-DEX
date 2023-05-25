@@ -571,7 +571,166 @@ export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
   );
 }
 
-export function WETHUSDCWithdraw() {
+export function WETHUSDCWithdraw({ setPoolView, setWETHUSDC }) {
+  const [nekoETHLPWithdrawAmount, setNekoETHLPWithdrawAmount] = useState(0);
+  const [nekoETHLPBalance, setNekoETHLPBalance] = useState(0);
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
+
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const ETHPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["ETHPool"][
+          contractAddresses[chainId]["ETHPool"].length - 1
+        ]
+      : null;
+  const WETHTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WETH"][
+          contractAddresses[chainId]["WETH"].length - 1
+        ]
+      : null;
+
+  const dispatch = useNotification();
+  //****************************************************************/
+  //-----------------------NOTIFICATION-----------------------------
+  //****************************************************************/
+
+  const successNotification = msg => {
+    dispatch({
+      type: "success",
+      message: `${msg} Successfully! `,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+
+  const failureNotification = msg => {
+    dispatch({
+      type: "error",
+      message: `${msg} ( View console for more info )`,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+  //****************************************************************/
+  //--------------------END NOTIFICATION-----------------------------
+  //****************************************************************/
+  const withdrawLiquidityFromPool = async () => {
+    if (nekoETHLPWithdrawAmount <= 0) {
+      failureNotification(
+        "Values of the lp tokens to withdraw should be greater than 0!!"
+      );
+      return;
+    }
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      let enoughLiquidity = false;
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: ETHPoolContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value < nekoETHLPWithdrawAmount);
+          if (value < nekoETHLPWithdrawAmount) {
+            failureNotification("You do not have enough funds of WETH LP");
+            return;
+          }
+          enoughLiquidity = true;
+          console.log("balance ether : ", data.toString());
+        },
+      });
+      if (!enoughLiquidity) return;
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: ETHPoolContractAddress,
+          functionName: "approve",
+          params: {
+            spender: ETHPoolContractAddress,
+            amount: ethers.utils.parseEther(nekoETHLPWithdrawAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          console.log("approve lp", data);
+        },
+      });
+
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress: ETHPoolContractAddress,
+          functionName: "removeLiquidity",
+          params: {
+            liquidity: ethers.utils
+              .parseEther(nekoETHLPWithdrawAmount)
+              .toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          //   console.log("swap", data);
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan")
+            } ) `
+          );
+          setPoolView(true);
+          setWETHUSDC(false);
+          await data.wait(1);
+          successNotification(`Assets Withdrawn `);
+        },
+      });
+    }
+  };
+  const getDEXLPBalanceOfUser = async () => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: ETHPoolContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          setNekoETHLPBalance(value);
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    getDEXLPBalanceOfUser();
+  }, [account]);
   return (
     <>
       <div className="swapBox">
@@ -580,10 +739,50 @@ export function WETHUSDCWithdraw() {
           Withdraw{" "}
         </div>
 
-        <input className="asset" type="number" />
-        <div className="selectAsset1">LP Tokens</div>
+        <input
+          className="asset"
+          type="number"
+          onChange={e => {
+            setNekoETHLPWithdrawAmount(e.target.value);
+          }}
+          value={nekoETHLPWithdrawAmount}
+        ></input>
+        <div className="selectAsset1">LP Tokens </div>
 
-        <button className="swapButton"> Withdraw </button>
+        <span
+          style={{
+            fontSize: "11.5px",
+            marginLeft: "10px",
+            fontWeight: "600",
+            cursor: "pointer",
+          }}
+          title={nekoETHLPBalance}
+        >
+          ETH LP Balance : ~{parseFloat(nekoETHLPBalance).toFixed(2)}
+        </span>
+
+        <span
+          style={{
+            fontSize: "11.5px",
+            marginLeft: "10px",
+            fontWeight: "600",
+            cursor: "pointer",
+            background: "blueviolet",
+            padding: "3px 5px",
+            borderRadius: "4px",
+            color: "white",
+          }}
+          title={nekoETHLPBalance}
+          onClick={e => {
+            setNekoETHLPWithdrawAmount(nekoETHLPBalance);
+          }}
+        >
+          Withdraw All ?
+        </span>
+        <button className="swapButton" onClick={withdrawLiquidityFromPool}>
+          {" "}
+          Withdraw{" "}
+        </button>
       </div>
       <div className="infoPanel">
         <div className="typedOutWrapperInfo">
@@ -832,7 +1031,12 @@ export const WETHUSDCMODAL = ({ setPoolView, setWETHUSDC }) => {
             setWETHUSDC={setWETHUSDC}
           />
         )}
-        {activeTab === 3 && <WETHUSDCWithdraw />}
+        {activeTab === 3 && (
+          <WETHUSDCWithdraw
+            setPoolView={setPoolView}
+            setWETHUSDC={setWETHUSDC}
+          />
+        )}
 
         <PoolData />
       </div>

@@ -260,6 +260,7 @@ export function DAIUSDCSwap({ setPoolView, setDAIUSDC }) {
             setFirstSlotInput(e.target.value);
             getBasedAssetPrice(e.target.value);
           }}
+          value={firstSlotInput}
         />
         <div className="selectAsset1">
           {slot1Symbol}
@@ -397,7 +398,7 @@ export function DAIUSDCDeposit({ setPoolView, setDAIUSDC }) {
           //   console.log(`ETHER : ${ether}`);
           console.log(value <= DAIDepositAmount);
           if (value <= DAIDepositAmount) {
-            failureNotification("You do not have enough funds of WETH");
+            failureNotification("You do not have enough funds of DAI");
             return;
           }
           console.log("balance ether : ", data.toString());
@@ -569,7 +570,166 @@ export function DAIUSDCDeposit({ setPoolView, setDAIUSDC }) {
   );
 }
 
-export function DAIUSDCWithdraw() {
+export function DAIUSDCWithdraw({ setPoolView, setDAIUSDC }) {
+  const [nekoDAILPWithdrawAmount, setNekoDAILPWithdrawAmount] = useState(0);
+  const [nekoDAILPBalance, setNekoDAILPBalance] = useState(0);
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
+
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const DAIPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["DAIPool"][
+          contractAddresses[chainId]["DAIPool"].length - 1
+        ]
+      : null;
+  const DAITestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["DAI"][
+          contractAddresses[chainId]["DAI"].length - 1
+        ]
+      : null;
+
+  const dispatch = useNotification();
+  //****************************************************************/
+  //-----------------------NOTIFICATION-----------------------------
+  //****************************************************************/
+
+  const successNotification = msg => {
+    dispatch({
+      type: "success",
+      message: `${msg} Successfully! `,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+
+  const failureNotification = msg => {
+    dispatch({
+      type: "error",
+      message: `${msg} ( View console for more info )`,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+  //****************************************************************/
+  //--------------------END NOTIFICATION-----------------------------
+  //****************************************************************/
+  const withdrawLiquidityFromPool = async () => {
+    if (nekoDAILPWithdrawAmount <= 0) {
+      failureNotification(
+        "Values of the lp tokens to withdraw should be greater than 0!!"
+      );
+      return;
+    }
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      let enoughLiquidity = false;
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: DAIPoolContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value < nekoDAILPWithdrawAmount);
+          if (value < nekoDAILPWithdrawAmount) {
+            failureNotification("You do not have enough funds of DAI LP");
+            return;
+          }
+          enoughLiquidity = true;
+          console.log("balance ether : ", data.toString());
+        },
+      });
+      if (!enoughLiquidity) return;
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: DAIPoolContractAddress,
+          functionName: "approve",
+          params: {
+            spender: DAIPoolContractAddress,
+            amount: ethers.utils.parseEther(nekoDAILPWithdrawAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          console.log("approve lp", data);
+        },
+      });
+
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress: DAIPoolContractAddress,
+          functionName: "removeLiquidity",
+          params: {
+            liquidity: ethers.utils
+              .parseEther(nekoDAILPWithdrawAmount)
+              .toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          //   console.log("swap", data);
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan")
+            } ) `
+          );
+          setPoolView(true);
+          setDAIUSDC(false);
+          await data.wait(1);
+          successNotification(`Assets Withdrawn `);
+        },
+      });
+    }
+  };
+  const getDEXLPBalanceOfUser = async () => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: DAIPoolContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          setNekoDAILPBalance(value);
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    getDEXLPBalanceOfUser();
+  }, [account]);
   return (
     <>
       <div className="swapBox">
@@ -578,10 +738,49 @@ export function DAIUSDCWithdraw() {
           Withdraw{" "}
         </div>
 
-        <input className="asset" type="number" />
+        <input
+          className="asset"
+          type="number"
+          onChange={e => {
+            setNekoDAILPWithdrawAmount(e.target.value);
+          }}
+          value={nekoDAILPWithdrawAmount}
+        />
         <div className="selectAsset1">LP Tokens</div>
+        <span
+          style={{
+            fontSize: "11.5px",
+            marginLeft: "10px",
+            fontWeight: "600",
+            cursor: "pointer",
+          }}
+          title={nekoDAILPBalance}
+        >
+          DAI LP Balance : ~{parseFloat(nekoDAILPBalance).toFixed(2)}
+        </span>
 
-        <button className="swapButton"> Withdraw </button>
+        <span
+          style={{
+            fontSize: "11.5px",
+            marginLeft: "10px",
+            fontWeight: "600",
+            cursor: "pointer",
+            background: "blueviolet",
+            padding: "3px 5px",
+            borderRadius: "4px",
+            color: "white",
+          }}
+          title={nekoDAILPBalance}
+          onClick={e => {
+            setNekoDAILPWithdrawAmount(nekoDAILPBalance);
+          }}
+        >
+          Withdraw All ?
+        </span>
+        <button className="swapButton" onClick={withdrawLiquidityFromPool}>
+          {" "}
+          Withdraw{" "}
+        </button>
       </div>
       <div className="infoPanel">
         <div className="typedOutWrapperInfo">
@@ -822,7 +1021,9 @@ export const DAIUSDCMODAL = ({ setPoolView, setDAIUSDC }) => {
         {activeTab === 2 && (
           <DAIUSDCDeposit setPoolView={setPoolView} setDAIUSDC={setDAIUSDC} />
         )}
-        {activeTab === 3 && <DAIUSDCWithdraw />}
+        {activeTab === 3 && (
+          <DAIUSDCWithdraw setPoolView={setPoolView} setDAIUSDC={setDAIUSDC} />
+        )}
 
         <PoolData />
       </div>

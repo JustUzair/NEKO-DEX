@@ -571,7 +571,169 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
   );
 }
 
-export function OPUSDCWithdraw() {
+export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
+  const [nekoWMATICLPWithdrawAmount, setNekoWMATICLPWithdrawAmount] =
+    useState(0);
+  const [nekoWMATICLPBalance, setNekoWMATICLPBalance] = useState(0);
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
+
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const WMATICPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WMATICPool"][
+          contractAddresses[chainId]["WMATICPool"].length - 1
+        ]
+      : null;
+  const WMATICTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WMATIC"][
+          contractAddresses[chainId]["WMATIC"].length - 1
+        ]
+      : null;
+
+  const dispatch = useNotification();
+  //****************************************************************/
+  //-----------------------NOTIFICATION-----------------------------
+  //****************************************************************/
+
+  const successNotification = msg => {
+    dispatch({
+      type: "success",
+      message: `${msg} Successfully! `,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+
+  const failureNotification = msg => {
+    dispatch({
+      type: "error",
+      message: `${msg} ( View console for more info )`,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+  //****************************************************************/
+  //--------------------END NOTIFICATION-----------------------------
+  //****************************************************************/
+  const withdrawLiquidityFromPool = async () => {
+    if (nekoWMATICLPWithdrawAmount <= 0) {
+      failureNotification(
+        "Values of the lp tokens to withdraw should be greater than 0!!"
+      );
+      return;
+    }
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      let enoughLiquidity = false;
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: WMATICPoolContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value < nekoWMATICLPWithdrawAmount);
+          if (value < nekoWMATICLPWithdrawAmount) {
+            failureNotification("You do not have enough funds of WMATIC LP");
+            return;
+          }
+          enoughLiquidity = true;
+          console.log("balance ether : ", data.toString());
+        },
+      });
+      if (!enoughLiquidity) return;
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: WMATICPoolContractAddress,
+          functionName: "approve",
+          params: {
+            spender: WMATICPoolContractAddress,
+            amount: ethers.utils
+              .parseEther(nekoWMATICLPWithdrawAmount)
+              .toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          console.log("approve lp", data);
+        },
+      });
+
+      await runContractFunction({
+        params: {
+          abi: DEXAbi,
+          contractAddress: WMATICPoolContractAddress,
+          functionName: "removeLiquidity",
+          params: {
+            liquidity: ethers.utils
+              .parseEther(nekoWMATICLPWithdrawAmount)
+              .toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          //   console.log("swap", data);
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan")
+            } ) `
+          );
+          setPoolView(true);
+          setOPUSDC(false);
+          await data.wait(1);
+          successNotification(`Assets Withdrawn `);
+        },
+      });
+    }
+  };
+  const getDEXLPBalanceOfUser = async () => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: WMATICPoolContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          setNekoWMATICLPBalance(value);
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    getDEXLPBalanceOfUser();
+  }, [account]);
   return (
     <>
       <div className="swapBox">
@@ -580,10 +742,49 @@ export function OPUSDCWithdraw() {
           Withdraw{" "}
         </div>
 
-        <input className="asset" type="number" />
+        <input
+          className="asset"
+          type="number"
+          onChange={e => {
+            setNekoWMATICLPWithdrawAmount(e.target.value);
+          }}
+          value={nekoWMATICLPWithdrawAmount}
+        />
         <div className="selectAsset1">LP Tokens</div>
+        <span
+          style={{
+            fontSize: "11.5px",
+            marginLeft: "10px",
+            fontWeight: "600",
+            cursor: "pointer",
+          }}
+          title={nekoWMATICLPBalance}
+        >
+          ETH LP Balance : ~{parseFloat(nekoWMATICLPBalance).toFixed(2)}
+        </span>
 
-        <button className="swapButton"> Withdraw </button>
+        <span
+          style={{
+            fontSize: "11.5px",
+            marginLeft: "10px",
+            fontWeight: "600",
+            cursor: "pointer",
+            background: "blueviolet",
+            padding: "3px 5px",
+            borderRadius: "4px",
+            color: "white",
+          }}
+          title={nekoWMATICLPBalance}
+          onClick={e => {
+            setNekoWMATICLPWithdrawAmount(nekoWMATICLPBalance);
+          }}
+        >
+          Withdraw All ?
+        </span>
+        <button className="swapButton" onClick={withdrawLiquidityFromPool}>
+          {" "}
+          Withdraw{" "}
+        </button>
       </div>
       <div className="infoPanel">
         <div className="typedOutWrapperInfo">
@@ -829,7 +1030,9 @@ export const OPUSDCMODAL = ({ setPoolView, setOPUSDC }) => {
         {activeTab === 2 && (
           <OPUSDCDeposit setPoolView={setPoolView} setOPUSDC={setOPUSDC} />
         )}
-        {activeTab === 3 && <OPUSDCWithdraw />}
+        {activeTab === 3 && (
+          <OPUSDCWithdraw setPoolView={setPoolView} setOPUSDC={setOPUSDC} />
+        )}
 
         <PoolData />
       </div>
