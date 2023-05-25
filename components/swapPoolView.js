@@ -109,9 +109,9 @@ export default function SwapPoolView() {
             </div> */}
           </h1>
 
-          <table>
-            <tbody>
-              <tr style={{ color: "white", textShadow: "4px 4px 4px black" }}>
+          <table style={{border:"none"}}>
+            <tbody style={{border:"none"}}>
+              <tr style={{ color: "white", textShadow: "4px 4px 4px black", border:"none"}}>
                 <th>Pool</th>
                 <th>Volume</th>
                 <th>TVL</th>
