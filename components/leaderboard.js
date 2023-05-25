@@ -181,6 +181,7 @@ export const Leaderboard = () => {
             } ) `
           );
           await data.wait(1);
+          setNekoPoolLPTokenStakeAmount(0);
           getDEXLPBalanceOfUser();
           getAllTokensAmount();
           getAllStakedTokensAmount();
@@ -400,6 +401,7 @@ export const Leaderboard = () => {
     getDEXLPBalanceOfUser();
     getAllStakedTokensAmount();
     getAllTokensAmount();
+    setNekoPoolLPTokenStakeAmount(0);
   }, [account, selectedOption]);
   const Buttons = () => {
     return (
