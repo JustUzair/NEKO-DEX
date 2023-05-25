@@ -192,6 +192,7 @@ export const Leaderboard = () => {
   };
 
   const getDEXLPBalanceOfUser = async () => {
+    if (PoolContractAddress == null) return;
     if (!isWeb3Enabled) await enableWeb3();
     if (account) {
       await runContractFunction({
@@ -248,6 +249,13 @@ export const Leaderboard = () => {
   };
 
   const getAllStakedTokensAmount = async () => {
+    if (
+      ETHPoolContractAddress == null ||
+      WBTCPoolContractAddress == null ||
+      WMATICPoolContractAddress == null ||
+      DAIPoolContractAddress == null
+    )
+      return;
     await getStakedTokenAmount(ETHPoolContractAddress, setETHLPStakedBalance);
     await getStakedTokenAmount(WBTCPoolContractAddress, setWBTCLPStakedBalance);
     await getStakedTokenAmount(
@@ -295,6 +303,13 @@ export const Leaderboard = () => {
   };
 
   const getAllTokensAmount = async () => {
+    if (
+      ETHPoolContractAddress == null ||
+      WBTCPoolContractAddress == null ||
+      WMATICPoolContractAddress == null ||
+      DAIPoolContractAddress == null
+    )
+      return;
     await getTotalTokenAmount(ETHPoolContractAddress, setETHLPCurrentBalance);
     await getTotalTokenAmount(WBTCPoolContractAddress, setWBTCLPCurrentBalance);
     await getTotalTokenAmount(
@@ -400,6 +415,7 @@ export const Leaderboard = () => {
   // ********************   Leaderboard (Top stakes) ***************************
   //*************************************************************************************** */
   const getLeaderboard = async () => {
+    if (LeaderboardAddress == null) return;
     if (!isWeb3Enabled) await enableWeb3();
     if (account) {
       await runContractFunction({
@@ -434,6 +450,7 @@ export const Leaderboard = () => {
   // ********************  END Leaderboard (Top stakes) ***************************
   //*************************************************************************************** */
   useEffect(() => {
+    //JUMP
     getDEXLPBalanceOfUser();
     getAllStakedTokensAmount();
     getAllTokensAmount();
@@ -841,41 +858,134 @@ export const Leaderboard = () => {
   };
   if (activeTab === 1) {
     return (
-      <div
-        style={{
-          position: "relative",
-          height: "100%",
-        }}
-      >
-        <Top10 />
-        <Buttons />
-      </div>
+      <>
+        {LeaderboardAddress != null ? (
+          <div
+            style={{
+              position: "relative",
+              height: "100%",
+            }}
+          >
+            <Top10 />
+            <Buttons />
+          </div>
+        ) : (
+          <>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "80%",
+                height: "100%",
+                zIndex: "99",
+                color: "white",
+                fontSize: "2rem",
+                wordWrap: "break-word",
+                margin: "0 auto",
+              }}
+            >
+              <span
+                style={{
+                  background: "#FF494A",
+                  padding: "10px 25px",
+                  borderRadius: "20px",
+                }}
+              >
+                No contract found on this network!!!
+              </span>
+            </div>
+          </>
+        )}
+      </>
     );
   }
   if (activeTab == 2) {
     return (
-      <div
-        style={{
-          position: "relative",
-          height: "100%",
-        }}
-      >
-        <StakeLP />
-        <Buttons />
-      </div>
+      <>
+        {LeaderboardAddress != null ? (
+          <div
+            style={{
+              position: "relative",
+              height: "100%",
+            }}
+          >
+            <StakeLP />
+            <Buttons />
+          </div>
+        ) : (
+          <>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "80%",
+                height: "100%",
+                zIndex: "99",
+                color: "white",
+                fontSize: "2rem",
+                wordWrap: "break-word",
+                margin: "0 auto",
+              }}
+            >
+              <span
+                style={{
+                  background: "#FF494A",
+                  padding: "10px 25px",
+                  borderRadius: "20px",
+                }}
+              >
+                No contract found on this network!!!
+              </span>
+            </div>
+          </>
+        )}
+      </>
     );
   }
   if (activeTab == 3) {
     return (
-      <div
-        style={{
-          position: "relative",
-          height: "100%",
-        }}
-      >
-        <UnstakeLP />
-        <Buttons />
-      </div>
+      <>
+        {LeaderboardAddress != null ? (
+          <div
+            style={{
+              position: "relative",
+              height: "100%",
+            }}
+          >
+            <UnstakeLP />
+            <Buttons />
+          </div>
+        ) : (
+          <>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "80%",
+                height: "100%",
+                zIndex: "99",
+                color: "white",
+                fontSize: "2rem",
+                wordWrap: "break-word",
+                margin: "0 auto",
+              }}
+            >
+              <span
+                style={{
+                  background: "#FF494A",
+                  padding: "10px 25px",
+                  borderRadius: "20px",
+                }}
+              >
+                No contract found on this network!!!
+              </span>
+            </div>
+          </>
+        )}
+      </>
     );
   }
 };
