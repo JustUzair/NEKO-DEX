@@ -113,11 +113,13 @@ export default function SwapPoolView() {
             <tbody style={{border:"none"}}>
               <tr style={{ color: "white", textShadow: "4px 4px 4px black", border:"none"}}>
                 <th>Pool</th>
+                <th></th>
                 <th>Volume</th>
                 <th>TVL</th>
               </tr>
               {ETHPoolContractAddress != null ? (
                 <tr onClick={() => viewWETHUSDC()} className="poolSection">
+                  
                   <td>
                     {" "}
                     <div className="poolContent">
@@ -135,8 +137,12 @@ export default function SwapPoolView() {
                       </div>
                     </div>
                   </td>
+                  <td >
+                  <img src="https://i.ibb.co/7bmvCmD/image.png" className="poolPic"/>
+                  </td>
                   <td>-</td>
                   <td>-</td>
+           
                 </tr>
               ) : (
                 <>
@@ -186,6 +192,7 @@ export default function SwapPoolView() {
                       </div>
                     </div>
                   </td>
+                  <td> <img src="https://i.ibb.co/dJx1s8f/image.png" className="poolPic"/></td>
                   <td>-</td>
                   <td>-</td>
                 </tr>
@@ -236,6 +243,7 @@ export default function SwapPoolView() {
                       </div>
                     </div>
                   </td>
+                  <td><img src="https://i.ibb.co/ZSMSdWY/image.png" className="poolPic"></img></td>
                   <td>-</td>
                   <td>-</td>
                 </tr>
@@ -287,6 +295,7 @@ export default function SwapPoolView() {
                       </div>
                     </div>
                   </td>
+                  <td> <img src="https://i.ibb.co/MnX5vJ0/image.png" className="poolPic"></img></td>
                   <td>-</td>
                   <td>-</td>
                 </tr>

@@ -451,7 +451,7 @@ export default function Game() {
         {showBoard && (
           <>
             <div  className="modal">
-              <div style={{border:"10px solid #EED2BD" ,background: "#ECA97C"}} className="modal-content">
+              <div style={{border:"10px solid #954434" ,background: "#ECA97C", borderRadius:"0"}} className="modal-content">
                 <StickyBoard />
                 <button
                 className="modalButton"
