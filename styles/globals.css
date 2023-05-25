@@ -705,8 +705,8 @@ th {
   position: absolute;
   /* margin-top: -120px;
   margin-left: 410px; */
-  top: 10%;
-  right: 10%;
+  top: 2%;
+  right: 5%;
   max-width: 250px;
   color: white;
   font-size: 15px;
@@ -729,8 +729,8 @@ th {
 
 .infoPanelLeaderboard {
   position: absolute;
-  top: 10%;
-  right: 10%;
+  top: 2%;
+  right: 5%;
   max-width: 250px;
   color: white;
   font-size: 15px;
@@ -742,10 +742,9 @@ th {
 
 .infoPanelControls {
   position: absolute;
-  /* margin-top: 400px;
-  margin-left: 410px; */
-  top: 10%;
-  right: 10%;
+
+  top: 2%;
+  right: 5%;
   max-width: 250px;
   color: white;
   font-size: 15px;

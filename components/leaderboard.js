@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 import leaderboardAbi from "../constants/LeaderboardAbi.json";
 export const Leaderboard = () => {
   const [activeTab, setActiveTab] = useState(1);
-
+  const [leaders, setLeaders] = useState([]);
   const [selectedOption, setSelectedOption] = useState("nekoWETHLP");
   const [nekoPoolLPBalance, setNekoPoolLPBalance] = useState(0);
   const [nekoPoolLPTokenStakeAmount, setNekoPoolLPTokenStakeAmount] =
@@ -388,8 +388,6 @@ export const Leaderboard = () => {
           getAllTokensAmount();
           //   setActiveTab(2);
           successNotification(`Assets Withdraw/Un-staked`);
-
-          //JUMP
         },
       });
     }
@@ -397,15 +395,60 @@ export const Leaderboard = () => {
   //*************************************************************************************** */
   // ******************** END Unstake Tokens from of all dex pools ***************************
   //*************************************************************************************** */
+
+  //*************************************************************************************** */
+  // ********************   Leaderboard (Top stakes) ***************************
+  //*************************************************************************************** */
+  const getLeaderboard = async () => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: leaderboardAbi,
+          contractAddress: LeaderboardAddress,
+          functionName: "getLeaderboard",
+          params: {},
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          console.log(data);
+          const leaderArr = [];
+          data.map((item, index) => {
+            console.log(`Item`, item);
+            const leader = {};
+            leader["address"] = item[0];
+            leader["score"] = parseInt(item[1].toString());
+
+            leaderArr.push(leader);
+            console.log(leaderArr);
+          });
+          setLeaders(leaderArr);
+        },
+      });
+    }
+  };
+  //*************************************************************************************** */
+  // ********************  END Leaderboard (Top stakes) ***************************
+  //*************************************************************************************** */
   useEffect(() => {
     getDEXLPBalanceOfUser();
     getAllStakedTokensAmount();
     getAllTokensAmount();
     setNekoPoolLPTokenStakeAmount(0);
+    getLeaderboard();
   }, [account, selectedOption]);
   const Buttons = () => {
     return (
-      <div style={{ padding: "15px" }}>
+      <div
+        style={{
+          padding: "15px",
+          position: "absolute",
+          bottom: "5%",
+        }}
+      >
         {activeTab != 1 && (
           <button className="modalButton" onClick={() => setActiveTab(1)}>
             Leaderboard
@@ -771,56 +814,18 @@ export const Leaderboard = () => {
                 <th>Address</th>
                 <th>Points</th>
               </tr>
-              <tr>
-                <td>1</td>
-                <td>gas-limit.eth</td>
-                <td>1000</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>JustUzair.eth</td>
-                <td>1000</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Inzhagi.eth</td>
-                <td>1000</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>0x1234...5678</td>
-                <td>1000</td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>0x1234...5678</td>
-                <td>1000</td>
-              </tr>
-              <tr>
-                <td>6</td>
-                <td>0x1234...5678</td>
-                <td>1000</td>
-              </tr>
-              <tr>
-                <td>7</td>
-                <td>0x1234...5678</td>
-                <td>1000</td>
-              </tr>
-              <tr>
-                <td>8</td>
-                <td>0x1234...5678</td>
-                <td>1000</td>
-              </tr>
-              <tr>
-                <td>9</td>
-                <td>0x1234...5678</td>
-                <td>1000</td>
-              </tr>
-              <tr>
-                <td>10</td>
-                <td>0x1234...5678</td>
-                <td>1000</td>
-              </tr>
+              {leaders.map((leader, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>
+                    {leader?.address &&
+                      leader?.address.substr(0, 4) +
+                        "..." +
+                        leader?.address.substr(-4)}
+                  </td>
+                  <td>{leader?.score}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -836,27 +841,41 @@ export const Leaderboard = () => {
   };
   if (activeTab === 1) {
     return (
-      <>
+      <div
+        style={{
+          position: "relative",
+          height: "100%",
+        }}
+      >
         <Top10 />
         <Buttons />
-      </>
+      </div>
     );
   }
   if (activeTab == 2) {
     return (
-      <>
+      <div
+        style={{
+          position: "relative",
+          height: "100%",
+        }}
+      >
         <StakeLP />
         <Buttons />
-      </>
+      </div>
     );
   }
   if (activeTab == 3) {
     return (
-      <>
+      <div
+        style={{
+          position: "relative",
+          height: "100%",
+        }}
+      >
         <UnstakeLP />
-
         <Buttons />
-      </>
+      </div>
     );
   }
 };
