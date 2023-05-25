@@ -115,7 +115,8 @@ body {
   width: 700px;
   height: 500px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5);
-  border-radius: 5px;
+  border-radius: 60px;
+
 }
 
 .textBox {
@@ -344,8 +345,15 @@ th {
   height: 60px;
   padding-top: 20px;
   color: white;
-  text-shadow: 0px 0px 10px black, 0px 0px 10px black, 0px 0px 10px black,
-    0px 0px 10px black, 0px 0px 10px black, 0px 0px 10px black;
+  /* text-shadow: 0px 0px 10px black, 0px 0px 10px black, 0px 0px 10px black,
+    0px 0px 10px black, 0px 0px 10px black, 0px 0px 10px black; */
+  
+  }
+
+.poolContent:hover {
+  scale: 1.01;
+  /*slow animation*/
+  transition: 0.5s;
 }
 
 .poolHighlight:hover {
@@ -367,6 +375,7 @@ th {
   background-repeat: no-repeat;
   background-position: top;
   box-shadow: inset 0 0 30px #000000;
+  border-radius: 60px;
 }
 
 .tab-container-2 {
@@ -377,6 +386,7 @@ th {
   background-repeat: no-repeat;
   background-position: top;
   box-shadow: inset 0 0 30px #000000;
+  border-radius: 60px;
 }
 
 .tab-container-3 {
@@ -387,6 +397,8 @@ th {
   background-repeat: no-repeat;
   background-position: top;
   box-shadow: inset 0 0 30px #000000;
+  border-radius: 60px;
+  
 }
 
 .tab-container-4 {
@@ -397,6 +409,7 @@ th {
   background-repeat: no-repeat;
   background-position: top;
   box-shadow: inset 0 0 30px #000000;
+  border-radius: 60px;
 }
 
 .poolTab {
@@ -470,57 +483,55 @@ th {
 
 .poolSection {
   background-size: cover;
-  background: url("https://i.ibb.co/7JLZFRM/image.png");
+  /* background: url("https://i.ibb.co/7JLZFRM/image.png"); */
   background-repeat: no-repeat;
   background-position: center;
-  box-shadow: inset 0 0 20px #000000;
+  /* box-shadow: inset 0 0 20px #000000; */
+  text-shadow: 1px 1px 1px #000000;
+
 }
+
+
 
 .poolSection:hover,
 .poolSection2:hover,
 .poolSection3:hover,
 .poolSection4:hover {
-  transition: all 0.25s;
-  box-shadow: inset 0 0 10px #000000;
+  transition: all 0.1s;
+  /* box-shadow: inset 0 0 10px #000000; */
   cursor: pointer;
-  filter: drop-shadow(2px 4px 6px black) saturate(0.8) hue-rotate(4deg);
+  background: rgba(255, 255, 255, 0.2);
+  /* filter: drop-shadow(2px 4px 6px black) saturate(0.8) hue-rotate(4deg); */
 }
 
 .poolSection2 {
   background-size: cover;
-  background: url("https://i.ibb.co/mS04HmT/image.png");
+  /* background: url("https://i.ibb.co/mS04HmT/image.png"); */
+  
 
   background-repeat: no-repeat;
   background-position: center;
-  box-shadow: inset 0 0 20px #000000;
-}
-
-.poolSection2:hover {
-  box-shadow: inset 0 0 10px #000000;
+  /* box-shadow: inset 0 0 20px #000000; */
+  text-shadow: 1px 1px 1px #000000;
 }
 
 .poolSection3 {
   background-size: cover;
-  background: url("https://i.ibb.co/WBnRDy8/image.png");
+  /* background: url("https://i.ibb.co/WBnRDy8/image.png"); */
   background-repeat: no-repeat;
   background-position: center;
-  box-shadow: inset 0 0 20px #000000;
-}
+  /* box-shadow: inset 0 0 20px #000000;*/
+  text-shadow: 1px 1px 1px #000000;
+} 
 
-.poolSection3:hover {
-  box-shadow: inset 0 0 10px #000000;
-}
 
 .poolSection4 {
   background-size: cover;
-  background: url("https://i.ibb.co/Y02gCXF/image.png");
+  /* background: url("https://i.ibb.co/Y02gCXF/image.png"); */
   background-repeat: no-repeat;
   background-position: center;
-  box-shadow: inset 0 0 20px #000000;
-}
-
-.poolSection4:hover {
-  box-shadow: inset 0 0 10px #000000;
+  /* box-shadow: inset 0 0 20px #000000; */
+  text-shadow: 1px 1px 1px #000000;
 }
 
 .login {
@@ -818,4 +829,25 @@ th {
   border: 2px solid red;
   margin-top: 450px;
   margin-left: 600px;
+}
+
+
+.poolPic {
+  max-height: 50px;
+  max-width: 50px;
+  /*image animates by hovering up and down slightly infintely*/
+  animation: hover 1.4s ease-in-out infinite;
+
+}
+
+@keyframes hover {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
