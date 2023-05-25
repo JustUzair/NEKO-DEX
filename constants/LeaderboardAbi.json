@@ -202,12 +202,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "account",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "",
+        "name": "_tokenAddress",
         "type": "address"
       }
     ],

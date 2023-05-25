@@ -15,6 +15,21 @@ export const Leaderboard = () => {
   const [nekoPoolLPTokenStakeAmount, setNekoPoolLPTokenStakeAmount] =
     useState(0);
 
+  // *****************************  STAKED AMOUNT VARIABLES *****************************
+  const [ethLPStakedBalance, setETHLPStakedBalance] = useState(0);
+  const [ethLPCurrentBalance, setETHLPCurrentBalance] = useState(0);
+
+  const [wbtcLPStakedBalance, setWBTCLPStakedBalance] = useState(0);
+  const [wbtcLPCurrentBalance, setWBTCLPCurrentBalance] = useState(0);
+
+  const [wmaticLPStakedBalance, setWMATICLPStakedBalance] = useState(0);
+  const [wmaticLPCurrentBalance, setWMATICLPCurrentBalance] = useState(0);
+
+  const [daiLPStakedBalance, setDAILPStakedBalance] = useState(0);
+  const [daiLPCurrentBalance, setDAILPCurrentBalance] = useState(0);
+
+  // ***************************** END STAKED AMOUNT VARIABLES  *****************************
+
   const { runContractFunction } = useWeb3Contract();
   const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
     useMoralis();
@@ -27,6 +42,32 @@ export const Leaderboard = () => {
           contractAddresses[chainId]["Leaderboard"].length - 1
         ]
       : null;
+  // -------------------  DEX POOLS ADDRESS    -------------------
+  const ETHPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["ETHPool"][
+          contractAddresses[chainId]["ETHPool"].length - 1
+        ]
+      : null;
+  const WBTCPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WBTCPool"][
+          contractAddresses[chainId]["WBTCPool"].length - 1
+        ]
+      : null;
+  const WMATICPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WMATICPool"][
+          contractAddresses[chainId]["WMATICPool"].length - 1
+        ]
+      : null;
+  const DAIPoolContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["DAIPool"][
+          contractAddresses[chainId]["DAIPool"].length - 1
+        ]
+      : null;
+  // ------------------- END DEX POOLS ADDRESS    -------------------
   let PoolContractAddress =
     chainId in contractAddresses
       ? contractAddresses[chainId]["ETHPool"][
@@ -140,6 +181,9 @@ export const Leaderboard = () => {
             } ) `
           );
           await data.wait(1);
+          getDEXLPBalanceOfUser();
+          getAllTokensAmount();
+          getAllStakedTokensAmount();
           successNotification(`Assets Staked `);
         },
       });
@@ -169,8 +213,193 @@ export const Leaderboard = () => {
       });
     }
   };
+  //*************************************************************************************** */
+  // ********************     GET Staked Balance of all dex pools ***************************
+  //*************************************************************************************** */
+  const getStakedTokenAmount = async (tokenAddress, setAmount) => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: leaderboardAbi,
+          contractAddress: LeaderboardAddress,
+          functionName: "getIndividualLockedBalance",
+          params: {
+            _tokenAddress: tokenAddress,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          //   console.log(
+          //     "Staked balance : ",
+          //     ethers.utils.formatUnits(data.toString(), "ether").toString()
+          //     // data.toString()
+          //   );
+          setAmount(
+            ethers.utils.formatUnits(data.toString(), "ether").toString()
+          );
+        },
+      });
+    }
+  };
+
+  const getAllStakedTokensAmount = async () => {
+    await getStakedTokenAmount(ETHPoolContractAddress, setETHLPStakedBalance);
+    await getStakedTokenAmount(WBTCPoolContractAddress, setWBTCLPStakedBalance);
+    await getStakedTokenAmount(
+      WMATICPoolContractAddress,
+      setWMATICLPStakedBalance
+    );
+    await getStakedTokenAmount(DAIPoolContractAddress, setDAILPStakedBalance);
+  };
+  //*************************************************************************************** */
+  // ********************   END Staked Balance of all dex pools ***************************
+  //*************************************************************************************** */
+
+  //*************************************************************************************** */
+  // ********************     GET Current Balance of all dex pools ***************************
+  //*************************************************************************************** */
+  const getTotalTokenAmount = async (poolAddress, setAmount) => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: poolAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          //   const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(
+          //     `${poolAddress} : ${ethers.utils
+          //       .formatUnits(data.toString(), "ether")
+          //       .toString()}`
+          //   );
+          setAmount(
+            ethers.utils.formatUnits(data.toString(), "ether").toString()
+          );
+        },
+      });
+    }
+  };
+
+  const getAllTokensAmount = async () => {
+    await getTotalTokenAmount(ETHPoolContractAddress, setETHLPCurrentBalance);
+    await getTotalTokenAmount(WBTCPoolContractAddress, setWBTCLPCurrentBalance);
+    await getTotalTokenAmount(
+      WMATICPoolContractAddress,
+      setWMATICLPCurrentBalance
+    );
+    await getTotalTokenAmount(DAIPoolContractAddress, setDAILPCurrentBalance);
+  };
+  //*************************************************************************************** */
+  // ********************   END Current Balance of all dex pools ***************************
+  //*************************************************************************************** */
+
+  //*************************************************************************************** */
+  // ********************   Unstake Tokens from of all dex pools ***************************
+  //*************************************************************************************** */
+
+  const UnstakeToken = async () => {
+    if (!isWeb3Enabled) await enableWeb3();
+
+    if (account) {
+      let assetsStaked = false;
+      const options = {
+        contractAddress: LeaderboardAddress,
+        functionName: `userLockedBalances`,
+        abi: [
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "account",
+                type: "address",
+              },
+              {
+                internalType: "address",
+                name: "_tokenAddress",
+                type: "address",
+              },
+            ],
+            name: "userLockedBalances",
+            outputs: [
+              {
+                internalType: "uint256",
+                name: "",
+                type: "uint256",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+          },
+        ],
+        params: {
+          // FOR PARAMS TO WORK, SET NAME values in Leaderboard Contract's ABI
+
+          account,
+          _tokenAddress: PoolContractAddress,
+        },
+      };
+      const transaction = await Moralis.executeFunction(options);
+      //   console.log(ethers.utils.formatUnits(transaction.toString(), "ether"));
+      const value = ethers.utils.formatUnits(transaction.toString(), "ether");
+      if (value <= 0) {
+        failureNotification("You have no assets staked for this lp token");
+
+        return;
+      } else assetsStaked = true;
+
+      if (!assetsStaked) return;
+      await runContractFunction({
+        params: {
+          abi: leaderboardAbi,
+          contractAddress: LeaderboardAddress,
+          functionName: "withdrawLP",
+          params: {
+            _token: PoolContractAddress,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan")
+            } ) `
+          );
+          await data.wait(1);
+          getDEXLPBalanceOfUser();
+          getAllStakedTokensAmount();
+          getAllTokensAmount();
+          //   setActiveTab(2);
+          successNotification(`Assets Withdraw/Un-staked`);
+
+          //JUMP
+        },
+      });
+    }
+  };
+  //*************************************************************************************** */
+  // ******************** END Unstake Tokens from of all dex pools ***************************
+  //*************************************************************************************** */
   useEffect(() => {
     getDEXLPBalanceOfUser();
+    getAllStakedTokensAmount();
+    getAllTokensAmount();
   }, [account, selectedOption]);
   const Buttons = () => {
     return (
@@ -203,48 +432,23 @@ export const Leaderboard = () => {
   switch (selectedOption) {
     case "nekoWETHLP":
       imageUrl = "https://i.ibb.co/CWfhL6J/image.png";
-      PoolContractAddress =
-        chainId in contractAddresses
-          ? contractAddresses[chainId]["ETHPool"][
-              contractAddresses[chainId]["ETHPool"].length - 1
-            ]
-          : null;
+      PoolContractAddress = ETHPoolContractAddress;
       break;
     case "nekoWBTCLP":
       imageUrl = "https://i.ibb.co/YRYQ82y/image.png";
-      PoolContractAddress =
-        chainId in contractAddresses
-          ? contractAddresses[chainId]["WBTCPool"][
-              contractAddresses[chainId]["WBTCPool"].length - 1
-            ]
-          : null;
+      PoolContractAddress = WBTCPoolContractAddress;
       break;
     case "nekoMATICLP":
       imageUrl = "https://i.ibb.co/ZLW9d4x/image.png";
-      PoolContractAddress =
-        chainId in contractAddresses
-          ? contractAddresses[chainId]["WMATICPool"][
-              contractAddresses[chainId]["WMATICPool"].length - 1
-            ]
-          : null;
+      PoolContractAddress = WMATICPoolContractAddress;
       break;
     case "nekoDAILP":
       imageUrl = "https://i.ibb.co/26fPzxF/image.png";
-      PoolContractAddress =
-        chainId in contractAddresses
-          ? contractAddresses[chainId]["DAIPool"][
-              contractAddresses[chainId]["DAIPool"].length - 1
-            ]
-          : null;
+      PoolContractAddress = DAIPoolContractAddress;
       break;
     default:
       imageUrl = "path/to/default-image.jpg";
-      PoolContractAddress =
-        chainId in contractAddresses
-          ? contractAddresses[chainId]["ETHPool"][
-              contractAddresses[chainId]["ETHPool"].length - 1
-            ]
-          : null;
+      PoolContractAddress = ETHPoolContractAddress;
       break;
   }
 
@@ -320,7 +524,6 @@ export const Leaderboard = () => {
               }}
               value={nekoPoolLPTokenStakeAmount}
             ></input>
-
             <div
               style={{
                 display: "flex",
@@ -443,7 +646,11 @@ export const Leaderboard = () => {
               </select>
             </div>
             <br />{" "}
-            <button style={{ marginLeft: "15px" }} className="swapButton">
+            <button
+              style={{ marginLeft: "15px" }}
+              className="swapButton"
+              onClick={UnstakeToken}
+            >
               Unstake all
             </button>
           </div>
@@ -476,7 +683,11 @@ export const Leaderboard = () => {
       >
         <h4>Your LP Tokens</h4>
 
-        <table>
+        <table
+          style={{
+            cursor: "pointer",
+          }}
+        >
           <tr>
             <th>LP Token</th>
             <th>Unstaked</th>
@@ -484,23 +695,39 @@ export const Leaderboard = () => {
           </tr>
           <tr>
             <td>nekoWETHLP</td>
-            <td>1000</td>
-            <td>1000</td>
+            <td title={ethLPCurrentBalance}>
+              {parseFloat(ethLPCurrentBalance).toFixed(2)}
+            </td>
+            <td title={ethLPStakedBalance}>
+              {parseFloat(ethLPStakedBalance).toFixed(2)}
+            </td>
           </tr>
           <tr>
             <td>nekoWBTCLP</td>
-            <td>1000</td>
-            <td>1000</td>
+            <td title={wbtcLPCurrentBalance}>
+              {parseFloat(wbtcLPCurrentBalance).toFixed(2)}
+            </td>
+            <td title={wbtcLPStakedBalance}>
+              {parseFloat(wbtcLPStakedBalance).toFixed(2)}
+            </td>
           </tr>
           <tr>
             <td>nekoMATICLP</td>
-            <td>1000</td>
-            <td>1000</td>
+            <td title={wmaticLPCurrentBalance}>
+              {parseFloat(wmaticLPCurrentBalance).toFixed(2)}
+            </td>
+            <td title={wmaticLPStakedBalance}>
+              {parseFloat(wmaticLPStakedBalance).toFixed(2)}
+            </td>
           </tr>
           <tr>
             <td>nekoDAILP</td>
-            <td>1000</td>
-            <td>1000</td>
+            <td title={daiLPCurrentBalance}>
+              {parseFloat(daiLPCurrentBalance).toFixed(2)}
+            </td>
+            <td title={daiLPStakedBalance}>
+              {parseFloat(daiLPStakedBalance).toFixed(2)}
+            </td>
           </tr>
         </table>
       </div>
