@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { polygonMumbai } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
+
 import { MoralisProvider } from "react-moralis";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { useEffect } from "react";
@@ -15,9 +16,115 @@ import { useEffect } from "react";
 function MyApp({ Component, pageProps }) {
   useEffect(() => {}, []);
   const router = useRouter();
+  const polygonMainnet = {
+    // OKC Testnet Faucet : https://www.okx.com/en-in/oktc/faucet
+    id: 137,
+    name: "Polygon LlamaNodes",
+    network: "Polygon LlamaNodes",
+
+    rpcUrls: {
+      default: {
+        http: ["https://polygon.llamarpc.com"],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "polygon-mainnet",
+        url: "https://polygonscan.com",
+      },
+    },
+  };
+  const xdcTestnetChain = {
+    // 1) create xinfin wallet - https://wallet.xinfin.network/
+    // 2) use address of xinfin wallet for faucet; faucet link - https://faucet.blocksscan.io/
+    id: 51,
+    name: "XDC Apothem Network",
+    network: "XDC Apothem Network",
+
+    rpcUrls: {
+      default: {
+        http: ["https://rpc.apothem.network"],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "apothem-xinfinscan",
+        url: "https://apothem.xinfinscan.com",
+      },
+    },
+
+    testnet: true,
+  };
+  const xdcChain = {
+    id: 50,
+    name: "XinFin XDC Network",
+    network: "XinFin XDC Network",
+
+    rpcUrls: {
+      default: {
+        http: ["https://rpc.xdcrpc.com"],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "XinFin-xinfinscan",
+        url: "https://xdcscan.io",
+      },
+    },
+
+    testnet: false,
+  };
+  const okcChain = {
+    id: 66,
+    name: "OKXChain Mainnet",
+    network: "OKXChain Mainnet",
+
+    rpcUrls: {
+      default: {
+        http: ["https://exchainrpc.okex.org"],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "okxchain-mainnet",
+        url: "https://www.oklink.com/en/okc",
+      },
+    },
+  };
+  const okcTestnetChain = {
+    // OKC Testnet Faucet : https://www.okx.com/en-in/oktc/faucet
+    id: 65,
+    name: "OKExChain Testnet",
+    network: "OKExChain Testnet",
+
+    rpcUrls: {
+      default: {
+        http: ["https://exchaintestrpc.okex.org"],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "okxchain-testnet",
+        url: "https://www.oklink.com/okexchain-test",
+      },
+    },
+  };
+
   const { chains, provider } = configureChains(
-    [polygonMumbai], // Testnet LINK  address : 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
-    [publicProvider()]
+    [
+      polygonMumbai,
+      xdcTestnetChain,
+      xdcChain,
+      okcChain,
+      okcTestnetChain,
+      polygonMainnet,
+    ], // Testnet LINK  address : 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
+    [
+      jsonRpcProvider({
+        rpc: chain => ({ http: chain.rpcUrls.default.http[0] }),
+      }),
+      publicProvider(),
+    ]
   );
   const { connectors } = getDefaultWallets({
     appName: "Neko-DEX",
