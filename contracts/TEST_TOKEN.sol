@@ -8,9 +8,23 @@ contract TEST_TOKEN is IERC20 {
     uint public totalSupply;
     mapping(address => uint) public balanceOf;
     mapping(address => mapping(address => uint)) public allowance;
-    string public name = "Wrapped Ether";
-    string public symbol = "WETH";
+    string public name;
+    string public symbol;
     uint8 public decimals = 18;
+
+    address public owner;
+
+    address factoryContract;
+
+    mapping(address => bool) public isStaff;
+
+    constructor(string memory _name, string memory _symbol, address _factoryContract){
+        name = _name;
+        symbol = _symbol;
+        owner = msg.sender;
+        isStaff[msg.sender] = true;
+        factoryContract = _factoryContract;
+    }
 
     function transfer(address recipient, uint amount) external returns (bool) {
         balanceOf[msg.sender] -= amount;
@@ -37,15 +51,17 @@ contract TEST_TOKEN is IERC20 {
         return true;
     }
 
-    function mint(uint amount) external {
+    function mint(uint amount) external onlyStaff {
         balanceOf[msg.sender] += amount;
         totalSupply += amount;
         emit Transfer(address(0), msg.sender, amount);
     }
 
-    function burn(uint amount) external {
-        balanceOf[msg.sender] -= amount;
-        totalSupply -= amount;
-        emit Transfer(msg.sender, address(0), amount);
+    function addStaff(address _staff) external onlyStaff {
+        isStaff[_staff] = true;
+    }
+    modifier onlyStaff(){
+        require(isStaff[msg.sender] || msg.sender == factoryContract, "Only staff can call this function");
+        _;
     }
 }
