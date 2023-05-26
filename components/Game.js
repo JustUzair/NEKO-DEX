@@ -429,20 +429,30 @@ export default function Game() {
 
           <div className="table2" />
 
-          <div className="leaveRoom1">
-   
-            
-            
-          </div>
+          <div className="leaveRoom1"></div>
         </div>
 
         {showDEX && (
           <div className="modal">
-            <div className="modal-content">
+            <div
+              className="modal-content"
+              style={{
+                position: "relative",
+              }}
+            >
               <>
                 <SwapPoolView />
               </>
-              <button className="modalButton" onClick={() => setShowDEX(false)}>
+              <button
+                className="modalButton"
+                style={{
+                  position: "absolute",
+                  right: "5%",
+                  top: "5%",
+                  zIndex: "999",
+                }}
+                onClick={() => setShowDEX(false)}
+              >
                 Close
               </button>
             </div>
@@ -450,11 +460,18 @@ export default function Game() {
         )}
         {showBoard && (
           <>
-            <div  className="modal">
-              <div style={{border:"10px solid #954434" ,background: "#ECA97C", borderRadius:"0"}} className="modal-content">
+            <div className="modal">
+              <div
+                style={{
+                  border: "10px solid #954434",
+                  background: "#ECA97C",
+                  borderRadius: "0",
+                }}
+                className="modal-content"
+              >
                 <StickyBoard />
                 <button
-                className="modalButton"
+                  className="modalButton"
                   style={{
                     zIndex: 11,
                     position: "absolute",
@@ -550,8 +567,6 @@ export default function Game() {
         }
       }
 
-      
-
       window?.addEventListener("keydown", handleKeyPress);
 
       return () => {
@@ -578,12 +593,14 @@ export default function Game() {
           .querySelector(".leaveRoom2")
           .getBoundingClientRect();
         const aaveStake = document
-        .querySelector(".aaveStake")
-        .getBoundingClientRect();
+          .querySelector(".aaveStake")
+          .getBoundingClientRect();
 
         const catRect = document.querySelector(".neko").getBoundingClientRect();
-        const stakeRect = document.querySelector(".aaveStake").getBoundingClientRect();
-        
+        const stakeRect = document
+          .querySelector(".aaveStake")
+          .getBoundingClientRect();
+
         if (
           innerBoxRect.left + 50 < leaveRoom2.right &&
           innerBoxRect.right < leaveRoom2.left + 170 &&
@@ -595,7 +612,6 @@ export default function Game() {
           setInnerBoxPosition({ top: 230, left: 600 });
           console.log("leave room 2");
         }
-
 
         if (
           innerBoxRect.left < catRect.right &&
@@ -636,8 +652,6 @@ export default function Game() {
           setStakeText(false);
           setShowStaking(false);
         }
-
-        
       }
 
       checkCollision();
@@ -645,25 +659,17 @@ export default function Game() {
 
     return (
       <div className="container">
-
-
-
         <div className="box2" style={{ height: BOX_HEIGHT, width: BOX_WIDTH }}>
           <div className="leaveRoom2">
             <span>
-       
               <span
                 style={{
                   fontSize: "1.8rem",
                   fontWeight: "bold",
                 }}
-              >
-               
-              </span>
+              ></span>
             </span>
           </div>
-
-          
 
           <div
             className={`inner-box ${direction}`}
@@ -677,10 +683,9 @@ export default function Game() {
             }}
           ></div>
 
+          <div className="aaveStake" />
 
-          <div className="aaveStake"/>
-
-{nekoText && (
+          {nekoText && (
             <div className="textBox">
               <div className="typedOutWrapper">
                 <div className="typedOut"> View the leaderboard?</div>{" "}
@@ -696,43 +701,55 @@ export default function Game() {
             </div>
           )}
 
-{showNeko && (
-          <>
-          
-            <div style={{marginTop:"0px"}}className="modal">
-              <div className="modal-content">
-                <Leaderboard />
-                <button
-                  className="modalButton"
-                  onClick={() => setShowNeko(false)}
-                >
-                  Close
-                </button>
+          {showNeko && (
+            <>
+              <div style={{ marginTop: "0px" }} className="modal">
+                <div className="modal-content">
+                  <Leaderboard />
+                  <button
+                    className="modalButton"
+                    onClick={() => setShowNeko(false)}
+                    style={{
+                      position: "absolute",
+                      right: "11%",
+                      bottom: "12%",
+                      zIndex: "999",
+                    }}
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
 
-        <Image
-          className="neko"
-          src="https://66.media.tumblr.com/tumblr_ma11pbpN0j1rfjowdo1_500.gif"
-          width={400}
-          height={500}
-          alt="neko"
-        />
+          <Image
+            className="neko"
+            src="https://66.media.tumblr.com/tumblr_ma11pbpN0j1rfjowdo1_500.gif"
+            width={400}
+            height={500}
+            alt="neko"
+          />
 
-        {showStaking && <><button
-                  className="modalButton"
-                  onClick={() => setShowStaking(false)}
-                  style={{position:"absolute", top:"0px", right:"0px",zIndex:"999"}}
-                >
-                  Close
-                </button> <AaveStake/>
-                  
-                </>
-        }
+          {showStaking && (
+            <>
+              <button
+                className="modalButton"
+                onClick={() => setShowStaking(false)}
+                style={{
+                  position: "absolute",
+                  right: "11%",
+                  bottom: "8%",
+                  zIndex: "999",
+                }}
+              >
+                Close
+              </button>{" "}
+              <AaveStake />
+            </>
+          )}
 
-        {stakeText && (
+          {stakeText && (
             <div className="textBox">
               <div className="typedOutWrapper">
                 <div className="typedOut"> Look at the staking screen?</div>{" "}

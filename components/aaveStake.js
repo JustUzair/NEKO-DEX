@@ -1,19 +1,379 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
+import contractAddresses from "../constants/networkMappings.json";
+import ierc20Abi from "../constants/ierc20Abi.json";
+import { useNotification } from "web3uikit";
+import { ethers } from "ethers";
+import aaveStakingAbi from "../constants/AAVEStakingAbi.json";
 export const AaveStake = () => {
   const [activeTab, setActiveTab] = useState(2);
+  const [currentTokenBalance, setCurrentTokenBalance] = useState("0");
+  const [tokenDepositAmount, setTokenDepositAmount] = useState("0");
+  const [tokenWithdrawAmount, setTokenWithdrawAmount] = useState("0");
 
   const [selectedOption, setSelectedOption] = useState("MATIC");
 
+  // *****************************  STAKED AMOUNT VARIABLES *****************************
+  const [ethStakedBalance, setETHStakedBalance] = useState(0);
+
+  const [wbtcStakedBalance, setWBTCStakedBalance] = useState(0);
+
+  const [wmaticStakedBalance, setWMATICStakedBalance] = useState(0);
+
+  const [daiStakedBalance, setDAIStakedBalance] = useState(0);
+  const [usdcStakedBalance, setUSDCStakedBalance] = useState(0);
+
+  // ***************************** END STAKED AMOUNT VARIABLES  *****************************
+
+  const { runContractFunction } = useWeb3Contract();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
+
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const AAVEStakingAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["AAVEStaking"][
+          contractAddresses[chainId]["AAVEStaking"].length - 1
+        ]
+      : null;
+  // -------------------  DEX POOLS ADDRESS    -------------------
+  const WETHContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WETH"][
+          contractAddresses[chainId]["WETH"].length - 1
+        ]
+      : null;
+  const WBTCContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WBTC"][
+          contractAddresses[chainId]["WBTC"].length - 1
+        ]
+      : null;
+  const WMATICContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WMATIC"][
+          contractAddresses[chainId]["WMATIC"].length - 1
+        ]
+      : null;
+  const USDCContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["USDC"][
+          contractAddresses[chainId]["USDC"].length - 1
+        ]
+      : null;
+  const DAIContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["DAI"][
+          contractAddresses[chainId]["DAI"].length - 1
+        ]
+      : null;
+  // ------------------- END DEX POOLS ADDRESS    -------------------
+
+  let ContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WMATIC"][
+          contractAddresses[chainId]["WMATIC"].length - 1
+        ]
+      : null;
+  const dispatch = useNotification();
+
+  //****************************************************************/
+  //-----------------------NOTIFICATION-----------------------------
+  //****************************************************************/
+
+  const successNotification = msg => {
+    dispatch({
+      type: "success",
+      message: `${msg} Successfully! `,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+
+  const failureNotification = msg => {
+    dispatch({
+      type: "error",
+      message: `${msg} ( View console for more info )`,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+  //****************************************************************/
+  //--------------------END NOTIFICATION-----------------------------
+  //****************************************************************/
+  //*************************************************************************************** */
+  // ******************** Stake Tokens  ***************************
+  //*************************************************************************************** */
+
+  const StakeToken = async () => {
+    // DEPOSIT TOKEN
+    if (tokenDepositAmount <= 0) {
+      failureNotification(
+        "Values of the token to stake should be greater than 0!!"
+      );
+      return;
+    }
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      let enoughLiquidity = false;
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: ContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          //   console.log(`ETHER : ${ether}`);
+          console.log(value < tokenDepositAmount);
+          if (value < tokenDepositAmount) {
+            failureNotification("You do not have enough funds for staking!");
+            return;
+          }
+          enoughLiquidity = true;
+          console.log("balance ether : ", data.toString());
+        },
+      });
+      if (!enoughLiquidity) return;
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: ContractAddress,
+          functionName: "approve",
+          params: {
+            spender: AAVEStakingAddress,
+            amount: ethers.utils.parseEther(tokenDepositAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          console.log("approve lp", data);
+          await data.wait(1);
+        },
+      });
+
+      await runContractFunction({
+        params: {
+          abi: aaveStakingAbi,
+          contractAddress: AAVEStakingAddress,
+          functionName: "stake",
+          params: {
+            _token: ContractAddress,
+            _amount: ethers.utils.parseEther(tokenDepositAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          //   console.log("swap", data);
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan")
+            } ) `
+          );
+          await data.wait(1);
+          setTokenDepositAmount(0);
+          getCurrentTokenBalance();
+          getAllStakedTokensAmount();
+          successNotification(`Assets Staked `);
+        },
+      });
+    }
+  };
+  //*************************************************************************************** */
+  // ******************** END stake Tokens  ***************************
+  //*************************************************************************************** */
+
+  //*************************************************************************************** */
+  // ********************   Unstake Tokens  ***************************
+  //*************************************************************************************** */
+
+  const UnstakeToken = async () => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      let assetsStaked = false;
+      await runContractFunction({
+        params: {
+          abi: aaveStakingAbi,
+          contractAddress: AAVEStakingAddress,
+          functionName: "getBalance",
+          params: {
+            _user: account,
+            _token: ContractAddress,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          //   console.log(
+          //     "Staked balance : ",
+          //     ethers.utils.formatUnits(data.toString(), "ether").toString()
+          //     // data.toString()
+          //   );
+          //   setAmount(
+          //     ethers.utils.formatUnits(data.toString(), "ether").toString()
+          //   );
+          const value = ethers.utils
+            .formatUnits(data.toString(), "ether")
+            .toString();
+          if (value <= 0) {
+            failureNotification(
+              "You have no assets staked for this asset/token"
+            );
+            return;
+          } else assetsStaked = true;
+        },
+      });
+
+      if (!assetsStaked) return;
+      await runContractFunction({
+        params: {
+          abi: aaveStakingAbi,
+          contractAddress: AAVEStakingAddress,
+          functionName: "unstake",
+          params: {
+            _token: ContractAddress,
+            _amount: ethers.utils.parseEther(tokenWithdrawAmount).toString(),
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan")
+            } ) `
+          );
+          await data.wait(1);
+          setTokenDepositAmount(0);
+          setTokenWithdrawAmount(0);
+
+          getCurrentTokenBalance();
+          getAllStakedTokensAmount();
+          successNotification(`Assets Withdraw/Un-staked`);
+        },
+      });
+    }
+  };
+  //*************************************************************************************** */
+  // ******************** END Unstake Tokens  ***************************
+  //*************************************************************************************** */
+
+  const getCurrentTokenBalance = async () => {
+    if (ContractAddress == null) return;
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: ierc20Abi,
+          contractAddress: ContractAddress,
+          functionName: "balanceOf",
+          params: {
+            account,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          const value = ethers.utils.formatUnits(data.toString(), "ether");
+          setCurrentTokenBalance(value.toString());
+        },
+      });
+    }
+  };
+
+  //*************************************************************************************** */
+  // ********************     GET Staked Balance of all dex pools ***************************
+  //*************************************************************************************** */
+  const getStakedTokenAmount = async (tokenAddress, setAmount) => {
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: aaveStakingAbi,
+          contractAddress: AAVEStakingAddress,
+          functionName: "getBalance",
+          params: {
+            _user: account,
+            _token: tokenAddress,
+          },
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification(error.message);
+        },
+        onSuccess: data => {
+          //   console.log(
+          //     "Staked balance : ",
+          //     ethers.utils.formatUnits(data.toString(), "ether").toString()
+          //     // data.toString()
+          //   );
+          setAmount(
+            ethers.utils.formatUnits(data.toString(), "ether").toString()
+          );
+        },
+      });
+    }
+  };
+
+  const getAllStakedTokensAmount = async () => {
+    if (
+      WETHContractAddress == null ||
+      WBTCContractAddress == null ||
+      WMATICContractAddress == null ||
+      DAIContractAddress == null
+    )
+      return;
+    await getStakedTokenAmount(WETHContractAddress, setETHStakedBalance);
+    await getStakedTokenAmount(WBTCContractAddress, setWBTCStakedBalance);
+    await getStakedTokenAmount(WMATICContractAddress, setWMATICStakedBalance);
+    await getStakedTokenAmount(DAIContractAddress, setDAIStakedBalance);
+    await getStakedTokenAmount(USDCContractAddress, setUSDCStakedBalance);
+  };
+  //*************************************************************************************** */
+  // ********************   END Staked Balance of all dex pools ***************************
+  //*************************************************************************************** */
+
+  useEffect(() => {
+    setTokenWithdrawAmount(0);
+    setTokenDepositAmount(0);
+    getCurrentTokenBalance();
+    getAllStakedTokensAmount();
+  }, [account, selectedOption]);
   const Buttons = () => {
     return (
       <div style={{ padding: "15px" }}>
-        <button className="modalButton" onClick={() => setActiveTab(2)}>
-          Stake LP
-        </button>
-        <button className="modalButton" onClick={() => setActiveTab(3)}>
-          Unstake LP
-        </button>
+        {activeTab != 2 && (
+          <button className="modalButton" onClick={() => setActiveTab(2)}>
+            Stake LP
+          </button>
+        )}
+        {activeTab != 3 && (
+          <button className="modalButton" onClick={() => setActiveTab(3)}>
+            Unstake LP
+          </button>
+        )}
       </div>
     );
   };
@@ -27,57 +387,65 @@ export const AaveStake = () => {
   switch (selectedOption) {
     case "MATIC":
       imageUrl = "https://app.aave.com/icons/tokens/matic.svg";
+      ContractAddress = WMATICContractAddress;
       break;
     case "WETH":
       imageUrl = "https://app.aave.com/icons/tokens/weth.svg";
+      ContractAddress = WETHContractAddress;
       break;
     case "USDC":
       imageUrl = "https://app.aave.com/icons/tokens/usdc.svg";
+      ContractAddress = USDCContractAddress;
       break;
     case "WBTC":
       imageUrl = "https://app.aave.com/icons/tokens/wbtc.svg";
+      ContractAddress = WBTCContractAddress;
       break;
-    case "MaticX":
-      imageUrl = "https://app.aave.com/icons/tokens/maticx.svg";
-      break;
-    case "USDT":
-      imageUrl = "https://app.aave.com/icons/tokens/usdt.svg";
-      break;
+    // case "MaticX":
+    //   imageUrl = "https://app.aave.com/icons/tokens/maticx.svg";
+    //   break;
+    // case "USDT":
+    //   imageUrl = "https://app.aave.com/icons/tokens/usdt.svg";
+    //   break;
     case "DAI":
       imageUrl = "https://app.aave.com/icons/tokens/dai.svg";
+      ContractAddress = DAIContractAddress;
+
       break;
-    case "wstETH":
-      imageUrl = "https://app.aave.com/icons/tokens/wsteth.svg";
-      break;
-    case "GHST":
-      imageUrl = "https://app.aave.com/icons/tokens/ghst.svg";
-      break;
-    case "LINK":
-      imageUrl = "https://app.aave.com/icons/tokens/link.svg";
-      break;
-    case "BAL":
-      imageUrl = "https://app.aave.com/icons/tokens/bal.svg";
-      break;
-    case "EURS":
-      imageUrl = "https://app.aave.com/icons/tokens/eurs.svg";
-      break;
-    case "CRV":
-      imageUrl = "https://app.aave.com/icons/tokens/crv.svg";
-      break;
-    case "agEUR":
-      imageUrl = "https://app.aave.com/icons/tokens/ageur.svg";
-      break;
-    case "miMATIC":
-      imageUrl = "https://app.aave.com/icons/tokens/mai.svg";
-      break;
-    case "SUSHI":
-      imageUrl = "https://app.aave.com/icons/tokens/stmatic.svg";
-      break;
-    case "DPI":
-      imageUrl = "https://app.aave.com/icons/tokens/dpi.svg";
-      break;
+    // case "wstETH":
+    //   imageUrl = "https://app.aave.com/icons/tokens/wsteth.svg";
+    //   break;
+    // case "GHST":
+    //   imageUrl = "https://app.aave.com/icons/tokens/ghst.svg";
+    //   break;
+    // case "LINK":
+    //   imageUrl = "https://app.aave.com/icons/tokens/link.svg";
+    //   break;
+    // case "BAL":
+    //   imageUrl = "https://app.aave.com/icons/tokens/bal.svg";
+    //   break;
+    // case "EURS":
+    //   imageUrl = "https://app.aave.com/icons/tokens/eurs.svg";
+    //   break;
+    // case "CRV":
+    //   imageUrl = "https://app.aave.com/icons/tokens/crv.svg";
+    //   break;
+    // case "agEUR":
+    //   imageUrl = "https://app.aave.com/icons/tokens/ageur.svg";
+    //   break;
+    // case "miMATIC":
+    //   imageUrl = "https://app.aave.com/icons/tokens/mai.svg";
+    //   break;
+    // case "SUSHI":
+    //   imageUrl = "https://app.aave.com/icons/tokens/stmatic.svg";
+    //   break;
+    // case "DPI":
+    //   imageUrl = "https://app.aave.com/icons/tokens/dpi.svg";
+    //   break;
     default:
       imageUrl = "path/to/default-image.jpg";
+      ContractAddress = WMATICContractAddress;
+
       break;
   }
 
@@ -134,16 +502,17 @@ export const AaveStake = () => {
                   background: "black",
                   color: "white",
                   margin: "0 auto",
+                  cursor: "pointer",
                 }}
               >
                 <option value="MATIC">MATIC</option>
                 <option value="WETH">WETH</option>
                 <option value="USDC">USDC</option>
                 <option value="WBTC">WBTC</option>
-                <option value="MaticX">MaticX</option>
-                <option value="USDT">USDT</option>
+                {/* <option value="MaticX">MaticX</option>
+                <option value="USDT">USDT</option> */}
                 <option value="DAI">DAI</option>
-                <option value="wstETH">wstETH</option>
+                {/* <option value="wstETH">wstETH</option>
                 <option value="GHST">GHST</option>
                 <option value="LINK">LINK</option>
                 <option value="BAL">BAL</option>
@@ -152,18 +521,71 @@ export const AaveStake = () => {
                 <option value="agEUR">agEUR</option>
                 <option value="miMATIC">miMATIC</option>
                 <option value="SUSHI">SUSHI</option>
-                <option value="DPI">DPI</option>
+                <option value="DPI">DPI</option> */}
               </select>
             </div>
+
             <div>
               <input
                 style={{ margin: "15px" }}
                 className="asset"
                 type="text"
                 placeholder="Amount to deposit"
+                onChange={e => {
+                  setTokenDepositAmount(e.target.value);
+                }}
+                value={tokenDepositAmount}
+                autoFocus="autoFocus"
               ></input>
               <br />{" "}
-              <button style={{ marginLeft: "15px" }} className="swapButton">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "14px",
+                    marginLeft: "10px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    color: "#fff",
+                  }}
+                  title={currentTokenBalance}
+                >
+                  Token Balance : ~
+                  {currentTokenBalance
+                    .toLocaleString("fullwide", {
+                      useGrouping: false,
+                    })
+                    .substr(0, 6) + "..."}
+                </span>
+                <span
+                  style={{
+                    fontSize: "12px",
+                    marginLeft: "10px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    background: "blueviolet",
+                    padding: "3px 5px",
+                    borderRadius: "4px",
+                    color: "white",
+                  }}
+                  title={currentTokenBalance}
+                  onClick={e => {
+                    setTokenDepositAmount(currentTokenBalance);
+                  }}
+                >
+                  Stake All ?
+                </span>
+              </div>
+              <button
+                style={{ marginLeft: "15px" }}
+                className="swapButton"
+                onClick={StakeToken}
+              >
                 Deposit
               </button>
             </div>
@@ -218,8 +640,6 @@ export const AaveStake = () => {
               objectPosition: "center",
             }}
           >
-            <br />
-            <br />
             <div
               style={{
                 display: "flex",
@@ -257,10 +677,10 @@ export const AaveStake = () => {
                 <option value="WETH">WETH</option>
                 <option value="USDC">USDC</option>
                 <option value="WBTC">WBTC</option>
-                <option value="MaticX">MaticX</option>
-                <option value="USDT">USDT</option>
+                {/* <option value="MaticX">MaticX</option> */}
+                {/* <option value="USDT">USDT</option> */}
                 <option value="DAI">DAI</option>
-                <option value="wstETH">wstETH</option>
+                {/* <option value="wstETH">wstETH</option>
                 <option value="GHST">GHST</option>
                 <option value="LINK">LINK</option>
                 <option value="BAL">BAL</option>
@@ -269,16 +689,110 @@ export const AaveStake = () => {
                 <option value="agEUR">agEUR</option>
                 <option value="miMATIC">miMATIC</option>
                 <option value="SUSHI">SUSHI</option>
-                <option value="DPI">DPI</option>
+                <option value="DPI">DPI</option> */}
               </select>
             </div>
-            <br />{" "}
-            <button style={{ marginLeft: "15px" }} className="swapButton">
-              Unstake all
-            </button>
-            <br />
-            <br />
-            <br />
+            <div>
+              <input
+                style={{ margin: "15px" }}
+                className="asset"
+                type="text"
+                placeholder="Amount to un-stake"
+                onChange={e => {
+                  setTokenWithdrawAmount(e.target.value);
+                }}
+                value={tokenWithdrawAmount}
+                autoFocus="autoFocus"
+              ></input>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "14px",
+                    marginLeft: "10px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    color: "#fff",
+                  }}
+                  title={
+                    (selectedOption == "WETH" && ethStakedBalance) ||
+                    (selectedOption == "DAI" && daiStakedBalance) ||
+                    (selectedOption == "USDC" && usdcStakedBalance) ||
+                    (selectedOption == "WBTC" && wbtcStakedBalance) ||
+                    (selectedOption == "MATIC" && wmaticStakedBalance)
+                  }
+                >
+                  Total Staked : ~
+                  {selectedOption == "WETH" &&
+                    ethStakedBalance
+                      .toLocaleString("fullwide", {
+                        useGrouping: false,
+                      })
+                      .substr(0, 6) + "..."}
+                  {selectedOption == "DAI" &&
+                    daiStakedBalance
+                      .toLocaleString("fullwide", {
+                        useGrouping: false,
+                      })
+                      .substr(0, 6) + "..."}
+                  {selectedOption == "USDC" &&
+                    usdcStakedBalance
+                      .toLocaleString("fullwide", {
+                        useGrouping: false,
+                      })
+                      .substr(0, 6) + "..."}
+                  {selectedOption == "WBTC" &&
+                    wbtcStakedBalance
+                      .toLocaleString("fullwide", {
+                        useGrouping: false,
+                      })
+                      .substr(0, 6) + "..."}
+                  {selectedOption == "MATIC" &&
+                    wmaticStakedBalance
+                      .toLocaleString("fullwide", {
+                        useGrouping: false,
+                      })
+                      .substr(0, 6) + "..."}
+                </span>
+                <span
+                  style={{
+                    fontSize: "12px",
+                    marginLeft: "10px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    background: "blueviolet",
+                    padding: "3px 5px",
+                    borderRadius: "4px",
+                    color: "white",
+                  }}
+                  title={currentTokenBalance}
+                  onClick={e => {
+                    setTokenWithdrawAmount(
+                      (selectedOption == "WETH" && ethStakedBalance) ||
+                        (selectedOption == "DAI" && daiStakedBalance) ||
+                        (selectedOption == "USDC" && usdcStakedBalance) ||
+                        (selectedOption == "WBTC" && wbtcStakedBalance) ||
+                        (selectedOption == "MATIC" && wmaticStakedBalance)
+                    );
+                  }}
+                >
+                  Un-Stake All
+                </span>
+              </div>
+              <button
+                style={{ marginLeft: "15px" }}
+                className="swapButton"
+                onClick={UnstakeToken}
+              >
+                Unstake
+              </button>
+            </div>
           </div>
 
           <Stakes />
@@ -311,27 +825,40 @@ export const AaveStake = () => {
         <h4>Your locked assets</h4>
 
         <table>
-          <tr>
-            <th>Token</th>
-
-            <th>Staked</th>
-          </tr>
-          <tr>
-            <td>MATIC</td>
-            <td>1000</td>
-          </tr>
-          <tr>
-            <td>WETH</td>
-            <td>1000</td>
-          </tr>
-          <tr>
-            <td>USDC</td>
-            <td>1000</td>
-          </tr>
-          <tr>
-            <td>WBTC</td>
-            <td>1000</td>
-          </tr>
+          <tbody>
+            <tr>
+              <th>Token</th>
+              <th>Staked</th>
+            </tr>
+            <tr>
+              <td>MATIC</td>
+              <td title={wmaticStakedBalance}>{wmaticStakedBalance}</td>
+            </tr>
+            <tr>
+              <td>WETH</td>
+              <td title={ethStakedBalance}>
+                {parseFloat(ethStakedBalance).toFixed(4)}
+              </td>
+            </tr>
+            <tr>
+              <td>USDC</td>
+              <td title={usdcStakedBalance}>
+                {parseFloat(usdcStakedBalance).toFixed(4)}
+              </td>
+            </tr>
+            <tr>
+              <td>WBTC</td>
+              <td title={wbtcStakedBalance}>
+                {parseFloat(wbtcStakedBalance).toFixed(4)}
+              </td>
+            </tr>
+            <tr>
+              <td>DAI</td>
+              <td title={daiStakedBalance}>
+                {parseFloat(daiStakedBalance).toFixed(4)}
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     );
@@ -435,40 +962,129 @@ export const AaveStake = () => {
       </>
     );
   };
-  if (activeTab === 1) {
-    return (
-      <>
-        <div className="modal" style={{ top: "100px" }}>
-          <div className="modal-content">
-            <Top10 />
-            <Buttons />
-          </div>
-        </div>
-      </>
-    );
-  }
+  //   if (activeTab === 1) {
+  //     return (
+  //       <>
+  //         {AAVEStakingAddress != null ? (
+  //           <>
+  //             <div className="modal" style={{ top: "100px" }}>
+  //               <div className="modal-content">
+  //                 <Top10 />
+  //                 <Buttons />
+  //               </div>
+  //             </div>
+  //           </>
+  //         ) : (
+  //           <>
+  //             <div
+  //               style={{
+  //                 display: "flex",
+  //                 justifyContent: "center",
+  //                 alignItems: "center",
+  //                 width: "80%",
+  //                 height: "100%",
+  //                 zIndex: "99",
+  //                 color: "white",
+  //                 fontSize: "2rem",
+  //                 wordWrap: "break-word",
+  //                 margin: "0 auto",
+  //               }}
+  //             >
+  //               <span
+  //                 style={{
+  //                   background: "#FF494A",
+  //                   padding: "10px 25px",
+  //                   borderRadius: "20px",
+  //                 }}
+  //               >
+  //                 No contract found on this network!!!
+  //               </span>
+  //             </div>
+  //           </>
+  //         )}
+  //       </>
+  //     );
+  //   }
   if (activeTab == 2) {
     return (
-      <>
-        <div className="modal" style={{ top: "100px" }}>
-          <div className="modal-content">
-            <StakeLP />
-            <Buttons />
-          </div>
+      <div className="modal" style={{ top: "100px" }}>
+        <div className="modal-content">
+          {AAVEStakingAddress != null ? (
+            <>
+              <StakeLP />
+              <Buttons />
+            </>
+          ) : (
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "80%",
+                  height: "100%",
+                  zIndex: "99",
+                  color: "white",
+                  fontSize: "2rem",
+                  wordWrap: "break-word",
+                  margin: "0 auto",
+                }}
+              >
+                <span
+                  style={{
+                    background: "#FF494A",
+                    padding: "10px 25px",
+                    borderRadius: "20px",
+                  }}
+                >
+                  No contract found on this network!!!
+                </span>
+              </div>
+            </>
+          )}
         </div>
-      </>
+      </div>
     );
   }
   if (activeTab == 3) {
     return (
-      <>
-        <div className="modal" style={{ top: "100px" }}>
-          <div className="modal-content">
-            <UnstakeLP />
-            <Buttons />
-          </div>
+      <div className="modal" style={{ top: "100px" }}>
+        <div className="modal-content">
+          {AAVEStakingAddress != null ? (
+            <>
+              <UnstakeLP />
+              <Buttons />
+            </>
+          ) : (
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "80%",
+                  height: "100%",
+                  zIndex: "99",
+                  color: "white",
+                  fontSize: "2rem",
+                  wordWrap: "break-word",
+                  margin: "0 auto",
+                }}
+              >
+                <span
+                  style={{
+                    background: "#FF494A",
+                    padding: "10px 25px",
+                    borderRadius: "20px",
+                  }}
+                >
+                  No contract found on this network!!!
+                </span>
+              </div>
+            </>
+          )}
         </div>
-      </>
+      </div>
     );
   }
 };
