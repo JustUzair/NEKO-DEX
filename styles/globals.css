@@ -26,7 +26,7 @@ body {
 
 .box2 {
   position: relative;
-  background: url("https://media.discordapp.net/attachments/944019971527278623/1111779223548465152/dexroom2.png?width=901&height=676");
+  background: url("https://cdn.discordapp.com/attachments/944019971527278623/1111796782175883294/dexroom3.png");
   repeat: none;
   background-size: cover;
 }
@@ -855,11 +855,23 @@ th {
   height: 100px;
   width: 100px;
   margin-top: 450px;
-  margin-left: 600px;
+  margin-left: 650px;
   background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif");
   background-size: cover;
   background-repeat: no-repeat;
 } 
+
+.aaveStakeCat {
+  position:absolute;
+  height: 100px;
+  width: 100px;
+
+  margin-left: 650px;
+  margin-top:-100px;
+
+  background: url("https://i.ibb.co/bs2x6b8/ezgif-com-gif-maker.gif");
+  background-size:cover;
+}
 
 .poolPic {
   max-height: 50px;

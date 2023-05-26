@@ -735,6 +735,10 @@ export default function Game() {
             alt="neko"
           />
 
+          <div
+          className="aaveStakeCat"
+          
+          />
             
 
           <div className="nekoSparkle"/>

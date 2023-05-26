@@ -598,19 +598,20 @@ export const AaveStake = () => {
             // maxWidth: "350px",
              marginTop: "50px",
              marginRight: "80px",
-            Index:"100"
+            Index:"100",
+            width:"1000px"
           }}
         >
           <div
-            className="typedOutWrapperLeaderboard"
+            
             style={{ width: "1000px" }}
           >
-            <div className="typedOutInfo">
+            
               ⌛ Lock your funds to generate yields on AAVE, <br /> which are
               donated to charity. User deposits <br /> are available for
               withdrawal at any time. <br></br>Check out AAVE for the latest
               rates.
-            </div>
+           
           </div>
         </div>
       </>
