@@ -365,12 +365,12 @@ export const AaveStake = () => {
     return (
       <div style={{ padding: "15px" }}>
         {activeTab != 2 && (
-          <button className="modalButton" onClick={() => setActiveTab(2)}>
+          <button style={{position:"absolute", bottom:"60px",left:"100px"}} className="modalButton" onClick={() => setActiveTab(2)}>
             Stake LP
           </button>
         )}
         {activeTab != 3 && (
-          <button className="modalButton" onClick={() => setActiveTab(3)}>
+          <button style={{position:"absolute", bottom:"60px",left:"100px"}} className="modalButton" onClick={() => setActiveTab(3)}>
             Unstake LP
           </button>
         )}
@@ -595,9 +595,10 @@ export const AaveStake = () => {
         <div
           className="infoPanelLeaderboard"
           style={{
-            maxWidth: "350px",
-            marginTop: "-420px",
-            marginLeft: "320px",
+            // maxWidth: "350px",
+             marginTop: "50px",
+             marginRight: "80px",
+            Index:"100"
           }}
         >
           <div

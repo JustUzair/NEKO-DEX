@@ -113,7 +113,7 @@ export default function StickyNotes() {
           style={{ height: "100px", width: "300px" }}
           type="text"
           onChange={e => {
-            setMessage(e.target.value.toString());
+            adowsetMessage(e.target.value.toString());
           }}
           value={message}
         />
