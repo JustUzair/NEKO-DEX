@@ -3,6 +3,7 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { Leaderboard } from "./leaderboard.js";
 import { AaveStake } from "./aaveStake.js";
+import { MovingDiv } from "./movingDiv.js";
 
 import SwapPoolView from "./swapPoolView.js";
 import StickyBoard from "./stickyNotes.js";
@@ -246,7 +247,7 @@ export default function Game() {
         ) {
           setShowRoom1(false);
           setShowRoom2(true);
-          setInnerBoxPosition({ top: 230, left: 80 });
+          setInnerBoxPosition({ top: 400, left: 20 });
           console.log("leave room 1");
         }
         // if (
@@ -448,7 +449,7 @@ export default function Game() {
                 style={{
                   position: "absolute",
                   right: "5%",
-                  top: "5%",
+                  bottom: "10px",
                   zIndex: "999",
                 }}
                 onClick={() => setShowDEX(false)}
@@ -534,7 +535,7 @@ export default function Game() {
         const { top, left } = innerBoxPosition;
         const maxTop = BOX_HEIGHT - INNER_BOX_SIZE;
         const maxLeft = BOX_WIDTH - INNER_BOX_SIZE;
-        const minTop = 0;
+        const minTop = 160;
         const minLeft = 0;
 
         switch (keyCode) {
@@ -657,6 +658,9 @@ export default function Game() {
       checkCollision();
     }, [innerBoxPosition]);
 
+  
+    
+
     return (
       <div className="container">
         <div className="box2" style={{ height: BOX_HEIGHT, width: BOX_WIDTH }}>
@@ -731,6 +735,10 @@ export default function Game() {
             alt="neko"
           />
 
+            
+
+          <div className="nekoSparkle"/>
+
           {showStaking && (
             <>
               <button
@@ -764,6 +772,9 @@ export default function Game() {
               </div>{" "}
             </div>
           )}
+
+
+          
         </div>
       </div>
     );

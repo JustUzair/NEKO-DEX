@@ -345,7 +345,7 @@ export default function SwapPoolView() {
         <DAIUSDCMODAL setPoolView={setPoolView} setDAIUSDC={setDAIUSDC} />
       )}
       {(WETHUSDC || WBTCUSDC || OPUSDC || DAIUSDC || WETHUSDC) && (
-        <button className="modalButton" onClick={() => viewNone(false)}>
+        <button style={{position: "absolute", bottom: "10px", marginLeft:"30px"}}className="modalButton" onClick={() => viewNone(false)}>
           Back
         </button>
       )}

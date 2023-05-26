@@ -20,13 +20,13 @@ body {
 
 .box {
   position: relative;
-  background: url("https://cdn.discordapp.com/attachments/944019971527278623/1111093807916797962/exportdex.png");
+  background: url("https://media.discordapp.net/attachments/944019971527278623/1111774652193316874/exportdex.png?width=901&height=676");
   background-size: cover;
 }
 
 .box2 {
   position: relative;
-  background: url("https://i.ibb.co/CP4WdB9/image.png");
+  background: url("https://media.discordapp.net/attachments/944019971527278623/1111779223548465152/dexroom2.png?width=901&height=676");
   repeat: none;
   background-size: cover;
 }
@@ -68,6 +68,10 @@ body {
   top: 250px;
   left: 115px;
   /* border: white 2px solid; */
+  background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif" );
+  background-size: 50%;
+  background-repeat:no-repeat;
+  background-position:70% 40%;
 }
 
 .board {
@@ -75,6 +79,10 @@ body {
   top: 150px;
   left: 320px;
   /* border: 2px solid black; */
+  background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif" );
+  background-size: 20%;
+  background-repeat:no-repeat;
+  background-position:center;
 }
 
 .modal {
@@ -254,13 +262,23 @@ input[type="number"] {
 }
 
 .neko {
-  max-width: 30px;
-  max-height: 40px;
+  max-width: 60px;
+  max-height: 80px;
   position: absolute;
   top: 200px;
   left: 300px;
+}
 
-  border: 2px solid green;
+.nekoSparkle{
+  width: 60px;
+  height: 80px;
+  position: absolute;
+  top: 200px;
+  left: 300px;
+  background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif" );
+  background-size: 100%;
+  background-repeat:no-repeat;
+  background-position:center;
 }
 
 .worker {
@@ -619,22 +637,30 @@ th {
   align-items: center; */
   width: 80px;
   /* font-weight: bold; */
+  background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif");
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: bottom center;
 }
 .leaveRoom1 span {
   transform: rotate(-90deg);
 }
 .leaveRoom2 {
   position: absolute;
-  left: 60px;
-  top: 100px;
+  left: 0px;
+  bottom: 0px;
   height: 100px;
-
   display: flex;
   justify-content: center;
   align-items: center;
   width: 104px;
   font-weight: bold;
   z-index: 999;
+  background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif");
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+
 }
 .leaveRoom2 span {
   transform: rotate(90deg);
@@ -756,7 +782,7 @@ th {
 
 .sticky-notes--container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   width: 90%;
   margin: 0 auto;
   grid-row-gap: 20px;
@@ -770,18 +796,25 @@ th {
   position: relative;
   border: 1px solid black;
   text-align: center;
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
 
   background-color: yellow;
 
-  filter: invert(100%) drop-shadow(6px 8px 10px black);
+  border: 1px solid black;
+  color:black;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.75);
+  padding: 10px;
+  margin-bottom:10px;
+
+/* 
+  filter: invert(100%) drop-shadow(4px 0px 0px 10px black); */
   overflow-y: -moz-scrollbars-none;
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none; /* Firefox */
   overflow-y: scroll;
-  border-radius: 10px;
 }
+
 .note::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
@@ -821,10 +854,12 @@ th {
 .aaveStake {
   height: 100px;
   width: 100px;
-  border: 2px solid red;
   margin-top: 450px;
   margin-left: 600px;
-}
+  background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif");
+  background-size: cover;
+  background-repeat: no-repeat;
+} 
 
 .poolPic {
   max-height: 50px;
@@ -842,5 +877,25 @@ th {
   }
   100% {
     transform: translateY(0);
+  }
+}
+
+.moving-div {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: red;
+  animation: moveDiv 3s infinite;
+}
+
+@keyframes moveDiv {
+  0% {
+    top: 0;
+    left: 0;
+  }
+
+  100% {
+    top: calc(600px - 50px);
+    left: calc(800px - 50px);
   }
 }
