@@ -33,6 +33,7 @@ function MyApp({ Component, pageProps }) {
         url: "https://polygonscan.com",
       },
     },
+    testnet: false,
   };
   const xdcTestnetChain = {
     // 1) create xinfin wallet - https://wallet.xinfin.network/
@@ -90,6 +91,7 @@ function MyApp({ Component, pageProps }) {
         url: "https://www.oklink.com/en/okc",
       },
     },
+    testnet: false,
   };
   const okcTestnetChain = {
     // OKC Testnet Faucet : https://www.okx.com/en-in/oktc/faucet
@@ -108,6 +110,7 @@ function MyApp({ Component, pageProps }) {
         url: "https://www.oklink.com/okexchain-test",
       },
     },
+    testnet: true,
   };
 
   const { chains, provider } = configureChains(
