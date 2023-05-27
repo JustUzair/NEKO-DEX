@@ -12,7 +12,8 @@
     "WBTC": ["0x60256Cc5bA5177377EeaE1d0AB6536edb54eeA5c"],
     "WMATIC": ["0x5E17916671f281695e917F3878D177A5eD35CDd7"],
     "DAI": ["0x2264e68560B450d45A18dB7Be2874e75b288c7Ae"],
-    "AAVEStaking": ["0x5b8B1Df5355A50DacB7eA2aDDB8a2B7C10adC4bd"]
+    "AAVEStaking": ["0x5b8B1Df5355A50DacB7eA2aDDB8a2B7C10adC4bd"],
+    "TestTokenFaucet": []
   },
   "137": {
     "StickyNotes": [],
@@ -27,7 +28,8 @@
     "WBTC": [],
     "WMATIC": [],
     "DAI": [],
-    "AAVEStaking": []
+    "AAVEStaking": [],
+    "TestTokenFaucet": []
   },
 
   "65": {
@@ -43,7 +45,8 @@
     "WBTC": ["0x73778d5569E3798360C0F557CeB549092759A029"],
     "WMATIC": ["0x31bF40f5642BCC6d41f28cccB2ADFB735722Bb30"],
     "DAI": ["0x7FA0D30b30aF032bd1d8453603D7Df948021eA60"],
-    "AAVEStaking": []
+    "AAVEStaking": [],
+    "TestTokenFaucet": ["0x666ea8Af3070E24Da722d548890F5aa787aF34EF"]
   },
   "66": {
     "StickyNotes": [],
@@ -58,6 +61,7 @@
     "WBTC": [],
     "WMATIC": [],
     "DAI": [],
-    "AAVEStaking": []
+    "AAVEStaking": [],
+    "TestTokenFaucet": []
   }
 }
