@@ -105,9 +105,11 @@ export default function StickyNotes() {
             setAmount(e.target.value);
           }}
           value={amount}
-        /> 
-        <img src="https://static-00.iconduck.com/assets.00/usd-coin-cryptocurrency-icon-512x512-at5npdb1.png"
-        style={{height: "20px", width: "20px"}}/>
+        />
+        <img
+          src="https://static-00.iconduck.com/assets.00/usd-coin-cryptocurrency-icon-512x512-at5npdb1.png"
+          style={{ height: "20px", width: "20px" }}
+        />
         <br />
         {/* message of length 64 max */}
         <label>Message</label>
@@ -296,7 +298,7 @@ export default function StickyNotes() {
                         borderRadius: "20px",
                       }}
                     >
-                      loading...
+                      No Notes to display!!
                     </span>
                   </div>
                 </>
@@ -323,8 +325,16 @@ export default function StickyNotes() {
                 className="asset"
                 style={{ width: "200px" }}
               />
-              <img src="https://static-00.iconduck.com/assets.00/usd-coin-cryptocurrency-icon-512x512-at5npdb1.png"
-                style={{ position: "absolute", width: "45px", height: "45px", marginLeft: "-80px", marginTop: "5px", lineHeight: "50px"}}
+              <img
+                src="https://static-00.iconduck.com/assets.00/usd-coin-cryptocurrency-icon-512x512-at5npdb1.png"
+                style={{
+                  position: "absolute",
+                  width: "45px",
+                  height: "45px",
+                  marginLeft: "-80px",
+                  marginTop: "5px",
+                  lineHeight: "50px",
+                }}
               />
               <br />
               {/* message of length 64 max */}
@@ -332,7 +342,6 @@ export default function StickyNotes() {
               <br />
               <textarea
                 style={{ height: "100px", width: "300px" }}
-
                 className="messageInput"
                 onChange={e => {
                   setMessage(e.target.value.toString());
