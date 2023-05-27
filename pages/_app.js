@@ -75,14 +75,7 @@ function MyApp({ Component, pageProps }) {
   };
 
   const { chains, provider } = configureChains(
-    [
-      polygonMumbai,
-      xdcTestnetChain,
-      xdcChain,
-      okcChain,
-      okcTestnetChain,
-      polygonMainnet,
-    ], // Testnet LINK  address : 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
+    [polygonMumbai, okcChain, okcTestnetChain, polygonMainnet], // Testnet LINK  address : 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
     [
       jsonRpcProvider({
         rpc: chain => ({ http: chain.rpcUrls.default.http[0] }),
