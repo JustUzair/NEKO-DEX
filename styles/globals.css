@@ -213,6 +213,18 @@ body {
   font-size: 20px;
 }
 
+.messageInput {
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-left: 2%;
+  margin-bottom: 2px;
+  text-decoration: none;
+  background: rgba(170, 51, 106, 1);
+  color: white;
+  padding: 5px;
+  text-shadow: 2px 2px black;
+  font-size: 12px;
+}
 .swapButton {
   border: 1px solid black;
   border-radius: 5px;
@@ -911,3 +923,36 @@ th {
     left: calc(800px - 50px);
   }
 }
+
+
+{/* image of nyan cat is animated by flying around the room, inside the div with class Box2.  */}
+.nyanCat {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: url("https://media.tenor.com/xzjlrhYq_lQAAAAj/cat-nyan-cat.gif");
+  background-size: cover;
+  background-repeat: no-repeat;
+  animation: moveDiv 3s infinite;
+
+}
+
+@keyframes moveDiv {
+  0% {
+    top: 0;
+    left: 0;
+  }
+
+  20% {
+    top: calc(100px - 50px);
+    left: calc(200px - 50px);
+  }
+
+
+  100% {
+    top: calc(30px - 50px);
+    left: calc(800px - 50px);
+  }
+}
+
+

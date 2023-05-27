@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { Leaderboard } from "./leaderboard.js";
 import { AaveStake } from "./aaveStake.js";
-import { MovingDiv } from "./movingDiv.js";
+import { NyanCat } from "./nyanCat.js";
 
 import SwapPoolView from "./swapPoolView.js";
 import StickyBoard from "./stickyNotes.js";
@@ -659,6 +659,7 @@ export default function Game() {
     }, [innerBoxPosition]);
 
   
+
     
 
     return (
@@ -739,6 +740,15 @@ export default function Game() {
           className="aaveStakeCat"
           
           />
+
+          <img 
+
+          style={{position: "absolute", bottom: "280px", right: "175px", 
+          width: "40px", height: "40px",
+          zIndex: "999"}}
+        
+          src="https://i.pinimg.com/originals/80/7b/5c/807b5c4b02e765bb4930b7c66662ef4b.gif"
+          />
             
 
           <div className="nekoSparkle"/>
@@ -776,6 +786,11 @@ export default function Game() {
               </div>{" "}
             </div>
           )}
+
+
+         
+
+
 
 
           
