@@ -18,7 +18,6 @@ import upImage from "../public/assets/up.gif";
 
 import worker from "../public/assets/worker.gif";
 import { useMoralis, useWeb3Contract } from "react-moralis";
-import zIndex from "@material-ui/core/styles/zIndex.js";
 
 const BOX_COLOR = "#ccc";
 const INNER_BOX_SIZE = 70;
@@ -103,10 +102,6 @@ export default function Game() {
 
     return () => clearInterval(interval);
   }, [innerBoxPosition]);
-
-
-
-
 
   /////////////////////////ROOM 1//////////////////////////////
 
@@ -198,11 +193,7 @@ export default function Game() {
         const leaveRoomRect1 = document
           .querySelector(".leaveRoom1")
           .getBoundingClientRect();
-          const ATMRect = document
-          .querySelector(".ATM")
-          .getBoundingClientRect();
-
-    
+        const ATMRect = document.querySelector(".ATM").getBoundingClientRect();
 
         if (
           !showDEX &&
@@ -378,8 +369,7 @@ export default function Game() {
             width: BOX_WIDTH,
           }}
         >
-
-          <HUD/>
+          <HUD />
           {/*  THE CHARACTER DIV */}
           <div className="bottom-right-div"></div>
           <div
@@ -470,34 +460,42 @@ export default function Game() {
           <div className="table2" />
 
           <div className="ATM">ATM</div>
-    
-    {showATMText && (
+
+          {showATMText && (
             <div className="textBox">
               <div className="typedOutWrapper">
-                <div className="typedOut">Would you like to access the ATM?</div>{" "}
+                <div className="typedOut">
+                  Would you like to access the ATM?
+                </div>{" "}
               </div>
               <div className="textSelect" onClick={() => showATMFunc(true)}>
                 Okay
-                </div>
+              </div>
 
-                <div className="textSelect2" onClick={() => setShowATMText(false)}>
+              <div
+                className="textSelect2"
+                onClick={() => setShowATMText(false)}
+              >
                 No thanks
-                </div>
-                </div>
-    )}
+              </div>
+            </div>
+          )}
 
-    {showATM && <>
-    
-      
-    <div className="modal" style={{marginTop:"0px"}}>
-      <div className="modal-content">
-      <button className="modalButton" onClick={() => setShowATM(false)}>Close</button>
-      <ATM/>
-      </div>
-      </div>
-    
-
-    </>}
+          {showATM && (
+            <>
+              <div className="modal" style={{ marginTop: "0px" }}>
+                <div className="modal-content">
+                  <button
+                    className="modalButton"
+                    onClick={() => setShowATM(false)}
+                  >
+                    Close
+                  </button>
+                  <ATM />
+                </div>
+              </div>
+            </>
+          )}
 
           <div className="leaveRoom1"></div>
         </div>
@@ -727,10 +725,6 @@ export default function Game() {
       checkCollision();
     }, [innerBoxPosition]);
 
-  
-
-    
-
     return (
       <div className="container">
         <div className="box2" style={{ height: BOX_HEIGHT, width: BOX_WIDTH }}>
@@ -805,22 +799,21 @@ export default function Game() {
             alt="neko"
           />
 
-          <div
-          className="aaveStakeCat"
-          
+          <div className="aaveStakeCat" />
+
+          <img
+            style={{
+              position: "absolute",
+              bottom: "280px",
+              right: "175px",
+              width: "40px",
+              height: "40px",
+              zIndex: "999",
+            }}
+            src="https://i.pinimg.com/originals/80/7b/5c/807b5c4b02e765bb4930b7c66662ef4b.gif"
           />
 
-          <img 
-
-          style={{position: "absolute", bottom: "280px", right: "175px", 
-          width: "40px", height: "40px",
-          zIndex: "999"}}
-        
-          src="https://i.pinimg.com/originals/80/7b/5c/807b5c4b02e765bb4930b7c66662ef4b.gif"
-          />
-            
-
-          <div className="nekoSparkle"/>
+          <div className="nekoSparkle" />
 
           {showStaking && (
             <>
@@ -855,14 +848,6 @@ export default function Game() {
               </div>{" "}
             </div>
           )}
-
-
-         
-
-
-
-
-          
         </div>
       </div>
     );
