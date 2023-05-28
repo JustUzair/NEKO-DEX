@@ -21,16 +21,19 @@ contract NEKO_TEST_TOKEN_MINTER {
     }
 
     function mintTester() public {
-        
-    IERC20(tokenContractsArray[0]).mint(10000 ether); // MATIC
-    IERC20(tokenContractsArray[1]).mint(5 ether); // WETH
-    IERC20(tokenContractsArray[2]).mint(10000 ether); // USDC
-    IERC20(tokenContractsArray[3]).mint(0.5 ether); // WBTC
+    
 
-    IERC20(tokenContractsArray[0]).transfer(msg.sender, 10000 ether); // MATIC
+    IERC20(tokenContractsArray[0]).mint(10000 ether); // USDC
+    IERC20(tokenContractsArray[1]).mint(5 ether); // WETH
+    IERC20(tokenContractsArray[2]).mint(0.5 ether); // WBTC
+    IERC20(tokenContractsArray[3]).mint(600 ether); // LINK
+    IERC20(tokenContractsArray[4]).mint(10000 ether); // DAI
+
+    IERC20(tokenContractsArray[0]).transfer(msg.sender, 10000 ether); // USDC
     IERC20(tokenContractsArray[1]).transfer(msg.sender, 5 ether); // WETH
-    IERC20(tokenContractsArray[2]).transfer(msg.sender, 10000 ether); // USDC
-    IERC20(tokenContractsArray[3]).transfer(msg.sender, 0.5 ether); // WBTC
+    IERC20(tokenContractsArray[2]).transfer(msg.sender, 0.5 ether); // WBTC
+    IERC20(tokenContractsArray[3]).transfer(msg.sender, 600 ether); // LINK
+    IERC20(tokenContractsArray[4]).transfer(msg.sender, 10000 ether); // DAI
 
 
     // IERC20(tokenContractsArray[4]).mint(10000 ether); // aMATIC
