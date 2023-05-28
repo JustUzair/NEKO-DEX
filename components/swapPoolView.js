@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 import { WETHUSDCMODAL } from "./swapWETHUSDC.js";
 import { WBTCUSDCMODAL } from "./swapWBTCUSDC.js";
-import { OPUSDCMODAL } from "./swapOPUSDC.js";
+import { LINKUSDCMODAL } from "./swapLINKUSDC.js";
 import { DAIUSDCMODAL } from "./swapDAIUSDC.js";
 import contractAddresses from "../constants/networkMappings.json";
 export default function SwapPoolView() {
@@ -28,10 +28,10 @@ export default function SwapPoolView() {
           contractAddresses[chainId]["WBTCPool"].length - 1
         ]
       : null;
-  const WMATICPoolContractAddress =
+  const LINKPoolContractAddress =
     chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATICPool"][
-          contractAddresses[chainId]["WMATICPool"].length - 1
+      ? contractAddresses[chainId]["LINKPool"][
+          contractAddresses[chainId]["LINKPool"].length - 1
         ]
       : null;
   const DAIPoolContractAddress =
@@ -42,7 +42,7 @@ export default function SwapPoolView() {
       : null;
   const [WETHUSDC, setWETHUSDC] = useState(false);
   const [WBTCUSDC, setWBTCUSDC] = useState(false);
-  const [OPUSDC, setOPUSDC] = useState(false);
+  const [LINKUSDC, setLINKUSDC] = useState(false);
 
   const [DAIUSDC, setDAIUSDC] = useState(false);
   const [poolview, setPoolView] = useState(true);
@@ -61,8 +61,8 @@ export default function SwapPoolView() {
     setShowPoolInfo(false);
   }
 
-  function viewOPUSDC() {
-    setOPUSDC(true);
+  function viewLINKUSDC() {
+    setLINKUSDC(true);
     setPoolView(false);
     setShowPoolInfo(false);
   }
@@ -76,7 +76,7 @@ export default function SwapPoolView() {
   function viewNone() {
     setWETHUSDC(false);
     setDAIUSDC(false);
-    setOPUSDC(false);
+    setLINKUSDC(false);
     setWBTCUSDC(false);
     setPoolView(true);
     setShowPoolInfo(false);
@@ -225,25 +225,25 @@ export default function SwapPoolView() {
                   </div>
                 </>
               )}
-              {WMATICPoolContractAddress ? (
-                <tr onClick={() => viewOPUSDC(true)} className="poolSection3">
+              {LINKPoolContractAddress ? (
+                <tr onClick={() => viewLINKUSDC(true)} className="poolSection3">
                   <td>
                     <div className="poolContent">
                       <img
                         className="tokenIcon"
-                        src="https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/DPYBKVZG55EWFHIK2TVT3HTH7Y.png"
+                        src="https://s2.coinmarketcap.com/static/img/coins/200x200/1975.png"
                       />
                       <img
                         className="tokenIcon"
                         src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
                       />
                       <div>
-                        <b> Matic Melt </b> <br />
-                        WMATIC / USDC
+                        <b> Link Layer Cake </b> <br />
+                        LINK / USDC
                       </div>
                     </div>
                   </td>
-                  <td><img src="https://i.ibb.co/ZSMSdWY/image.png" className="poolPic"></img></td>
+                  <td><img src="https://i.ibb.co/MM0H872/image.png" className="poolPic"></img></td>
                   <td>-</td>
                   <td>-</td>
                 </tr>
@@ -338,13 +338,13 @@ export default function SwapPoolView() {
       {WBTCUSDC && (
         <WBTCUSDCMODAL setPoolView={setPoolView} setWBTCUSDC={setWBTCUSDC} />
       )}
-      {OPUSDC && (
-        <OPUSDCMODAL setPoolView={setPoolView} setOPUSDC={setOPUSDC} />
+      {LINKUSDC && (
+        <LINKUSDCMODAL setPoolView={setPoolView} setLINKUSDC={setLINKUSDC} />
       )}
       {DAIUSDC && (
         <DAIUSDCMODAL setPoolView={setPoolView} setDAIUSDC={setDAIUSDC} />
       )}
-      {(WETHUSDC || WBTCUSDC || OPUSDC || DAIUSDC || WETHUSDC) && (
+      {(WETHUSDC || WBTCUSDC || LINKUSDC || DAIUSDC || WETHUSDC) && (
         <button style={{position: "absolute", bottom: "10px", marginLeft:"30px"}}className="modalButton" onClick={() => viewNone(false)}>
           Back
         </button>

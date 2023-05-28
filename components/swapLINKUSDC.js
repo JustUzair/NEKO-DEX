@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import contractAddresses from "../constants/networkMappings.json";
-
 import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 import ierc20Abi from "../constants/ierc20Abi.json";
 import { BigNumber, ethers } from "ethers";
@@ -9,9 +8,22 @@ import { useNotification } from "web3uikit";
 
 const mumbaiExplorerAddress = `https://mumbai.polygonscan.com/address/`;
 const okxExplorerAddress = `https://www.oklink.com/oktc-test/address/`;
-
-export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
+export function LINKUSDCSwap({ setPoolView, setLINKUSDC }) {
   const dispatch = useNotification();
+
+  const [slot1Symbol, setSlot1Symbol] = useState("LINK");
+  const [slot2Symbol, setSlot2Symbol] = useState("USDC");
+  const [firstSlotInput, setFirstSlotInput] = useState(0);
+  const [secondSlotOutput, setSecondSlotOutput] = useState(0);
+  const [isSwapped, setIsSwapped] = useState(false);
+
+  const [slot2Icon, setSlot2Icon] = useState(
+    "https://s2.coinmarketcap.com/static/img/coins/200x200/1975.png"
+  );
+  const [slot1Icon, setSlot1Icon] = useState(
+    "https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
+  );
+
   //****************************************************************/
   //-----------------------NOTIFICATION-----------------------------
   //****************************************************************/
@@ -36,34 +48,22 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
   //****************************************************************/
   //--------------------END NOTIFICATION-----------------------------
   //****************************************************************/
-  const [slot1Symbol, setSlot1Symbol] = useState("WMATIC");
-  const [slot2Symbol, setSlot2Symbol] = useState("USDC");
-  const [firstSlotInput, setFirstSlotInput] = useState(0);
-  const [secondSlotOutput, setSecondSlotOutput] = useState(0);
-  const [isSwapped, setIsSwapped] = useState(false);
-
-  const [slot2Icon, setSlot2Icon] = useState(
-    "https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/DPYBKVZG55EWFHIK2TVT3HTH7Y.png"
-  );
-  const [slot1Icon, setSlot1Icon] = useState(
-    "https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
-  );
   const { runContractFunction } = useWeb3Contract();
   const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
     useMoralis();
 
   const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex);
-  const WMATICPoolContractAddress =
+  const LINKPoolContractAddress =
     chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATICPool"][
-          contractAddresses[chainId]["WMATICPool"].length - 1
+      ? contractAddresses[chainId]["LINKPool"][
+          contractAddresses[chainId]["LINKPool"].length - 1
         ]
       : null;
-  const WMATICTestTokenContractAddress =
+  const LINKTestTokenContractAddress =
     chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATIC"][
-          contractAddresses[chainId]["WMATIC"].length - 1
+      ? contractAddresses[chainId]["LINK"][
+          contractAddresses[chainId]["LINK"].length - 1
         ]
       : null;
   const USDCTestTokenContractAddress =
@@ -79,7 +79,7 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
       await runContractFunction({
         params: {
           abi: DEXAbi,
-          contractAddress: WMATICPoolContractAddress,
+          contractAddress: LINKPoolContractAddress,
           functionName: "getOutputAmountWithFee",
           params: {
             inputAmount: await ethers.utils
@@ -107,7 +107,6 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
     if (!isWeb3Enabled) enableWeb3();
     if (account) {
       let enoughBalance = false;
-
       //   console.log(
       //     `${slot1Symbol} Address ${
       //       slot1Symbol == "USDC"
@@ -121,7 +120,7 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
           contractAddress:
             slot1Symbol === "USDC"
               ? USDCTestTokenContractAddress
-              : WMATICTestTokenContractAddress,
+              : LINKTestTokenContractAddress,
           functionName: "balanceOf",
           params: {
             account,
@@ -155,10 +154,10 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
           contractAddress:
             slot1Symbol === "USDC"
               ? USDCTestTokenContractAddress
-              : WMATICTestTokenContractAddress,
+              : LINKTestTokenContractAddress,
           functionName: "approve",
           params: {
-            spender: WMATICPoolContractAddress,
+            spender: LINKPoolContractAddress,
             amount: ethers.utils.parseEther(firstSlotInput).toString(),
           },
         },
@@ -168,25 +167,25 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
         },
         onSuccess: data => {
           console.log("approve", data);
-          //   console.log(
-          //     `First slot input in wei : `,
-          //     ethers.utils.parseEther(firstSlotInput.toString()).toString()
-          //   );
+          console.log(
+            `First slot input in wei : `,
+            ethers.utils.parseEther(firstSlotInput.toString()).toString()
+          );
         },
       });
-      //   console.log(
-      //     `TOKEN 0 : `,
-      //     ethers.utils.parseEther(firstSlotInput).toString()
-      //   );
-      //   console.log(
-      //     `TOKEN 1 : `,
-      //     ethers.utils.parseEther(secondSlotOutput).toString()
-      //   );
+      console.log(
+        `TOKEN 0 : `,
+        ethers.utils.parseEther(firstSlotInput).toString()
+      );
+      console.log(
+        `TOKEN 1 : `,
+        ethers.utils.parseEther(secondSlotOutput).toString()
+      );
       //   console.log(Math.floor(secondSlotOutput).toString());
       await runContractFunction({
         params: {
           abi: DEXAbi,
-          contractAddress: WMATICPoolContractAddress,
+          contractAddress: LINKPoolContractAddress,
           functionName: "swap",
           params:
             slot1Symbol === "USDC"
@@ -218,9 +217,10 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
             } ) `
           );
           setPoolView(true);
-          setOPUSDC(false);
+          setLINKUSDC(false);
           await data.wait(1);
           successNotification(`Assets swapped `);
+
           setFirstSlotInput(0);
         },
       });
@@ -289,7 +289,7 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
       <div className="infoPanel">
         <div className="typedOutWrapperInfo">
           <div className="typedOutInfo">
-            🔀 Swap WMATIC for USDC or <br /> USDC for WMATIC.
+            🔀 Swap LINK for USDC or <br /> USDC for LINK.
           </div>
         </div>
       </div>
@@ -297,26 +297,26 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
   );
 }
 
-export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
-  const [WMATICDepositAmount, setWMATICDepositAmount] = useState(0);
+export function LINKUSDCDeposit({ setPoolView, setLINKUSDC }) {
+  const [LINKDepositAmount, setLINKDepositAmount] = useState(0);
   const [USDCDepositAmount, setUSDCDepositAmount] = useState(0);
-  const [nekoWMATICLPBalance, setNekoWMATICLPBalance] = useState(0);
+  const [nekoLINKLPBalance, setNekoLINKLPBalance] = useState(0);
   const { runContractFunction } = useWeb3Contract();
   const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
     useMoralis();
 
   const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex);
-  const WMATICPoolContractAddress =
+  const LINKPoolContractAddress =
     chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATICPool"][
-          contractAddresses[chainId]["WMATICPool"].length - 1
+      ? contractAddresses[chainId]["LINKPool"][
+          contractAddresses[chainId]["LINKPool"].length - 1
         ]
       : null;
-  const WMATICTestTokenContractAddress =
+  const LINKTestTokenContractAddress =
     chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATIC"][
-          contractAddresses[chainId]["WMATIC"].length - 1
+      ? contractAddresses[chainId]["LINK"][
+          contractAddresses[chainId]["LINK"].length - 1
         ]
       : null;
   const USDCTestTokenContractAddress =
@@ -351,7 +351,7 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
   //--------------------END NOTIFICATION-----------------------------
   //****************************************************************/
   const addLiquidityToPool = async () => {
-    if (WMATICDepositAmount <= 0 || USDCDepositAmount <= 0) {
+    if (LINKDepositAmount <= 0 || USDCDepositAmount <= 0) {
       failureNotification(
         "Values of both the assets should be greater than 0!!"
       );
@@ -386,7 +386,7 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
       await runContractFunction({
         params: {
           abi: ierc20Abi,
-          contractAddress: WMATICTestTokenContractAddress,
+          contractAddress: LINKTestTokenContractAddress,
           functionName: "balanceOf",
           params: {
             account,
@@ -399,9 +399,9 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
         onSuccess: data => {
           const value = ethers.utils.formatUnits(data.toString(), "ether");
           //   console.log(`ETHER : ${ether}`);
-          console.log(value <= WMATICDepositAmount);
-          if (value <= WMATICDepositAmount) {
-            failureNotification("You do not have enough funds of WMATIC");
+          console.log(value <= LINKDepositAmount);
+          if (value <= LINKDepositAmount) {
+            failureNotification("You do not have enough funds of LINK");
             return;
           }
           console.log("balance ether : ", data.toString());
@@ -410,11 +410,11 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
       await runContractFunction({
         params: {
           abi: ierc20Abi,
-          contractAddress: WMATICTestTokenContractAddress,
+          contractAddress: LINKTestTokenContractAddress,
           functionName: "approve",
           params: {
-            spender: WMATICPoolContractAddress,
-            amount: ethers.utils.parseEther(WMATICDepositAmount).toString(),
+            spender: LINKPoolContractAddress,
+            amount: ethers.utils.parseEther(LINKDepositAmount).toString(),
           },
         },
         onError: error => {
@@ -422,7 +422,7 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
           failureNotification(error.message);
         },
         onSuccess: data => {
-          console.log("approve wmatic", data);
+          console.log("approve LINK", data);
         },
       });
       await runContractFunction({
@@ -431,7 +431,7 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
           contractAddress: USDCTestTokenContractAddress,
           functionName: "approve",
           params: {
-            spender: WMATICPoolContractAddress,
+            spender: LINKPoolContractAddress,
             amount: ethers.utils.parseEther(USDCDepositAmount).toString(),
           },
         },
@@ -447,13 +447,11 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
       await runContractFunction({
         params: {
           abi: DEXAbi,
-          contractAddress: WMATICPoolContractAddress,
+          contractAddress: LINKPoolContractAddress,
           functionName: "addLiquidity",
           params: {
             token0Amount: ethers.utils.parseEther(USDCDepositAmount).toString(),
-            token1Amount: ethers.utils
-              .parseEther(WMATICDepositAmount)
-              .toString(),
+            token1Amount: ethers.utils.parseEther(LINKDepositAmount).toString(),
           },
         },
         onError: error => {
@@ -471,7 +469,7 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
             } ) `
           );
           setPoolView(true);
-          setOPUSDC(false);
+          setLINKUSDC(false);
           await data.wait(1);
           successNotification(`Assets Deposited `);
         },
@@ -484,7 +482,7 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
       await runContractFunction({
         params: {
           abi: ierc20Abi,
-          contractAddress: WMATICPoolContractAddress,
+          contractAddress: LINKPoolContractAddress,
           functionName: "balanceOf",
           params: {
             account,
@@ -496,7 +494,7 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
         },
         onSuccess: data => {
           const value = ethers.utils.formatUnits(data.toString(), "ether");
-          setNekoWMATICLPBalance(value);
+          setNekoLINKLPBalance(value);
         },
       });
     }
@@ -523,15 +521,15 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
           className="asset"
           type="number"
           onChange={e => {
-            setWMATICDepositAmount(e.target.value);
+            setLINKDepositAmount(e.target.value);
           }}
-          value={WMATICDepositAmount}
+          value={LINKDepositAmount}
         />
         <div className="selectAsset1">
-          WMATIC
+          LINK
           <img
             className="tokenIcon"
-            src="https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/DPYBKVZG55EWFHIK2TVT3HTH7Y.png"
+            src="https://s2.coinmarketcap.com/static/img/coins/200x200/1975.png"
           />
         </div>
         <div className="selectAsset2">
@@ -556,10 +554,10 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
             marginLeft: "10px",
             fontWeight: "600",
           }}
-          title={nekoWMATICLPBalance}
+          title={nekoLINKLPBalance}
         >
-          Your Neko MATIC LP Balance : ~
-          {parseFloat(nekoWMATICLPBalance).toFixed(4)}
+          Your Neko LINK LP Balance : ~
+          {parseFloat(nekoLINKLPBalance).toFixed(4)}
         </span>
         <button className="swapButton" onClick={addLiquidityToPool}>
           {" "}
@@ -569,7 +567,7 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
       <div className="infoPanel">
         <div className="typedOutWrapperInfo">
           <div className="typedOutInfo">
-            ✨ Deposit WMATIC and USDC to <br /> to produce trading fees, <br />{" "}
+            ✨ Deposit LINK and USDC to <br /> to produce trading fees, <br />{" "}
             which are donated.
           </div>
         </div>
@@ -578,26 +576,25 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
   );
 }
 
-export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
-  const [nekoWMATICLPWithdrawAmount, setNekoWMATICLPWithdrawAmount] =
-    useState(0);
-  const [nekoWMATICLPBalance, setNekoWMATICLPBalance] = useState(0);
+export function LINKUSDCWithdraw({ setPoolView, setLINKUSDC }) {
+  const [nekoBTCLPWithdrawAmount, setNekoBTCLPWithdrawAmount] = useState(0);
+  const [nekoBTCLPBalance, setNekoBTCLPBalance] = useState(0);
   const { runContractFunction } = useWeb3Contract();
   const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
     useMoralis();
 
   const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex);
-  const WMATICPoolContractAddress =
+  const LINKPoolContractAddress =
     chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATICPool"][
-          contractAddresses[chainId]["WMATICPool"].length - 1
+      ? contractAddresses[chainId]["LINKPool"][
+          contractAddresses[chainId]["LINKPool"].length - 1
         ]
       : null;
-  const WMATICTestTokenContractAddress =
+  const LINKTestTokenContractAddress =
     chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATIC"][
-          contractAddresses[chainId]["WMATIC"].length - 1
+      ? contractAddresses[chainId]["LINK"][
+          contractAddresses[chainId]["LINK"].length - 1
         ]
       : null;
 
@@ -627,7 +624,7 @@ export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
   //--------------------END NOTIFICATION-----------------------------
   //****************************************************************/
   const withdrawLiquidityFromPool = async () => {
-    if (nekoWMATICLPWithdrawAmount <= 0) {
+    if (nekoBTCLPWithdrawAmount <= 0) {
       failureNotification(
         "Values of the lp tokens to withdraw should be greater than 0!!"
       );
@@ -639,7 +636,7 @@ export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
       await runContractFunction({
         params: {
           abi: ierc20Abi,
-          contractAddress: WMATICPoolContractAddress,
+          contractAddress: LINKPoolContractAddress,
           functionName: "balanceOf",
           params: {
             account,
@@ -652,9 +649,9 @@ export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
         onSuccess: data => {
           const value = ethers.utils.formatUnits(data.toString(), "ether");
           //   console.log(`ETHER : ${ether}`);
-          console.log(value < nekoWMATICLPWithdrawAmount);
-          if (value < nekoWMATICLPWithdrawAmount) {
-            failureNotification("You do not have enough funds of WMATIC LP");
+          console.log(value < nekoBTCLPWithdrawAmount);
+          if (value < nekoBTCLPWithdrawAmount) {
+            failureNotification("You do not have enough funds of WETH LP");
             return;
           }
           enoughLiquidity = true;
@@ -665,13 +662,11 @@ export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
       await runContractFunction({
         params: {
           abi: ierc20Abi,
-          contractAddress: WMATICPoolContractAddress,
+          contractAddress: LINKPoolContractAddress,
           functionName: "approve",
           params: {
-            spender: WMATICPoolContractAddress,
-            amount: ethers.utils
-              .parseEther(nekoWMATICLPWithdrawAmount)
-              .toString(),
+            spender: LINKPoolContractAddress,
+            amount: ethers.utils.parseEther(nekoBTCLPWithdrawAmount).toString(),
           },
         },
         onError: error => {
@@ -686,11 +681,11 @@ export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
       await runContractFunction({
         params: {
           abi: DEXAbi,
-          contractAddress: WMATICPoolContractAddress,
+          contractAddress: LINKPoolContractAddress,
           functionName: "removeLiquidity",
           params: {
             liquidity: ethers.utils
-              .parseEther(nekoWMATICLPWithdrawAmount)
+              .parseEther(nekoBTCLPWithdrawAmount)
               .toString(),
           },
         },
@@ -709,7 +704,7 @@ export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
             } ) `
           );
           setPoolView(true);
-          setOPUSDC(false);
+          setLINKUSDC(false);
           await data.wait(1);
           successNotification(`Assets Withdrawn `);
         },
@@ -722,7 +717,7 @@ export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
       await runContractFunction({
         params: {
           abi: ierc20Abi,
-          contractAddress: WMATICPoolContractAddress,
+          contractAddress: LINKPoolContractAddress,
           functionName: "balanceOf",
           params: {
             account,
@@ -734,7 +729,7 @@ export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
         },
         onSuccess: data => {
           const value = ethers.utils.formatUnits(data.toString(), "ether");
-          setNekoWMATICLPBalance(value);
+          setNekoBTCLPBalance(value);
         },
       });
     }
@@ -755,11 +750,14 @@ export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
           className="asset"
           type="number"
           onChange={e => {
-            setNekoWMATICLPWithdrawAmount(e.target.value);
+            setNekoBTCLPWithdrawAmount(e.target.value);
           }}
-          value={nekoWMATICLPWithdrawAmount}
+          value={nekoBTCLPWithdrawAmount}
         />
-        <div className="selectAsset1">LP Tokens</div>
+        
+        <div className="selectAsset1">LP Tokens
+
+        </div>
         <span
           style={{
             fontSize: "11.5px",
@@ -767,9 +765,10 @@ export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
             fontWeight: "600",
             cursor: "pointer",
           }}
-          title={nekoWMATICLPBalance}
+          title={nekoBTCLPBalance}
         >
-          ETH LP Balance : ~{parseFloat(nekoWMATICLPBalance).toFixed(2)}
+          LINK LP Balance : ~{parseFloat(nekoBTCLPBalance).toFixed(2)}
+
         </span>
 
         <span
@@ -783,9 +782,9 @@ export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
             borderRadius: "4px",
             color: "white",
           }}
-          title={nekoWMATICLPBalance}
+          title={nekoBTCLPBalance}
           onClick={e => {
-            setNekoWMATICLPWithdrawAmount(nekoWMATICLPBalance);
+            setNekoBTCLPWithdrawAmount(nekoBTCLPBalance);
           }}
         >
           Withdraw All ?
@@ -798,7 +797,7 @@ export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
       <div className="infoPanel">
         <div className="typedOutWrapperInfo">
           <div className="typedOutInfo">
-            📤 Stop accumulating fees and <br /> claim your WMATIC and USDC.
+            📤 Stop accumulating fees and <br /> claim your LINK and USDC.
           </div>
         </div>
       </div>
@@ -810,20 +809,20 @@ export function PoolData() {
   const { runContractFunction } = useWeb3Contract();
   const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
     useMoralis();
-  const [WMATICReserve, setWMATICReserve] = useState(0);
+  const [LINKReserve, setLINKReserve] = useState(0);
   const [USDCReserve, setUSDCReserve] = useState(0);
   const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex);
-  const WMATICPoolContractAddress =
+  const LINKPoolContractAddress =
     chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATICPool"][
-          contractAddresses[chainId]["WMATICPool"].length - 1
+      ? contractAddresses[chainId]["LINKPool"][
+          contractAddresses[chainId]["LINKPool"].length - 1
         ]
       : null;
-  const WMATICTestTokenContractAddress =
+  const LINKTestTokenContractAddress =
     chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATIC"][
-          contractAddresses[chainId]["WMATIC"].length - 1
+      ? contractAddresses[chainId]["LINK"][
+          contractAddresses[chainId]["LINK"].length - 1
         ]
       : null;
   const USDCTestTokenContractAddress =
@@ -838,17 +837,17 @@ export function PoolData() {
       await runContractFunction({
         params: {
           abi: ierc20Abi,
-          contractAddress: WMATICTestTokenContractAddress,
+          contractAddress: LINKTestTokenContractAddress,
           functionName: "balanceOf",
-          params: { account: WMATICPoolContractAddress },
+          params: { account: LINKPoolContractAddress },
         },
         onError: error => {
           console.error(error);
         },
         onSuccess: data => {
-          const matic = ethers.utils.formatUnits(data.toString(), "ether");
+          const LINK = ethers.utils.formatUnits(data.toString(), "ether");
           //   console.log(`ETHER : ${ether}`);
-          setWMATICReserve(matic);
+          setLINKReserve(LINK);
         },
       });
       await runContractFunction({
@@ -856,7 +855,7 @@ export function PoolData() {
           abi: ierc20Abi,
           contractAddress: USDCTestTokenContractAddress,
           functionName: "balanceOf",
-          params: { account: WMATICPoolContractAddress },
+          params: { account: LINKPoolContractAddress },
         },
         onError: error => {
           console.error(error);
@@ -884,17 +883,17 @@ export function PoolData() {
                   Pool
                 </td>
                 <td style={{ paddingLeft: 0 }} align="right">
-                  {WMATICPoolContractAddress ? (
+                  {LINKPoolContractAddress ? (
                     <a
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
                         (chainId == 65 && okxExplorerAddress)
-                      }${WMATICPoolContractAddress}`}
+                      }${LINKPoolContractAddress}`}
                       target="_blank"
                     >
-                      {WMATICPoolContractAddress.substr(0, 4) +
+                      {LINKPoolContractAddress.substr(0, 4) +
                         "..." +
-                        WMATICPoolContractAddress.substr(-4)}
+                        LINKPoolContractAddress.substr(-4)}
                     </a>
                   ) : (
                     "-"
@@ -907,17 +906,17 @@ export function PoolData() {
                   Token
                 </td>
                 <td style={{ paddingLeft: 0 }} align="right">
-                  {WMATICTestTokenContractAddress ? (
+                  {LINKTestTokenContractAddress ? (
                     <a
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
                         (chainId == 65 && okxExplorerAddress)
-                      }${WMATICTestTokenContractAddress}`}
+                      }${LINKTestTokenContractAddress}`}
                       target="_blank"
                     >
-                      {WMATICTestTokenContractAddress.substr(0, 4) +
+                      {LINKTestTokenContractAddress.substr(0, 4) +
                         "..." +
-                        WMATICTestTokenContractAddress.substr(-4)}
+                        LINKTestTokenContractAddress.substr(-4)}
                     </a>
                   ) : (
                     "-"
@@ -931,26 +930,22 @@ export function PoolData() {
             <tbody>
               <tr>
                 <td style={{ paddingLeft: 0 }} align="left">
-                  WMATIC
+                  LINK
                 </td>
                 <td
                   style={{ paddingLeft: 0 }}
                   align="right"
-                  title={
-                    WMATICReserve > 0
-                      ? `~${parseFloat(WMATICReserve).toFixed(4)} WMATIC`
-                      : "-"
-                  }
+                  title={`~${parseFloat(LINKReserve).toFixed(4)} LINK`}
                 >
-                  {WMATICReserve > 0
+                  {LINKReserve > 0
                     ? `~${
-                        parseFloat(WMATICReserve).toFixed(4).toString().length >
+                        parseFloat(LINKReserve).toFixed(4).toString().length >
                         13
-                          ? parseFloat(WMATICReserve)
+                          ? parseFloat(LINKReserve)
                               .toFixed(4)
                               .toString()
                               .substring(0, 13) + "..."
-                          : parseFloat(WMATICReserve).toFixed(4)
+                          : parseFloat(LINKReserve).toFixed(4)
                       }`
                     : "-"}
                 </td>
@@ -963,11 +958,7 @@ export function PoolData() {
                 <td
                   style={{ paddingLeft: 0 }}
                   align="right"
-                  title={
-                    USDCReserve > 0
-                      ? `~${parseFloat(USDCReserve).toFixed(4)} USDC`
-                      : "-"
-                  }
+                  title={`~${parseFloat(USDCReserve).toFixed(4)} USDC`}
                 >
                   {USDCReserve > 0
                     ? `~${
@@ -998,7 +989,7 @@ export function PoolData() {
   );
 }
 
-export const OPUSDCMODAL = ({ setPoolView, setOPUSDC }) => {
+export const LINKUSDCMODAL = ({ setPoolView, setLINKUSDC }) => {
   const [activeTab, setActiveTab] = useState(1);
   function handleTabClick(tab) {
     setActiveTab(tab);
@@ -1010,11 +1001,11 @@ export const OPUSDCMODAL = ({ setPoolView, setOPUSDC }) => {
         style={{
           color: "white",
           textShadow:
-            "0px 0px 10px brown, 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green",
+            "0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple, 0px 0px 10px purple",
         }}
       >
         {" "}
-        Matic Melt{" "}
+        Link Layer Cake{" "}
       </h2>
       <div className="tab-buttons">
         <button
@@ -1040,13 +1031,19 @@ export const OPUSDCMODAL = ({ setPoolView, setOPUSDC }) => {
       <br />
       <div className="tab-content">
         {activeTab === 1 && (
-          <OPUSDCSwap setPoolView={setPoolView} setOPUSDC={setOPUSDC} />
+          <LINKUSDCSwap setPoolView={setPoolView} setLINKUSDC={setLINKUSDC} />
         )}
         {activeTab === 2 && (
-          <OPUSDCDeposit setPoolView={setPoolView} setOPUSDC={setOPUSDC} />
+          <LINKUSDCDeposit
+            setPoolView={setPoolView}
+            setLINKUSDC={setLINKUSDC}
+          />
         )}
         {activeTab === 3 && (
-          <OPUSDCWithdraw setPoolView={setPoolView} setOPUSDC={setOPUSDC} />
+          <LINKUSDCWithdraw
+            setPoolView={setPoolView}
+            setLINKUSDC={setLINKUSDC}
+          />
         )}
 
         <PoolData />
