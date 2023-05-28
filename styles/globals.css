@@ -20,7 +20,7 @@ body {
 
 .box {
   position: relative;
-  background: url("https://media.discordapp.net/attachments/944019971527278623/1111774652193316874/exportdex.png?width=901&height=676");
+  background: url("https://cdn.discordapp.com/attachments/944019971527278623/1112453248973013032/exportdex.png");
   background-size: cover;
 }
 
@@ -420,7 +420,7 @@ th {
 .tab-container-3 {
   animation: fadeIn 0.5s;
   padding: 20px;
-  background: url("https://i.ibb.co/n3HzHTG/DALL-E-2023-05-17-20-08-42-pattern-of-sandwiches-colorful-pixel-art-sprites.png");
+  background: url("https://i.ibb.co/GHhVVsb/image.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top;
@@ -956,7 +956,7 @@ th {
   position: absolute;
   width: 800px;
   height: 600px;
-  border: 2px solid red;
+ 
 }
 
 .global-donations {

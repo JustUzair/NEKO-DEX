@@ -466,14 +466,14 @@ export default function Game() {
               border: "none",
             }}
           >
-            <img
+            {/* <img
               src={"/assets/atm.JPG"}
               alt="atm"
               style={{
                 width: "50px",
                 height: "100px",
               }}
-            />
+            /> */}
           </div>
 
           {showATMText && (

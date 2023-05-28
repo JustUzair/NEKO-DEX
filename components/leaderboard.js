@@ -22,8 +22,8 @@ export const Leaderboard = () => {
   const [wbtcLPStakedBalance, setWBTCLPStakedBalance] = useState(0);
   const [wbtcLPCurrentBalance, setWBTCLPCurrentBalance] = useState(0);
 
-  const [wmaticLPStakedBalance, setWMATICLPStakedBalance] = useState(0);
-  const [wmaticLPCurrentBalance, setWMATICLPCurrentBalance] = useState(0);
+  const [linkLPStakedBalance, setLINKLPStakedBalance] = useState(0);
+  const [linkLPCurrentBalance, setLINKLPCurrentBalance] = useState(0);
 
   const [daiLPStakedBalance, setDAILPStakedBalance] = useState(0);
   const [daiLPCurrentBalance, setDAILPCurrentBalance] = useState(0);
@@ -55,10 +55,10 @@ export const Leaderboard = () => {
           contractAddresses[chainId]["WBTCPool"].length - 1
         ]
       : null;
-  const WMATICPoolContractAddress =
+  const LINKPoolContractAddress =
     chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATICPool"][
-          contractAddresses[chainId]["WMATICPool"].length - 1
+      ? contractAddresses[chainId]["LINKPool"][
+          contractAddresses[chainId]["LINKPool"].length - 1
         ]
       : null;
   const DAIPoolContractAddress =
@@ -252,15 +252,15 @@ export const Leaderboard = () => {
     if (
       ETHPoolContractAddress == null ||
       WBTCPoolContractAddress == null ||
-      WMATICPoolContractAddress == null ||
+      LINKPoolContractAddress == null ||
       DAIPoolContractAddress == null
     )
       return;
     await getStakedTokenAmount(ETHPoolContractAddress, setETHLPStakedBalance);
     await getStakedTokenAmount(WBTCPoolContractAddress, setWBTCLPStakedBalance);
     await getStakedTokenAmount(
-      WMATICPoolContractAddress,
-      setWMATICLPStakedBalance
+      LINKPoolContractAddress,
+      setLINKLPStakedBalance
     );
     await getStakedTokenAmount(DAIPoolContractAddress, setDAILPStakedBalance);
   };
@@ -306,15 +306,15 @@ export const Leaderboard = () => {
     if (
       ETHPoolContractAddress == null ||
       WBTCPoolContractAddress == null ||
-      WMATICPoolContractAddress == null ||
+      LINKPoolContractAddress == null ||
       DAIPoolContractAddress == null
     )
       return;
     await getTotalTokenAmount(ETHPoolContractAddress, setETHLPCurrentBalance);
     await getTotalTokenAmount(WBTCPoolContractAddress, setWBTCLPCurrentBalance);
     await getTotalTokenAmount(
-      WMATICPoolContractAddress,
-      setWMATICLPCurrentBalance
+      LINKPoolContractAddress,
+      setLINKLPCurrentBalance
     );
     await getTotalTokenAmount(DAIPoolContractAddress, setDAILPCurrentBalance);
   };
@@ -500,9 +500,9 @@ export const Leaderboard = () => {
       imageUrl = "https://i.ibb.co/YRYQ82y/image.png";
       PoolContractAddress = WBTCPoolContractAddress;
       break;
-    case "nekoMATICLP":
-      imageUrl = "https://i.ibb.co/ZLW9d4x/image.png";
-      PoolContractAddress = WMATICPoolContractAddress;
+    case "nekoLINKLP":
+      imageUrl = "https://i.ibb.co/dcyP97m/image.pngg";
+      PoolContractAddress = LINKPoolContractAddress;
       break;
     case "nekoDAILP":
       imageUrl = "https://i.ibb.co/26fPzxF/image.png";
@@ -571,7 +571,7 @@ export const Leaderboard = () => {
               >
                 <option value="nekoWETHLP">nekoWETHLP</option>
                 <option value="nekoWBTCLP">nekoWBTCLP</option>
-                <option value="nekoMATICLP">nekoMATICLP</option>
+                <option value="nekoLINKLP">nekoLINKLP</option>
                 <option value="nekoDAILP">nekoDAILP</option>
               </select>
             </div>
@@ -703,7 +703,7 @@ export const Leaderboard = () => {
               >
                 <option value="nekoWETHLP">nekoWETHLP</option>
                 <option value="nekoWBTCLP">nekoWBTCLP</option>
-                <option value="nekoMATICLP">nekoMATICLP</option>
+                <option value="nekoLINKLP">nekoLINKLP</option>
                 <option value="nekoDAILP">nekoDAILP</option>
               </select>
             </div>
@@ -774,12 +774,12 @@ export const Leaderboard = () => {
             </td>
           </tr>
           <tr>
-            <td>nekoMATICLP</td>
-            <td title={wmaticLPCurrentBalance}>
-              {parseFloat(wmaticLPCurrentBalance).toFixed(2)}
+            <td>nekoLINKLP</td>
+            <td title={linkLPCurrentBalance}>
+              {parseFloat(linkLPCurrentBalance).toFixed(2)}
             </td>
-            <td title={wmaticLPStakedBalance}>
-              {parseFloat(wmaticLPStakedBalance).toFixed(2)}
+            <td title={linkLPStakedBalance}>
+              {parseFloat(linkLPStakedBalance).toFixed(2)}
             </td>
           </tr>
           <tr>
