@@ -6,7 +6,8 @@ import { BigNumber, ethers } from "ethers";
 import DEXAbi from "../constants/DEXAbi.json";
 import { useNotification } from "web3uikit";
 
-const explorerAddress = `https://mumbai.polygonscan.com/address/`;
+const mumbaiExplorerAddress = `https://mumbai.polygonscan.com/address/`;
+const okxExplorerAddress = `https://www.oklink.com/oktc-test/address/`;
 export function WBTCUSDCSwap({ setPoolView, setWBTCUSDC }) {
   const dispatch = useNotification();
 
@@ -210,7 +211,9 @@ export function WBTCUSDCSwap({ setPoolView, setWBTCUSDC }) {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -460,7 +463,9 @@ export function WBTCUSDCDeposit({ setPoolView, setWBTCUSDC }) {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -693,7 +698,9 @@ export function WBTCUSDCWithdraw({ setPoolView, setWBTCUSDC }) {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -874,7 +881,10 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0 }} align="right">
                   {WBTCPoolContractAddress ? (
                     <a
-                      href={`${explorerAddress}${WBTCPoolContractAddress}`}
+                      href={`${
+                        (chainId == 80001 && mumbaiExplorerAddress) ||
+                        (chainId == 65 && okxExplorerAddress)
+                      }${WBTCPoolContractAddress}`}
                       target="_blank"
                     >
                       {WBTCPoolContractAddress.substr(0, 4) +
@@ -894,7 +904,10 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0 }} align="right">
                   {WBTCTestTokenContractAddress ? (
                     <a
-                      href={`${explorerAddress}${WBTCTestTokenContractAddress}`}
+                      href={`${
+                        (chainId == 80001 && mumbaiExplorerAddress) ||
+                        (chainId == 65 && okxExplorerAddress)
+                      }${WBTCTestTokenContractAddress}`}
                       target="_blank"
                     >
                       {WBTCTestTokenContractAddress.substr(0, 4) +

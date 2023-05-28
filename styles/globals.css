@@ -68,10 +68,10 @@ body {
   top: 250px;
   left: 115px;
   /* border: white 2px solid; */
-  background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif" );
+  background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif");
   background-size: 50%;
-  background-repeat:no-repeat;
-  background-position:70% 40%;
+  background-repeat: no-repeat;
+  background-position: 70% 40%;
 }
 
 .board {
@@ -79,10 +79,10 @@ body {
   top: 150px;
   left: 320px;
   /* border: 2px solid black; */
-  background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif" );
+  background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif");
   background-size: 20%;
-  background-repeat:no-repeat;
-  background-position:center;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .modal {
@@ -281,16 +281,16 @@ input[type="number"] {
   left: 300px;
 }
 
-.nekoSparkle{
+.nekoSparkle {
   width: 60px;
   height: 80px;
   position: absolute;
   top: 200px;
   left: 300px;
-  background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif" );
+  background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif");
   background-size: 100%;
-  background-repeat:no-repeat;
-  background-position:center;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .worker {
@@ -672,7 +672,6 @@ th {
   background-size: 50%;
   background-repeat: no-repeat;
   background-position: bottom center;
-
 }
 .leaveRoom2 span {
   transform: rotate(90deg);
@@ -735,7 +734,7 @@ th {
 
 .modalButton:hover {
   background: rgba(170, 51, 106, 0.8);
-  
+
   transition: all 0.2s;
 }
 
@@ -811,16 +810,15 @@ th {
   width: 150px;
   height: 150px;
 
-  background-color: yellow;
+  /* background-color: yellow; */
 
-  border: 1px solid black;
-  color:black;
-  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.75);
+  border: 1px solid white !important;
+  /* color: black; */
+  /* box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.75); */
   padding: 10px;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 
-/* 
-  filter: invert(100%) drop-shadow(4px 0px 0px 10px black); */
+  filter: invert(1) drop-shadow(4px 0px 0px 10px black) !important ;
   overflow-y: -moz-scrollbars-none;
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none; /* Firefox */
@@ -871,18 +869,18 @@ th {
   background: url("https://em-content.zobj.net/source/animated-noto-color-emoji/356/sparkles_2728.gif");
   background-size: cover;
   background-repeat: no-repeat;
-} 
+}
 
 .aaveStakeCat {
-  position:absolute;
+  position: absolute;
   height: 100px;
   width: 100px;
 
   margin-left: 650px;
-  margin-top:-100px;
+  margin-top: -100px;
 
   background: url("https://i.ibb.co/bs2x6b8/ezgif-com-gif-maker.gif");
-  background-size:cover;
+  background-size: cover;
 }
 
 .poolPic {
@@ -924,8 +922,9 @@ th {
   }
 }
 
-
-{/* image of nyan cat is animated by flying around the room, inside the div with class Box2.  */}
+ {
+  /* image of nyan cat is animated by flying around the room, inside the div with class Box2.  */
+}
 .nyanCat {
   position: absolute;
   width: 100px;
@@ -934,7 +933,6 @@ th {
   background-size: cover;
   background-repeat: no-repeat;
   animation: moveDiv 3s infinite;
-
 }
 
 @keyframes moveDiv {
@@ -948,16 +946,14 @@ th {
     left: calc(200px - 50px);
   }
 
-
   100% {
     top: calc(30px - 50px);
     left: calc(800px - 50px);
   }
 }
 
-
 .HUD {
-  position:absolute;
+  position: absolute;
   width: 800px;
   height: 600px;
   border: 2px solid red;
@@ -981,18 +977,18 @@ th {
   bottom: 0;
   right: 0;
 
-  color:white;
+  color: white;
   font-size: 15px;
   font-weight: bold;
   text-shadow: 1px 1px 1px #000000;
   padding: 2px;
-  width:200px;
-  
+  width: 200px;
+
   background: rgba(0, 0, 0, 0.5);
 }
 
 .inventory-item {
-  width:50px;
+  width: 50px;
   height: 50px;
 }
 
@@ -1001,7 +997,6 @@ th {
   position: absolute;
   height: 100px;
   width: 50px;
-  top:140px;
-  left:255px;
-
+  top: 140px;
+  left: 255px;
 }

@@ -266,7 +266,6 @@ export const AaveStake = () => {
           await data.wait(1);
           setTokenDepositAmount(0);
           setTokenWithdrawAmount(0);
-
           getCurrentTokenBalance();
           getAllStakedTokensAmount();
           successNotification(`Assets Withdraw/Un-staked`);
@@ -307,7 +306,9 @@ export const AaveStake = () => {
   // ********************     GET Staked Balance of all dex pools ***************************
   //*************************************************************************************** */
   const getStakedTokenAmount = async (tokenAddress, setAmount) => {
+    if (tokenAddress == null || AAVEStakingAddress == null) return;
     if (!isWeb3Enabled) await enableWeb3();
+    // console.log("here");
     if (account) {
       await runContractFunction({
         params: {
@@ -365,13 +366,21 @@ export const AaveStake = () => {
     return (
       <div style={{ padding: "15px" }}>
         {activeTab != 2 && (
-          <button style={{position:"absolute", bottom:"60px",left:"100px"}} className="modalButton" onClick={() => setActiveTab(2)}>
-            Stake LP
+          <button
+            style={{ position: "absolute", bottom: "60px", left: "100px" }}
+            className="modalButton"
+            onClick={() => setActiveTab(2)}
+          >
+            Stake Assets
           </button>
         )}
         {activeTab != 3 && (
-          <button style={{position:"absolute", bottom:"60px",left:"100px"}} className="modalButton" onClick={() => setActiveTab(3)}>
-            Unstake LP
+          <button
+            style={{ position: "absolute", bottom: "60px", left: "100px" }}
+            className="modalButton"
+            onClick={() => setActiveTab(3)}
+          >
+            Unstake Assets
           </button>
         )}
       </div>
@@ -586,7 +595,7 @@ export const AaveStake = () => {
                 className="swapButton"
                 onClick={StakeToken}
               >
-                Deposit
+                Stake
               </button>
             </div>
           </div>
@@ -596,9 +605,9 @@ export const AaveStake = () => {
           className="infoPanelLeaderboard"
           style={{
             // maxWidth: "350px",
-             marginTop: "50px",
-             marginRight: "80px",
-            Index:"100"
+            marginTop: "50px",
+            marginRight: "80px",
+            Index: "100",
           }}
         >
           <div
@@ -661,8 +670,8 @@ export const AaveStake = () => {
                 src={imageUrl}
                 alt="Selected Image"
               />
-              <br/>
-              <br/>
+              <br />
+              <br />
 
               {/* Choose which LP to stake in a dropdown Menu */}
               <select
@@ -835,30 +844,32 @@ export const AaveStake = () => {
             </tr>
             <tr>
               <td>MATIC</td>
-              <td title={wmaticStakedBalance}>{wmaticStakedBalance}</td>
+              <td title={wmaticStakedBalance}>
+                {wmaticStakedBalance.substr(0, 6) + "..."}
+              </td>
             </tr>
             <tr>
               <td>WETH</td>
               <td title={ethStakedBalance}>
-                {parseFloat(ethStakedBalance).toFixed(4)}
+                {ethStakedBalance.substr(0, 6) + "..."}
               </td>
             </tr>
             <tr>
               <td>USDC</td>
               <td title={usdcStakedBalance}>
-                {parseFloat(usdcStakedBalance).toFixed(4)}
+                {usdcStakedBalance.substr(0, 6) + "..."}
               </td>
             </tr>
             <tr>
               <td>WBTC</td>
               <td title={wbtcStakedBalance}>
-                {parseFloat(wbtcStakedBalance).toFixed(4)}
+                {wbtcStakedBalance.substr(0, 6) + "..."}
               </td>
             </tr>
             <tr>
               <td>DAI</td>
               <td title={daiStakedBalance}>
-                {parseFloat(daiStakedBalance).toFixed(4)}
+                {daiStakedBalance.substr(0, 6) + "..."}
               </td>
             </tr>
           </tbody>

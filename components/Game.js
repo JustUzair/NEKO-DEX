@@ -15,7 +15,6 @@ import rightImage from "../public/assets/right.gif";
 import idleImage from "../public/assets/idle.gif";
 import downImage from "../public/assets/down.gif";
 import upImage from "../public/assets/up.gif";
-
 import worker from "../public/assets/worker.gif";
 import { useMoralis, useWeb3Contract } from "react-moralis";
 
@@ -39,6 +38,7 @@ export default function Game() {
   useEffect(() => {
     enableWeb3();
   }, []);
+
   /////////////////// LOGIN//////////////////
   // const [showLogin, setShowLogin] = useState(true);
 
@@ -459,7 +459,22 @@ export default function Game() {
 
           <div className="table2" />
 
-          <div className="ATM">ATM</div>
+          {/* <div className="ATM">ATM</div> */}
+          <div
+            className="ATM"
+            style={{
+              border: "none",
+            }}
+          >
+            <img
+              src={"/assets/atm.JPG"}
+              alt="atm"
+              style={{
+                width: "50px",
+                height: "100px",
+              }}
+            />
+          </div>
 
           {showATMText && (
             <div className="textBox">
@@ -808,7 +823,7 @@ export default function Game() {
               right: "175px",
               width: "40px",
               height: "40px",
-              zIndex: "999",
+              zIndex: "1",
             }}
             src="https://i.pinimg.com/originals/80/7b/5c/807b5c4b02e765bb4930b7c66662ef4b.gif"
           />

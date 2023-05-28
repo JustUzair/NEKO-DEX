@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import contractAddresses from "../constants/networkMappings.json";
-const explorerAddress = `https://mumbai.polygonscan.com/address/`;
+
 import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 import ierc20Abi from "../constants/ierc20Abi.json";
 import { BigNumber, ethers } from "ethers";
 import DEXAbi from "../constants/DEXAbi.json";
 import { useNotification } from "web3uikit";
+
+const mumbaiExplorerAddress = `https://mumbai.polygonscan.com/address/`;
+const okxExplorerAddress = `https://www.oklink.com/oktc-test/address/`;
 
 export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
   const dispatch = useNotification();
@@ -209,7 +212,9 @@ export function OPUSDCSwap({ setPoolView, setOPUSDC }) {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -460,7 +465,9 @@ export function OPUSDCDeposit({ setPoolView, setOPUSDC }) {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -696,7 +703,9 @@ export function OPUSDCWithdraw({ setPoolView, setOPUSDC }) {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -877,7 +886,10 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0 }} align="right">
                   {WMATICPoolContractAddress ? (
                     <a
-                      href={`${explorerAddress}${WMATICPoolContractAddress}`}
+                      href={`${
+                        (chainId == 80001 && mumbaiExplorerAddress) ||
+                        (chainId == 65 && okxExplorerAddress)
+                      }${WMATICPoolContractAddress}`}
                       target="_blank"
                     >
                       {WMATICPoolContractAddress.substr(0, 4) +
@@ -897,7 +909,10 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0 }} align="right">
                   {WMATICTestTokenContractAddress ? (
                     <a
-                      href={`${explorerAddress}${WMATICTestTokenContractAddress}`}
+                      href={`${
+                        (chainId == 80001 && mumbaiExplorerAddress) ||
+                        (chainId == 65 && okxExplorerAddress)
+                      }${WMATICTestTokenContractAddress}`}
                       target="_blank"
                     >
                       {WMATICTestTokenContractAddress.substr(0, 4) +

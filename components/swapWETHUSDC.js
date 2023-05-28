@@ -4,8 +4,9 @@ import ierc20Abi from "../constants/ierc20Abi.json";
 import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 import { BigNumber, ethers } from "ethers";
 import { useNotification } from "web3uikit";
-const explorerAddress = `https://mumbai.polygonscan.com/address/`;
 import DEXAbi from "../constants/DEXAbi.json";
+const mumbaiExplorerAddress = `https://mumbai.polygonscan.com/address/`;
+const okxExplorerAddress = `https://www.oklink.com/oktc-test/address/`;
 
 export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
   const dispatch = useNotification();
@@ -207,7 +208,9 @@ export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -460,7 +463,9 @@ export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -693,7 +698,9 @@ export function WETHUSDCWithdraw({ setPoolView, setWETHUSDC }) {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -875,7 +882,10 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
                   {ETHPoolContractAddress ? (
                     <a
-                      href={`${explorerAddress}${ETHPoolContractAddress}`}
+                      href={`${
+                        (chainId == 80001 && mumbaiExplorerAddress) ||
+                        (chainId == 65 && okxExplorerAddress)
+                      }${ETHPoolContractAddress}`}
                       target="_blank"
                     >
                       {ETHPoolContractAddress.substr(0, 4) +
@@ -895,7 +905,10 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0, fontWeight: "700" }} align="right">
                   {WETHTestTokenContractAddress ? (
                     <a
-                      href={`${explorerAddress}${WETHTestTokenContractAddress}`}
+                      href={`${
+                        (chainId == 80001 && mumbaiExplorerAddress) ||
+                        (chainId == 65 && okxExplorerAddress)
+                      }${WETHTestTokenContractAddress}`}
                       target="_blank"
                     >
                       {WETHTestTokenContractAddress.substr(0, 4) +

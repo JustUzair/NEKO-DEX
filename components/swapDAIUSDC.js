@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import contractAddresses from "../constants/networkMappings.json";
 import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
-const explorerAddress = `https://mumbai.polygonscan.com/address/`;
+const mumbaiExplorerAddress = `https://mumbai.polygonscan.com/address/`;
+const okxExplorerAddress = `https://www.oklink.com/oktc-test/address/`;
+
 import ierc20Abi from "../constants/ierc20Abi.json";
 import { BigNumber, ethers } from "ethers";
 import DEXAbi from "../constants/DEXAbi.json";
@@ -211,7 +213,9 @@ export function DAIUSDCSwap({ setPoolView, setDAIUSDC }) {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -460,7 +464,9 @@ export function DAIUSDCDeposit({ setPoolView, setDAIUSDC }) {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -692,7 +698,9 @@ export function DAIUSDCWithdraw({ setPoolView, setDAIUSDC }) {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -877,7 +885,10 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0 }} align="right">
                   {DAIPoolContractAddress ? (
                     <a
-                      href={`${explorerAddress}${DAIPoolContractAddress}`}
+                      href={`${
+                        (chainId == 80001 && mumbaiExplorerAddress) ||
+                        (chainId == 65 && okxExplorerAddress)
+                      }${DAIPoolContractAddress}`}
                       target="_blank"
                     >
                       {DAIPoolContractAddress.substr(0, 4) +
@@ -897,7 +908,10 @@ export function PoolData() {
                 <td style={{ paddingLeft: 0 }} align="right">
                   {DAITestTokenContractAddress ? (
                     <a
-                      href={`${explorerAddress}${DAITestTokenContractAddress}`}
+                      href={`${
+                        (chainId == 80001 && mumbaiExplorerAddress) ||
+                        (chainId == 65 && okxExplorerAddress)
+                      }${DAITestTokenContractAddress}`}
                       target="_blank"
                     >
                       {DAITestTokenContractAddress.substr(0, 4) +

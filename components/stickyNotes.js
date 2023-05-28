@@ -137,17 +137,18 @@ export default function StickyNotes() {
   const Notes = () => {
     return (
       <div className="sticky-notes--container">
-        <div
+        {/* <div
           className="note"
           style={{
             backgroundColor: `${getRandomColorCode()}`,
+            filter: "invert(1)",
           }}
         >
           0x..2FAB <br />
           $100
           <br />
           Have a good day!
-        </div>
+        </div> */}
       </div>
     );
   };
@@ -244,6 +245,8 @@ export default function StickyNotes() {
                       className="note"
                       style={{
                         backgroundColor: `${getRandomColorCode()}`,
+                        filter:
+                          "invert(1) drop-shadow( 4px 4px 4px rgba(0, 0, 0, 0.75))",
                       }}
                     >
                       {item.donorAddress.substr(0, 4)}...
