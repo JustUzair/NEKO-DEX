@@ -17,7 +17,6 @@ contract NEKO_TEST_TOKEN_MINTER {
 
     function addTokens(address[] memory _tokenContractsArray) public {
         require(isStaff[msg.sender], "Only staff can add tokens");
-        require(_tokenContractsArray.length == 8, "Must add 8 tokens");
         tokenContractsArray = _tokenContractsArray;
     }
 
