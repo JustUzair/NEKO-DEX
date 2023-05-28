@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { Leaderboard } from "./leaderboard.js";
 import { AaveStake } from "./aaveStake.js";
 import { NyanCat } from "./nyanCat.js";
+import { HUD } from "./HUD.js";
+import { ATM } from "./ATM.js";
 
 import SwapPoolView from "./swapPoolView.js";
 import StickyBoard from "./stickyNotes.js";
@@ -16,6 +18,7 @@ import upImage from "../public/assets/up.gif";
 
 import worker from "../public/assets/worker.gif";
 import { useMoralis, useWeb3Contract } from "react-moralis";
+import zIndex from "@material-ui/core/styles/zIndex.js";
 
 const BOX_COLOR = "#ccc";
 const INNER_BOX_SIZE = 70;
@@ -101,6 +104,10 @@ export default function Game() {
     return () => clearInterval(interval);
   }, [innerBoxPosition]);
 
+
+
+
+
   /////////////////////////ROOM 1//////////////////////////////
 
   const Room1 = () => {
@@ -109,9 +116,8 @@ export default function Game() {
 
     const [showDEXText, setShowDEXText] = useState(false);
     const [showBoardText, setShowBoardText] = useState(false);
-    // const [nekoText, setNekoText] = useState(false);
-
-    // const [showNeko, setShowNeko] = useState(false);
+    const [showATM, setShowATM] = useState(false);
+    const [showATMText, setShowATMText] = useState(false);
 
     const [usingModal, setUsingModal] = useState(false);
 
@@ -192,8 +198,11 @@ export default function Game() {
         const leaveRoomRect1 = document
           .querySelector(".leaveRoom1")
           .getBoundingClientRect();
+          const ATMRect = document
+          .querySelector(".ATM")
+          .getBoundingClientRect();
 
-        // const catRect = document.querySelector(".neko").getBoundingClientRect();
+    
 
         if (
           !showDEX &&
@@ -301,6 +310,28 @@ export default function Game() {
         ) {
           setShowBoardText(false);
         }
+
+        if (
+          !showDEX &&
+          !showBoard &&
+          innerBoxRect.left < ATMRect.right &&
+          innerBoxRect.right > ATMRect.left &&
+          innerBoxRect.top < ATMRect.bottom &&
+          innerBoxRect.bottom > ATMRect.top
+        ) {
+          setShowBoardText(false);
+          setShowATMText(true);
+        }
+        if (
+          !(
+            innerBoxRect.left - 30 < ATMRect.right &&
+            innerBoxRect.right + 30 > ATMRect.left &&
+            innerBoxRect.top - 30 < ATMRect.bottom &&
+            innerBoxRect.bottom + 30 > ATMRect.top
+          )
+        ) {
+          setShowATMText(false);
+        }
       }
 
       checkCollision();
@@ -314,6 +345,11 @@ export default function Game() {
     function showBoardFunc() {
       setShowBoard(true);
       setShowBoardText(false);
+    }
+
+    function showATMFunc() {
+      setShowATM(true);
+      setShowATMText(false);
     }
 
     // function Neko() {
@@ -342,6 +378,9 @@ export default function Game() {
             width: BOX_WIDTH,
           }}
         >
+
+          <HUD/>
+          {/*  THE CHARACTER DIV */}
           <div className="bottom-right-div"></div>
           <div
             className={`inner-box ${direction}`}
@@ -429,6 +468,36 @@ export default function Game() {
           <div className="table1" />
 
           <div className="table2" />
+
+          <div className="ATM">ATM</div>
+    
+    {showATMText && (
+            <div className="textBox">
+              <div className="typedOutWrapper">
+                <div className="typedOut">Would you like to access the ATM?</div>{" "}
+              </div>
+              <div className="textSelect" onClick={() => showATMFunc(true)}>
+                Okay
+                </div>
+
+                <div className="textSelect2" onClick={() => setShowATMText(false)}>
+                No thanks
+                </div>
+                </div>
+    )}
+
+    {showATM && <>
+    
+      
+    <div className="modal" style={{marginTop:"0px"}}>
+      <div className="modal-content">
+      <button className="modalButton" onClick={() => setShowATM(false)}>Close</button>
+      <ATM/>
+      </div>
+      </div>
+    
+
+    </>}
 
           <div className="leaveRoom1"></div>
         </div>
