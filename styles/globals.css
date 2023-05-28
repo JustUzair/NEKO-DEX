@@ -735,7 +735,7 @@ th {
 
 .modalButton:hover {
   background: rgba(170, 51, 106, 0.8);
-  border: 1px solid white;
+  
   transition: all 0.2s;
 }
 
@@ -956,3 +956,52 @@ th {
 }
 
 
+.HUD {
+  position:absolute;
+  width: 800px;
+  height: 600px;
+  border: 2px solid red;
+}
+
+.global-donations {
+  position: absolute;
+
+  max-width: 300px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #000000;
+  padding: 2px;
+
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.inventory {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  color:white;
+  font-size: 15px;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #000000;
+  padding: 2px;
+  width:200px;
+  
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.inventory-item {
+  width:50px;
+  height: 50px;
+}
+
+.ATM {
+  border: 2px solid red;
+  position: absolute;
+  height: 100px;
+  width: 50px;
+  top:140px;
+  left:255px;
+
+}
