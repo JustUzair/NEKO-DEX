@@ -11,14 +11,14 @@ export const AaveStake = () => {
   const [tokenDepositAmount, setTokenDepositAmount] = useState("0");
   const [tokenWithdrawAmount, setTokenWithdrawAmount] = useState("0");
 
-  const [selectedOption, setSelectedOption] = useState("MATIC");
+  const [selectedOption, setSelectedOption] = useState("LINK");
 
   // *****************************  STAKED AMOUNT VARIABLES *****************************
   const [ethStakedBalance, setETHStakedBalance] = useState(0);
 
   const [wbtcStakedBalance, setWBTCStakedBalance] = useState(0);
 
-  const [wmaticStakedBalance, setWMATICStakedBalance] = useState(0);
+  const [linkStakedBalance, setLINKStakedBalance] = useState(0);
 
   const [daiStakedBalance, setDAIStakedBalance] = useState(0);
   const [usdcStakedBalance, setUSDCStakedBalance] = useState(0);
@@ -50,10 +50,10 @@ export const AaveStake = () => {
           contractAddresses[chainId]["WBTC"].length - 1
         ]
       : null;
-  const WMATICContractAddress =
+  const LINKContractAddress =
     chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATIC"][
-          contractAddresses[chainId]["WMATIC"].length - 1
+      ? contractAddresses[chainId]["LINK"][
+          contractAddresses[chainId]["LINK"].length - 1
         ]
       : null;
   const USDCContractAddress =
@@ -72,8 +72,8 @@ export const AaveStake = () => {
 
   let ContractAddress =
     chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATIC"][
-          contractAddresses[chainId]["WMATIC"].length - 1
+      ? contractAddresses[chainId]["LINK"][
+          contractAddresses[chainId]["LINK"].length - 1
         ]
       : null;
   const dispatch = useNotification();
@@ -306,9 +306,11 @@ export const AaveStake = () => {
   // ********************     GET Staked Balance of all dex pools ***************************
   //*************************************************************************************** */
   const getStakedTokenAmount = async (tokenAddress, setAmount) => {
-    if (tokenAddress == null || AAVEStakingAddress == null) return;
     if (!isWeb3Enabled) await enableWeb3();
-    // console.log("here");
+    if (AAVEStakingAddress == null) return;
+    if (tokenAddress == null) return;
+    console.log("error here");
+
     if (account) {
       await runContractFunction({
         params: {
@@ -325,11 +327,10 @@ export const AaveStake = () => {
           failureNotification(error.message);
         },
         onSuccess: data => {
-          //   console.log(
-          //     "Staked balance : ",
-          //     ethers.utils.formatUnits(data.toString(), "ether").toString()
-          //     // data.toString()
-          //   );
+          console.log(
+            "Staked balance : ",
+            ethers.utils.formatUnits(data.toString(), "ether").toString()
+          );
           setAmount(
             ethers.utils.formatUnits(data.toString(), "ether").toString()
           );
@@ -342,13 +343,14 @@ export const AaveStake = () => {
     if (
       WETHContractAddress == null ||
       WBTCContractAddress == null ||
-      WMATICContractAddress == null ||
-      DAIContractAddress == null
+      LINKContractAddress == null ||
+      DAIContractAddress == null ||
+      USDCContractAddress == null
     )
       return;
     await getStakedTokenAmount(WETHContractAddress, setETHStakedBalance);
     await getStakedTokenAmount(WBTCContractAddress, setWBTCStakedBalance);
-    await getStakedTokenAmount(WMATICContractAddress, setWMATICStakedBalance);
+    await getStakedTokenAmount(LINKContractAddress, setLINKStakedBalance);
     await getStakedTokenAmount(DAIContractAddress, setDAIStakedBalance);
     await getStakedTokenAmount(USDCContractAddress, setUSDCStakedBalance);
   };
@@ -359,8 +361,8 @@ export const AaveStake = () => {
   useEffect(() => {
     setTokenWithdrawAmount(0);
     setTokenDepositAmount(0);
-    getCurrentTokenBalance();
-    getAllStakedTokensAmount();
+    account != null && getCurrentTokenBalance();
+    account != null && getAllStakedTokensAmount();
   }, [account, selectedOption]);
   const Buttons = () => {
     return (
@@ -394,9 +396,9 @@ export const AaveStake = () => {
   let imageUrl;
 
   switch (selectedOption) {
-    case "MATIC":
-      imageUrl = "https://app.aave.com/icons/tokens/matic.svg";
-      ContractAddress = WMATICContractAddress;
+    case "LINK":
+      imageUrl = "https://app.aave.com/icons/tokens/link.svg";
+      ContractAddress = LINKContractAddress;
       break;
     case "WETH":
       imageUrl = "https://app.aave.com/icons/tokens/weth.svg";
@@ -452,9 +454,8 @@ export const AaveStake = () => {
     //   imageUrl = "https://app.aave.com/icons/tokens/dpi.svg";
     //   break;
     default:
-      imageUrl = "path/to/default-image.jpg";
-      ContractAddress = WMATICContractAddress;
-
+      imageUrl = "https://app.aave.com/icons/tokens/link.svg";
+      ContractAddress = LINKContractAddress;
       break;
   }
 
@@ -514,7 +515,7 @@ export const AaveStake = () => {
                   cursor: "pointer",
                 }}
               >
-                <option value="MATIC">MATIC</option>
+                <option value="LINK">LINK</option>
                 <option value="WETH">WETH</option>
                 <option value="USDC">USDC</option>
                 <option value="WBTC">WBTC</option>
@@ -685,7 +686,7 @@ export const AaveStake = () => {
                   margin: "0 auto",
                 }}
               >
-                <option value="MATIC">MATIC</option>
+                <option value="LINK">LINK</option>
                 <option value="WETH">WETH</option>
                 <option value="USDC">USDC</option>
                 <option value="WBTC">WBTC</option>
@@ -737,7 +738,7 @@ export const AaveStake = () => {
                     (selectedOption == "DAI" && daiStakedBalance) ||
                     (selectedOption == "USDC" && usdcStakedBalance) ||
                     (selectedOption == "WBTC" && wbtcStakedBalance) ||
-                    (selectedOption == "MATIC" && wmaticStakedBalance)
+                    (selectedOption == "LINK" && linkStakedBalance)
                   }
                 >
                   Total Staked : ~
@@ -765,8 +766,8 @@ export const AaveStake = () => {
                         useGrouping: false,
                       })
                       .substr(0, 6) + "..."}
-                  {selectedOption == "MATIC" &&
-                    wmaticStakedBalance
+                  {selectedOption == "LINK" &&
+                    linkStakedBalance
                       .toLocaleString("fullwide", {
                         useGrouping: false,
                       })
@@ -790,7 +791,7 @@ export const AaveStake = () => {
                         (selectedOption == "DAI" && daiStakedBalance) ||
                         (selectedOption == "USDC" && usdcStakedBalance) ||
                         (selectedOption == "WBTC" && wbtcStakedBalance) ||
-                        (selectedOption == "MATIC" && wmaticStakedBalance)
+                        (selectedOption == "LINK" && linkStakedBalance)
                     );
                   }}
                 >
@@ -843,33 +844,57 @@ export const AaveStake = () => {
               <th>Staked</th>
             </tr>
             <tr>
-              <td>MATIC</td>
-              <td title={wmaticStakedBalance}>
-                {wmaticStakedBalance.substr(0, 6) + "..."}
+              <td>LINK</td>
+              <td title={linkStakedBalance}>
+                {linkStakedBalance
+                  .toLocaleString("fullwide", {
+                    useGrouping: false,
+                  })
+                  .substr(0, 6) + "..."}
               </td>
             </tr>
             <tr>
               <td>WETH</td>
               <td title={ethStakedBalance}>
-                {ethStakedBalance.substr(0, 6) + "..."}
+                {/* {ethStakedBalance.substr(0, 6) + "..."} */}
+                {ethStakedBalance
+                  .toLocaleString("fullwide", {
+                    useGrouping: false,
+                  })
+                  .substr(0, 6) + "..."}
               </td>
             </tr>
             <tr>
               <td>USDC</td>
               <td title={usdcStakedBalance}>
-                {usdcStakedBalance.substr(0, 6) + "..."}
+                {/* {usdcStakedBalance.substr(0, 6) + "..."} */}
+                {usdcStakedBalance
+                  .toLocaleString("fullwide", {
+                    useGrouping: false,
+                  })
+                  .substr(0, 6) + "..."}
               </td>
             </tr>
             <tr>
               <td>WBTC</td>
               <td title={wbtcStakedBalance}>
-                {wbtcStakedBalance.substr(0, 6) + "..."}
+                {/* {wbtcStakedBalance.substr(0, 6) + "..."} */}
+                {wbtcStakedBalance
+                  .toLocaleString("fullwide", {
+                    useGrouping: false,
+                  })
+                  .substr(0, 6) + "..."}
               </td>
             </tr>
             <tr>
               <td>DAI</td>
               <td title={daiStakedBalance}>
-                {daiStakedBalance.substr(0, 6) + "..."}
+                {/* {daiStakedBalance.substr(0, 6) + "..."} */}
+                {daiStakedBalance
+                  .toLocaleString("fullwide", {
+                    useGrouping: false,
+                  })
+                  .substr(0, 6) + "..."}
               </td>
             </tr>
           </tbody>

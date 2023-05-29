@@ -956,7 +956,6 @@ th {
   position: absolute;
   width: 800px;
   height: 600px;
- 
 }
 
 .global-donations {
@@ -999,4 +998,23 @@ th {
   width: 50px;
   top: 140px;
   left: 255px;
+}
+.okc-global--donation {
+  height: 22px;
+  overflow: hidden;
+  transition: height 2s;
+  animation: 2s delay-overflow linear;
+  cursor: "pointer";
+}
+@keyframes delay-overflow {
+  0% {
+    overflow: hidden;
+  }
+  100% {
+    overflow: visible;
+  }
+}
+.okc-global--donation:hover {
+  height: max-content;
+  overflow: visible;
 }

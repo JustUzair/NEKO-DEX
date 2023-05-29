@@ -4,6 +4,7 @@ import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 import { useNotification } from "web3uikit";
 import ierc20Abi from "../constants/ierc20Abi.json";
 import stickyNotesAbi from "../constants/StickyNotesAbi.json";
+import { ethers } from "ethers";
 
 export default function StickyNotes() {
   const [stickyNotes, setStickyNotes] = useState(true);
@@ -178,7 +179,10 @@ export default function StickyNotes() {
               abi: stickyNotesAbi,
               contractAddress: StickyNotesContractAddress,
               functionName: "newNote",
-              params: { _amount: amount, _message: message },
+              params: {
+                _amount: ethers.utils.parseEther(amount).toString(),
+                _message: message,
+              },
             },
             onError: error => {
               failureNotification(error.message);
@@ -210,7 +214,7 @@ export default function StickyNotes() {
           console.error(error);
         },
         onSuccess: data => {
-          console.log(data);
+          //   console.log(data);
 
           const arr1 = [];
           data.map(item => {
@@ -255,7 +259,10 @@ export default function StickyNotes() {
                           fontWeight: "600",
                         }}
                       >
-                        ${item.donationAmount}
+                        $
+                        {ethers.utils
+                          .formatEther(item.donationAmount)
+                          .toString()}
                       </span>
                       <br />
                       <span

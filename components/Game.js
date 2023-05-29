@@ -6,7 +6,7 @@ import { AaveStake } from "./aaveStake.js";
 import { NyanCat } from "./nyanCat.js";
 import { HUD } from "./HUD.js";
 import { ATM } from "./ATM.js";
-
+import axios from "axios";
 import SwapPoolView from "./swapPoolView.js";
 import StickyBoard from "./stickyNotes.js";
 
@@ -48,6 +48,11 @@ export default function Game() {
   const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex);
   const [globalDonations, setGlobalDonations] = useState([]);
+  const [timestamp, setTimestamp] = useState(Date.now());
+  const [totalDonationsInUSD, setTotalDonationsInUSD] = useState(0);
+  const [globalDonationsPolygon, setGlobalDonationsPolygon] = useState(0);
+  const [globalDonationsOKX, setGlobalDonationsOKX] = useState([]);
+
   const ReceiverAddress = // donation receiver address
     chainId in contractAddresses
       ? contractAddresses[chainId]["CharityAddress"][
@@ -101,12 +106,9 @@ export default function Game() {
           //   failureNotification(error.message);
         },
         onSuccess: async data => {
-          console.log(
-            `Polygon : `,
-            ethers.utils.formatEther(data.toString()).toString()
-          );
-          setGlobalDonations([
-            ethers.utils.formatEther(data.toString()).toString(),
+          //   console.log(`Polygon : `, parseFloat(data.toString()) / 100);
+          setGlobalDonationsPolygon([
+            (parseFloat(data.toString()) / 100).toString(),
           ]);
         },
       });
@@ -129,20 +131,11 @@ export default function Game() {
         },
         onSuccess: async data => {
           console.log(data);
-          //   data.map(item => {
-          //     console.log(`Address : ${item[0]}`);
-          //     console.log(
-          //       `Amount : ${ethers.utils
-          //         .formatEther(item[1].toString())
-          //         .toString()}`
-          //     );
-          //   });
-
           const arr1 = [];
           data.map(item => {
             const donation = {};
             donation["donatedTokenAddress"] = item[0];
-            donation["donatedTokenAddressAmount"] = ethers.utils
+            donation["donatedTokenAmount"] = ethers.utils
               .formatEther(item[1].toString())
               .toString();
             donation["donationTokenSymbol"] =
@@ -156,12 +149,22 @@ export default function Game() {
                 "LINK") ||
               (donation.donatedTokenAddress == DAITestTokenContractAddress &&
                 "DAI");
-
+            donation["donationTokenImage"] =
+              (donation.donatedTokenAddress == USDCTestTokenContractAddress &&
+                "https://app.aave.com/icons/tokens/usdc.svg") ||
+              (donation.donatedTokenAddress == WETHTestTokenContractAddress &&
+                "https://app.aave.com/icons/tokens/weth.svg") ||
+              (donation.donatedTokenAddress == WBTCTestTokenContractAddress &&
+                "https://app.aave.com/icons/tokens/wbtc.svg") ||
+              (donation.donatedTokenAddress == LINKTestTokenContractAddress &&
+                "https://app.aave.com/icons/tokens/link.svg") ||
+              (donation.donatedTokenAddress == DAITestTokenContractAddress &&
+                "https://app.aave.com/icons/tokens/dai.svg");
             arr1.push(donation);
             // console.log(arr1);
           });
           console.log(arr1);
-          setGlobalDonations(prevState => [...prevState, ...arr1]);
+          setGlobalDonationsOKX(prevState => [...prevState, ...arr1]);
         },
       });
     }
@@ -173,6 +176,32 @@ export default function Game() {
       getGlobalDonationsOKX();
     }
   }, [chainId]);
+
+  useEffect(() => {
+    if (chainId != null && (chainId == 65 || chainId == 66)) {
+      const COINGECKO_PRICE_FEED_URL =
+        "https://api.coingecko.com/api/v3/simple/price?ids=weth,wrapped-bitcoin,usd-coin,dai,chainlink&vs_currencies=usd";
+      try {
+        axios.get(COINGECKO_PRICE_FEED_URL).then(res => {
+          const data = res.data;
+          console.log(data);
+          // setCoinPriceData(data);
+          const value =
+            data?.["usd-coin"].usd * globalDonationsOKX[0]?.donatedTokenAmount +
+            data?.weth.usd * globalDonationsOKX[1]?.donatedTokenAmount +
+            data?.["wrapped-bitcoin"].usd *
+              globalDonationsOKX[2]?.donatedTokenAmount +
+            data?.chainlink.usd * globalDonationsOKX[3]?.donatedTokenAmount +
+            data?.dai.usd * globalDonationsOKX[4]?.donatedTokenAmount;
+          console.log(value);
+          setTotalDonationsInUSD(parseFloat(value).toFixed(2));
+        });
+        //   console.log(coinPriceData);
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+  }, [chainId, globalDonationsOKX]);
 
   /////////////////// LOGIN//////////////////
   // const [showLogin, setShowLogin] = useState(true);
@@ -504,7 +533,13 @@ export default function Game() {
             width: BOX_WIDTH,
           }}
         >
-          <HUD chainId={chainId} globalDonations={globalDonations} />
+          <HUD
+            chainId={chainId}
+            globalDonationsOKX={globalDonationsOKX}
+            globalDonationsPolygon={globalDonationsPolygon}
+            totalDonationsInUSD={totalDonationsInUSD}
+          />
+
           {/*  THE CHARACTER DIV */}
           <div className="bottom-right-div"></div>
           <div
