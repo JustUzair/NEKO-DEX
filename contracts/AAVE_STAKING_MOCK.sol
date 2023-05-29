@@ -131,15 +131,13 @@ contract NEKOStaking {
     //foundation withdraw all tokens
 
     function withdraw() public {
-        require(msg.sender == foundationAddress, "can only be called by cat charity foundation");
         address[] memory allTokens_ = allTokens;
         uint256 allTokensLength = allTokens_.length;
-
         for(uint i; i < allTokensLength; i++){
             address token = allTokens[i];
             uint256 amount = IERC20(token).balanceOf(address(this));
             if(amount > 0){
-                require(IERC20(allTokens[i]).transfer(msg.sender, amount), "contract to foundation transfer failed");
+                require(IERC20(allTokens[i]).transfer(foundationAddress, amount), "contract to foundation transfer failed");
             }
         }
   
