@@ -81,10 +81,10 @@ export default function StickyNotes() {
           contractAddresses[chainId]["WBTC"].length - 1
         ]
       : null;
-  const WMATICTestTokenContractAddress =
+  const LINKTestTokenContractAddress =
     chainId in contractAddresses
-      ? contractAddresses[chainId]["WMATIC"][
-          contractAddresses[chainId]["WMATIC"].length - 1
+      ? contractAddresses[chainId]["LINK"][
+          contractAddresses[chainId]["LINK"].length - 1
         ]
       : null;
   const DAITestTokenContractAddress =
@@ -239,9 +239,8 @@ export default function StickyNotes() {
             <div className="sticky-notes--container">
               {notes.length > 0 ? (
                 notes.map((item, index) => (
-                  <>
+                  <div key={index}>
                     <div
-                      key={index}
                       className="note"
                       style={{
                         backgroundColor: `${getRandomColorCode()}`,
@@ -277,7 +276,7 @@ export default function StickyNotes() {
                         </div>
                       </div>
                     </div>
-                  </>
+                  </div>
                 ))
               ) : (
                 <>

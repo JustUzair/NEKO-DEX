@@ -18,6 +18,14 @@ import upImage from "../public/assets/up.gif";
 import worker from "../public/assets/worker.gif";
 import { useMoralis, useWeb3Contract } from "react-moralis";
 
+import contractAddresses from "../constants/networkMappings.json";
+import ierc20Abi from "../constants/ierc20Abi.json";
+import { useNotification } from "web3uikit";
+import { ethers } from "ethers";
+
+import chainlinkFeedGlobalDonationOKX from "../constants/okxChainFeedAbi.json";
+import chainlinkFeedGlobalDonationPolygon from "../constants/polygonChainlinkFeedAbi.json";
+
 const BOX_COLOR = "#ccc";
 const INNER_BOX_SIZE = 70;
 const INNER_BOX_COLOR = "blue";
@@ -34,10 +42,145 @@ const BOARD_WIDTH = 230;
 const BOARD_HEIGHT = 50;
 
 export default function Game() {
+  const dispatch = useNotification();
+  const { runContractFunction } = useWeb3Contract();
   const { enableWeb3, authenticate, account, isWeb3Enabled } = useMoralis();
+  const { chainId: chainIdHex } = useMoralis();
+  const chainId = parseInt(chainIdHex);
+  const [globalDonations, setGlobalDonations] = useState([]);
+  const ReceiverAddress = // donation receiver address
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["CharityAddress"][
+          contractAddresses[chainId]["CharityAddress"].length - 1
+        ]
+      : null;
+
+  const USDCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["USDC"][
+          contractAddresses[chainId]["USDC"].length - 1
+        ]
+      : null;
+  const WETHTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WETH"][
+          contractAddresses[chainId]["WETH"].length - 1
+        ]
+      : null;
+  const WBTCTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WBTC"][
+          contractAddresses[chainId]["WBTC"].length - 1
+        ]
+      : null;
+  const LINKTestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["LINK"][
+          contractAddresses[chainId]["LINK"].length - 1
+        ]
+      : null;
+  const DAITestTokenContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["DAI"][
+          contractAddresses[chainId]["DAI"].length - 1
+        ]
+      : null;
+  const getGlobalDonationsPolygon = async () => {
+    if (ReceiverAddress == null) return;
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: chainlinkFeedGlobalDonationPolygon,
+          contractAddress: ReceiverAddress,
+          functionName: "getTotalWithdrawnUSD",
+          params: {},
+        },
+        onError: error => {
+          console.error(error);
+          //   failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          console.log(
+            `Polygon : `,
+            ethers.utils.formatEther(data.toString()).toString()
+          );
+          //   data.map(item => {
+          //     console.log(item);
+          //   });
+          //   dispatch({
+          //     type: "success",
+          //     message: `TX : ${data.tx} submitted, wait for tx to complete🔃`,
+          //     title: `TX : ${data.tx} submitted successfully`,
+          //     position: "topR",
+          //   });
+          //   await data.wait(1);
+          //   successNotification("Test Tokens Minted Successfully!");
+        },
+      });
+    }
+  };
+  const getGlobalDonationsOKX = async () => {
+    if (ReceiverAddress == null) return;
+    if (!isWeb3Enabled) enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi: chainlinkFeedGlobalDonationOKX,
+          contractAddress: ReceiverAddress,
+          functionName: "getKnownTokensDonated",
+          params: {},
+        },
+        onError: error => {
+          console.error(error);
+          //   failureNotification(error.message);
+        },
+        onSuccess: async data => {
+          console.log(data);
+          //   data.map(item => {
+          //     console.log(`Address : ${item[0]}`);
+          //     console.log(
+          //       `Amount : ${ethers.utils
+          //         .formatEther(item[1].toString())
+          //         .toString()}`
+          //     );
+          //   });
+
+          const arr1 = [];
+          data.map(item => {
+            const donation = {};
+            donation["donatedTokenAddress"] = item[0];
+            donation["donatedTokenAddressAmount"] = ethers.utils
+              .formatEther(item[1].toString())
+              .toString();
+            donation["donationTokenSymbol"] =
+              (donation.donatedTokenAddress == USDCTestTokenContractAddress &&
+                "USDC") ||
+              (donation.donatedTokenAddress == WETHTestTokenContractAddress &&
+                "WETH") ||
+              (donation.donatedTokenAddress == WBTCTestTokenContractAddress &&
+                "WBTC") ||
+              (donation.donatedTokenAddress == LINKTestTokenContractAddress &&
+                "LINK") ||
+              (donation.donatedTokenAddress == DAITestTokenContractAddress &&
+                "DAI");
+
+            arr1.push(donation);
+            // console.log(arr1);
+          });
+          console.log(arr1);
+          setGlobalDonations(prevState => [...prevState, ...arr1]);
+        },
+      });
+    }
+  };
   useEffect(() => {
-    enableWeb3();
-  }, []);
+    if (chainId != null && (chainId == 80001 || chainId == 137))
+      getGlobalDonationsPolygon();
+    if (chainId != null && (chainId == 65 || chainId == 66)) {
+      getGlobalDonationsOKX();
+    }
+  }, [chainId]);
 
   /////////////////// LOGIN//////////////////
   // const [showLogin, setShowLogin] = useState(true);
@@ -369,7 +512,7 @@ export default function Game() {
             width: BOX_WIDTH,
           }}
         >
-          <HUD />
+          <HUD chainId={chainId} globalDonations={globalDonations} />
           {/*  THE CHARACTER DIV */}
           <div className="bottom-right-div"></div>
           <div

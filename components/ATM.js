@@ -64,8 +64,8 @@ export const ATM = () => {
           console.log(data);
           dispatch({
             type: "success",
-            message: `TX : ${data.tx} submitted, wait for tx to complete🔃`,
-            title: `TX : ${data.tx} submitted successfully`,
+            message: `TX : ${data.hash} submitted, wait for tx to complete🔃`,
+            title: `TX : ${data.hash} submitted successfully`,
             position: "topR",
           });
           await data.wait(1);
