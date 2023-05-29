@@ -145,7 +145,7 @@ contract NEKOStaking {
   
     }
 
-    function getBalances(address _user, address _token) public view returns (uint256) {
+    function getBalance(address _user, address _token) public view returns (uint256) {
         return(userBalances[_user][_token]);
     }
 
