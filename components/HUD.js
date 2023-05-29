@@ -5,12 +5,12 @@ export const HUD = ({ chainId, globalDonations }) => {
     <div className="HUD">
       {chainId != null && (chainId == 80001 || chainId == 137) && (
         <div className="global-donations">
-          Global donations : $15,000,000,000
+          Global donations : ${globalDonations && globalDonations[0]}
         </div>
       )}
 
       {chainId != null && (chainId == 65 || chainId == 66) && (
-        <div className="global-donations">OKX</div>
+        <div className="global-donations">Global donations :</div>
       )}
       {/* <div className="inventory">
             <div>Inventory</div>

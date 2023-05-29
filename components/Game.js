@@ -105,17 +105,9 @@ export default function Game() {
             `Polygon : `,
             ethers.utils.formatEther(data.toString()).toString()
           );
-          //   data.map(item => {
-          //     console.log(item);
-          //   });
-          //   dispatch({
-          //     type: "success",
-          //     message: `TX : ${data.tx} submitted, wait for tx to complete🔃`,
-          //     title: `TX : ${data.tx} submitted successfully`,
-          //     position: "topR",
-          //   });
-          //   await data.wait(1);
-          //   successNotification("Test Tokens Minted Successfully!");
+          setGlobalDonations([
+            ethers.utils.formatEther(data.toString()).toString(),
+          ]);
         },
       });
     }
