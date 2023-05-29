@@ -36,8 +36,9 @@ contract NEKO_DEX is ERC20 {
     IERC20 public token1; // second asset
     address public feeReceiver; // charity foundation address
 
-    uint256 public totalToken1Donated; //counter for the total donated amount of token0 to the foundation
-    uint256 public totalToken0Donated; // counter for the total donated amount of token1 to the foundation
+    uint public constant MINIMUM_LIQUIDITY = 10**3;
+
+    address burnAddress;
 
     /// @notice Creates a new liquidity pool for the given assets.
     /// @param _token0 The first asset.
@@ -45,10 +46,11 @@ contract NEKO_DEX is ERC20 {
     /// @param _feeReceiver The charity foundation address.
     /// @param _name The name of the liquidity token.
     /// @param _symbol The symbol of the liquidity token.
-    constructor(IERC20 _token0, IERC20 _token1, address _feeReceiver, string memory _name, string memory _symbol) ERC20(_name,_symbol) {
+    constructor(IERC20 _token0, IERC20 _token1, address _feeReceiver, string memory _name, string memory _symbol,address _burnAddress) ERC20(_name,_symbol) {
         token0 = _token0; 
         token1 = _token1; 
         feeReceiver = _feeReceiver; 
+        burnAddress = _burnAddress;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -82,7 +84,9 @@ contract NEKO_DEX is ERC20 {
         // if the pool is empty, the liquidity is the square root of the product of the two amounts
         if (_totalSupply == 0) {
             // liquidity = sqrt(x*y)
-            liquidity = sqrt(token0Amount * token1Amount); 
+            liquidity = sqrt(token0Amount * token1Amount) - MINIMUM_LIQUIDITY;
+            _mint(burnAddress, MINIMUM_LIQUIDITY);
+
         } else {
             // liquidity = min(x*totalSupply/xPool, y*totalSupply/yPool)
             liquidity = min(token0Amount * _totalSupply / token0.balanceOf(address(this)), token1Amount * _totalSupply / token1.balanceOf(address(this))); 
@@ -138,7 +142,6 @@ function swap(uint256 token0In, uint256 token1In, uint256 token0OutMin, uint256 
         token1Out = getOutputAmountWithFee(token0In, true); // calculate the output amount of token1 based on the input amount of token0
         require(token1Out >= token1OutMin, "Slippage protection"); // check if the output amount of token1 is greater than the minimum output amount of token1
         _fee = getOutputAmountNoFee(token0In,true) - token1Out; // calculate the fee
-        totalToken1Donated += _fee; //add the amount donated to the counter
         token1.transfer(msg.sender, token1Out); // transfer token1 to sender
         token1.transfer(feeReceiver,_fee); // transfer fee to feeReceiver
         
@@ -148,7 +151,6 @@ function swap(uint256 token0In, uint256 token1In, uint256 token0OutMin, uint256 
         token0Out = getOutputAmountWithFee(token1In,false); // calculate the output amount of token0 based on the input amount of token1
         require(token0Out >= token0OutMin, "Slippage protection"); // check if the output amount of token0 is greater than the minimum output amount of token0
         _fee = getOutputAmountNoFee(token1In,false) - token0Out; // calculate the fee
-        totalToken0Donated += _fee; //add the amount donated to the counter
         token0.transfer(msg.sender, token0Out); // transfer token0 to sender
         token0.transfer(feeReceiver,_fee); // transfer fee to feeReceiver
     }
@@ -221,6 +223,10 @@ function swap(uint256 token0In, uint256 token1In, uint256 token0OutMin, uint256 
     function min(uint256 a, uint256 b) private pure returns (uint256) {
         return a < b ? a : b;
     }
+
+    
+
+    
 
 
     /*//////////////////////////////////////////////////////////////
