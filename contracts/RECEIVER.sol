@@ -30,15 +30,15 @@ contract NEKO_TEST_TOKEN_RECEIVER {
         tokensWithdrawn[_token] += amount;
     }
 
-    function addReceiver(address _receiver) public {
+    function addReceiver(address _receiver) onlyReceiver public {
         receiverAuth[_receiver] = true;
     }
 
-    function addKnown(address _token) public {
+    function addTokens(address _token) public onlyReceiver {
         knownTokens.push(_token);
     }
 
-    function withdrawKnown() onlyReceiver public {
+    function withdrawKnown() public onlyReceiver{
         address[] memory knownTokens_ = knownTokens;
         uint256 length = knownTokens_.length;
         for(uint i; i < length; i++){
