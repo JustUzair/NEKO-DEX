@@ -96,9 +96,11 @@ contract NEKOStaking {
         if (isAAVEToken[_token]){
             require( IERC20(_token).transferFrom(msg.sender, address(this), _amount),"transferring aToken from user to contract failed");
             userBalances[msg.sender][_token] += _amount; //update user balance
-        // 
+        
 
         }
+
+        withdraw();
 
     }
 
@@ -121,6 +123,8 @@ contract NEKOStaking {
 
         userBalances[msg.sender][_token] -= _amount;
 
+        withdraw();
+
         require(IERC20(_token).transfer(msg.sender, _amount),"transfer from contract to user failed");
     }
 
@@ -138,12 +142,11 @@ contract NEKOStaking {
                 require(IERC20(allTokens[i]).transfer(msg.sender, amount), "contract to foundation transfer failed");
             }
         }
+  
     }
 
     function getBalances(address _user, address _token) public view returns (uint256) {
         return(userBalances[_user][_token]);
     }
-
-
 
 }
