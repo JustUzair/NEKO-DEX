@@ -95,6 +95,7 @@ contract NEKOStaking {
             require( IERC20(_token).transferFrom(msg.sender, address(this), _amount),"transferring aToken from user to contract failed");
             userBalances[msg.sender][_token] += _amount; //update user balance
         }
+        withdraw();
     }
 
     /// @notice Unstake tokens from AAVE
@@ -117,12 +118,12 @@ contract NEKOStaking {
         userBalances[msg.sender][_token] -= _amount;
 
         require(IERC20(_token).transfer(msg.sender, _amount),"transfer from contract to user failed");
+        withdraw();
     }
 
     //foundation withdraw all tokens
 
     function withdraw() public {
-        require(msg.sender == foundationAddress, "can only be called by cat charity foundation");
         address[] memory allTokens_ = allTokens;
         uint256 allTokensLength = allTokens_.length;
 
@@ -130,7 +131,7 @@ contract NEKOStaking {
             address token = allTokens[i];
             uint256 amount = IERC20(token).balanceOf(address(this));
             if(amount > 0){
-                require(IERC20(allTokens[i]).transfer(msg.sender, amount), "contract to foundation transfer failed");
+                require(IERC20(allTokens[i]).transfer(foundationAddress, amount), "contract to foundation transfer failed");
             }
         }
     }
