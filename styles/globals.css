@@ -1018,3 +1018,10 @@ th {
   height: max-content;
   overflow: visible;
 }
+
+.withdraw-donation--amount:hover {
+  transition: all 0.2s;
+  border: 1px solid #f8567f !important;
+  background: #fff !important;
+  color: #f8567f !important;
+}

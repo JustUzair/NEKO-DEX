@@ -182,7 +182,9 @@ export const AaveStake = () => {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           await data.wait(1);
@@ -260,7 +262,9 @@ export const AaveStake = () => {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
             } ) `
           );
           await data.wait(1);
@@ -309,7 +313,7 @@ export const AaveStake = () => {
     if (!isWeb3Enabled) await enableWeb3();
     if (AAVEStakingAddress == null) return;
     if (tokenAddress == null) return;
-    console.log("error here");
+    // console.log("error occurred here");
 
     if (account) {
       await runContractFunction({

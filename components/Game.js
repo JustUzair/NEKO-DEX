@@ -44,7 +44,8 @@ const BOARD_HEIGHT = 50;
 export default function Game() {
   const dispatch = useNotification();
   const { runContractFunction } = useWeb3Contract();
-  const { enableWeb3, authenticate, account, isWeb3Enabled } = useMoralis();
+  const { enableWeb3, authenticate, account, isWeb3Enabled, Moralis } =
+    useMoralis();
   const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex);
   const [globalDonations, setGlobalDonations] = useState([]);
@@ -52,7 +53,30 @@ export default function Game() {
   const [totalDonationsInUSD, setTotalDonationsInUSD] = useState(0);
   const [globalDonationsPolygon, setGlobalDonationsPolygon] = useState(0);
   const [globalDonationsOKX, setGlobalDonationsOKX] = useState([]);
+  //****************************************************************/
+  //-----------------------NOTIFICATION-----------------------------
+  //****************************************************************/
 
+  const successNotification = msg => {
+    dispatch({
+      type: "success",
+      message: `${msg} Successfully! `,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+
+  const failureNotification = msg => {
+    dispatch({
+      type: "error",
+      message: `${msg} ( View console for more info )`,
+      title: `${msg}`,
+      position: "topR",
+    });
+  };
+  //****************************************************************/
+  //--------------------END NOTIFICATION-----------------------------
+  //****************************************************************/
   const ReceiverAddress = // donation receiver address
     chainId in contractAddresses
       ? contractAddresses[chainId]["CharityAddress"][
@@ -90,6 +114,45 @@ export default function Game() {
           contractAddresses[chainId]["DAI"].length - 1
         ]
       : null;
+
+  const withdrawCharityAmount = async () => {
+    if (ReceiverAddress == null) return;
+    if (!isWeb3Enabled) await enableWeb3();
+    if (account) {
+      await runContractFunction({
+        params: {
+          abi:
+            (chainId != null &&
+              (chainId == 80001 || chainId == 137) &&
+              chainlinkFeedGlobalDonationPolygon) ||
+            (chainId != null &&
+              (chainId == 65 || chainId == 66) &&
+              chainlinkFeedGlobalDonationOKX),
+          contractAddress: ReceiverAddress,
+          functionName: "withdrawKnown",
+          params: {},
+        },
+        onError: error => {
+          console.error(error);
+          failureNotification("You aren't the owner of the charity!!");
+        },
+        onSuccess: async data => {
+          //   console.log(`Polygon : `, parseFloat(data.toString()) / 100);
+          successNotification(
+            `TX : ${data.hash} (View on ${
+              (chainId == 80001 && "Mumbai Polygonscan") ||
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer")
+            } ) `
+          );
+          console.log(data);
+          await data.wait(1);
+          successNotification(`Donations claimed`);
+        },
+      });
+    }
+  };
   const getGlobalDonationsPolygon = async () => {
     if (ReceiverAddress == null) return;
     if (!isWeb3Enabled) enableWeb3();
@@ -170,8 +233,9 @@ export default function Game() {
     }
   };
   useEffect(() => {
-    if (chainId != null && (chainId == 80001 || chainId == 137))
+    if (chainId != null && (chainId == 80001 || chainId == 137)) {
       getGlobalDonationsPolygon();
+    }
     if (chainId != null && (chainId == 65 || chainId == 66)) {
       getGlobalDonationsOKX();
     }
@@ -538,6 +602,7 @@ export default function Game() {
             globalDonationsOKX={globalDonationsOKX}
             globalDonationsPolygon={globalDonationsPolygon}
             totalDonationsInUSD={totalDonationsInUSD}
+            withdrawCharityAmount={withdrawCharityAmount}
           />
 
           {/*  THE CHARACTER DIV */}

@@ -5,6 +5,7 @@ export const HUD = ({
   globalDonationsOKX,
   globalDonationsPolygon,
   totalDonationsInUSD,
+  withdrawCharityAmount,
 }) => {
   return (
     <div className="HUD">
@@ -84,6 +85,28 @@ export const HUD = ({
             <div ><img className="inventory-item" src="https://i.ibb.co/26fPzxF/image.png"/>100</div>
           
         </div> */}
+      <button
+        className="withdraw-donation--amount"
+        style={{
+          border: "1px solid white",
+          margin: "0px auto",
+          width: "max-content",
+          padding: "5px 3px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          background: "#f8567f",
+          color: "white",
+          borderRadius: "3px",
+          cursor: "pointer",
+          position: "absolute",
+          top: ".12%",
+          right: "0",
+        }}
+        onClick={withdrawCharityAmount}
+      >
+        Withdraw Donations
+      </button>
     </div>
   );
 };
