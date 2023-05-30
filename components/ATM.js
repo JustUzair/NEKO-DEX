@@ -74,6 +74,37 @@ export const ATM = () => {
       });
     }
   };
+
+  const WETHContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WETH"][
+          contractAddresses[chainId]["WETH"].length - 1
+        ]
+      : null;
+  const WBTCContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["WBTC"][
+          contractAddresses[chainId]["WBTC"].length - 1
+        ]
+      : null;
+  const LINKContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["LINK"][
+          contractAddresses[chainId]["LINK"].length - 1
+        ]
+      : null;
+  const USDCContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["USDC"][
+          contractAddresses[chainId]["USDC"].length - 1
+        ]
+      : null;
+  const DAIContractAddress =
+    chainId in contractAddresses
+      ? contractAddresses[chainId]["DAI"][
+          contractAddresses[chainId]["DAI"].length - 1
+        ]
+      : null;
   return (
     <>
       <h2 style={{ textAlign: "center" }}>NEKO ATM</h2>
@@ -86,15 +117,67 @@ export const ATM = () => {
           background: "black",
         }}
       >
-        <div style={{ textAlign: "center", paddingTop: "50px" }}>
-          Would you like to withdraw test tokens?
+        <div style={{ textAlign: "left", padding: "50px 20px 0 20px" }}>
+          Would you like to withdraw test tokens?{" "}
+          <span
+            style={{
+              textDecoration: "underline",
+            }}
+          >
+            [import them using their address]
+          </span>
           <br />
           <br />
-          <div>10,000 USDC</div>
-          <div>5 Wrapped Ether </div>
-          <div>0.5 Wrapped Bitcoin</div>
-          <div>600 LINK </div>
-          <div>10,000 DAI</div>
+          <div>
+            10,000 USDC{" "}
+            <span
+              style={{
+                color: "#ffc800",
+              }}
+            >
+              {USDCContractAddress}
+            </span>
+          </div>
+          <div>
+            5 Wrapped Ether{" "}
+            <span
+              style={{
+                color: "#ffc800",
+              }}
+            >
+              {WETHContractAddress}
+            </span>{" "}
+          </div>
+          <div>
+            0.5 Wrapped Bitcoin{" "}
+            <span
+              style={{
+                color: "#ffc800",
+              }}
+            >
+              {WBTCContractAddress}
+            </span>
+          </div>
+          <div>
+            600 LINK{" "}
+            <span
+              style={{
+                color: "#ffc800",
+              }}
+            >
+              {LINKContractAddress}
+            </span>{" "}
+          </div>
+          <div>
+            10,000 DAI{" "}
+            <span
+              style={{
+                color: "#ffc800",
+              }}
+            >
+              {DAIContractAddress}
+            </span>
+          </div>
           <div
             style={{
               position: "initial",
