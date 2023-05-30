@@ -1,35 +1,3 @@
-# TO DO
-
-`NEKO_DEX.sol`
-1) make a getter function to calculate the amount of LP tokens to be minted.
-2) make a getter function to calcualte the maount of assets to send when burning LP tokens.
-
-`LEADERBOARD.sol`
-<b>
-1) fix for loop to be more efficient, (remove checking all owners, just check to see if user has a number) </b>
-
-`game.js - game design`
-<b>
-1) move leaderboard to room 2
-2) move divs for stickynotes and div for DEX. Also set up appropriate borders for the player to not walk through.
-3) add cats that walk around
-</b>
-
-`game.js - web3 logic`
-<b>
-1) add liquidity, remove liquidity implementation in DEX
-2) add leaderboard implementation</b>
-3) add staking contract in room 2
-
-`art`
-<b>
-1) 2nd room
-2) New character sprites (animations for walking up, down, right, left, and idle)
-</b>
-
-<br/> <br/>
-=========================================================
-
 
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
