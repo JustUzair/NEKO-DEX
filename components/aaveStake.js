@@ -205,6 +205,7 @@ export const AaveStake = () => {
   //*************************************************************************************** */
 
   const UnstakeToken = async () => {
+    if (!tokenWithdrawAmount || tokenWithdrawAmount == 0) return;
     if (!isWeb3Enabled) await enableWeb3();
     if (account) {
       let assetsStaked = false;
