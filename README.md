@@ -1,36 +1,65 @@
+# NEKO DEX 😺- A Cute Cat-Themed DeFi Protocol on Polygon and OKX Networks
 
+## Problem Statement: <br>
+The traditional financial system often lacks transparency, accessibility, and inclusivity. Additionally, many charitable organizations struggle to raise funds consistently. To address these challenges, NEKO DEX aims to provide a decentralized finance (DeFi) solution on the Polygon and OKX networks while supporting a cat charity foundation. The project seeks to create an engaging and user-friendly interface to encourage participation and donations within the crypto community.
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Objective: <br>
+The main objective of NEKO DEX is to combine DeFi services with charitable giving, leveraging the growing popularity of cryptocurrencies and blockchain technology. The project aims to achieve the following:
 
-## Getting Started
+### 1. Enable Decentralized Exchanges <br>
+NEKO DEX offers a decentralized exchange platform on the Polygon and OKX networks, allowing users to swap cryptocurrencies seamlessly while generating fees for the cat charity foundation.
 
-First, run the development server:
+### 2. Liquidity Provision <br>
+Users can provide liquidity to the NEKO DEX ecosystem by participating in various dessert-themed liquidity pools. Liquidity providers earn rewards while contributing to the stability and liquidity of the platform.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+### 3. Charitable Donations <br>
+All fees collected from swaps are donated to a cat charity foundation, fostering a culture of giving within the crypto community.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 4. User Engagement <br> 
+The visually appealing and interactive user interface, inspired by a cat cafe, creates an engaging experience for participants. Elements such as the bulletin board, leaderboard, and staking feature encourage user interaction and participation.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Additional Details <br>
+NEKO DEX emphasizes transparency, with a live tracker displaying the total amount donated in US dollars. This provides users with real-time updates on the impact their transactions are making towards the cat charity foundation.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+The staking feature allows users to earn points based on the LP tokens they provide, the duration of their participation, and a scaling factor. This incentivizes liquidity provision and rewards participants who contribute the most to the NEKO DEX ecosystem.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+# Getting Started
+1. Log in with a web3 wallet <br>
+2. Move your character using the arrow keys on your keyboard (sorry mobile users) <br>
+3. Move your character to the ATM screen, and answer "Okay" when prompted to view the ATM. <br>
+4. Press the Withdraw to mint test tokens, confirm the transaction in your wallet. <br>
 
-## Learn More
+## Making a swap
+1. Walk to the DEX counter, to the left of the room, and select "okay" when prompted to view the DEX. <br>
+2. Choose a pool you would like to swap tokens in. <br>
+3. Enter an amount to swap, and view the expected output amount. Press the swap button, and accept all of the transactions (approve tokens and submit swap) 
+(NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) <br>
+4. Take a look at the leaderboard, your address should be there along with your score. <br>
 
-To learn more about Next.js, take a look at the following resources:
+## Providing Liquidity
+1. In a DEX Pool, select the "deposit" tab. <br>
+2. enter the tokens you would like to deposit into the liquidity pool. <br>
+3. Press the "deposit" button. <br>
+4. accept the transactions that pop up (approval of tokens, and deposit) <br>
+(NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) <br>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Removing Liquidity.
+1. In a DEX Pool, select the "withdraw" tab. <br>
+2. Input how many LP tokens you want to redeem <br>
+3. Press the "withdraw" button. <br>
+4. accept the transactions that pop up (approval of LP tokens, and withdraw) <br>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Post a Sticky Note
+1. Walk to the bulletin board on the top wall of the room. <br>
+2. Accept the prompt the asks if you want to view the board. <br>
+3. Press the "New Note" button at the bottom.  <br>
+4. Enter the amount in USDC that you would like to donate, and a message you would like to post, (remember, it's there forever so keep it classy).
+(NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) <br>
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Stake LP Tokens
+1. Walk up to the stairs, in the top right of the ground floor. <br>
+2. When you are upstairs, walk up to the NEKO cat in the top left of the room. <br>
+3. Press the "Stake LP" button on the bottom of the screen <br>
+4. Select which LP token you would like to stake, along with the amount. <br>
+5. Press the "stake" button, and accept the transactions that pop up (approval of LP tokens, and stake). 
+(NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again
