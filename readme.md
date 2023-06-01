@@ -26,7 +26,8 @@ The visually appealing and interactive user interface, inspired by a cat cafe, c
 
 ## Additional Details <br>
 
-NEKO DEX emphasizes transparency, with a live tracker displaying the total amount donated in US dollars. This provides users with real-time updates on the impact their transactions are making towards the cat charity foundation.
+> > > > > > > 81937b82d61812754d6c81d499dcf9b0b40e4928
+> > > > > > > NEKO DEX emphasizes transparency, with a live tracker displaying the total amount donated in US dollars. This provides users with real-time updates on the impact their transactions are making towards the cat charity foundation.
 
 The staking feature allows users to earn points based on the LP tokens they provide, the duration of their participation, and a scaling factor. This incentivizes liquidity provision and rewards participants who contribute the most to the NEKO DEX ecosystem.
 
@@ -47,13 +48,30 @@ The staking feature allows users to earn points based on the LP tokens they prov
 
 ## Providing Liquidity
 
+=======
+
+1. Walk to the DEX counter, to the left of the room, and select "okay" when prompted to view the DEX. <br>
+2. Choose a pool you would like to swap tokens in. <br>
+3. Enter an amount to swap, and view the expected output amount. Press the swap button, and accept all of the transactions (approve tokens and submit swap)
+   (NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) <br>
+4. Take a look at the leaderboard, your address should be there along with your score. <br>
+
+## Providing Liquidity
+
+> > > > > > > 81937b82d61812754d6c81d499dcf9b0b40e4928
+
 1. In a DEX Pool, select the "deposit" tab. <br>
 2. enter the tokens you would like to deposit into the liquidity pool. <br>
 3. Press the "deposit" button. <br>
 4. accept the transactions that pop up (approval of tokens, and deposit) <br>
-   (NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) <br>
 
 ## Removing Liquidity.
+
+(NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) <br>
+
+## Removing Liquidity.
+
+> > > > > > > 81937b82d61812754d6c81d499dcf9b0b40e4928
 
 1. In a DEX Pool, select the "withdraw" tab. <br>
 2. Input how many LP tokens you want to redeem <br>
@@ -70,9 +88,21 @@ The staking feature allows users to earn points based on the LP tokens they prov
 
 ## Stake LP Tokens
 
+1. Walk to the bulletin board on the top wall of the room. <br>
+2. Accept the prompt the asks if you want to view the board. <br>
+3. Press the "New Note" button at the bottom. <br>
+4. Enter the amount in USDC that you would like to donate, and a message you would like to post, (remember, it's there forever so keep it classy).
+   (NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) <br>
+
+## Stake LP Tokens
+
 1. Walk up to the stairs, in the top right of the ground floor. <br>
 2. When you are upstairs, walk up to the NEKO cat in the top left of the room. <br>
 3. Press the "Stake LP" button on the bottom of the screen <br>
 4. Select which LP token you would like to stake, along with the amount. <br>
+
 5. Press the "stake" button, and accept the transactions that pop up (approval of LP tokens, and stake).
+   (NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again
+
+6. Press the "stake" button, and accept the transactions that pop up (approval of LP tokens, and stake).
    (NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again
