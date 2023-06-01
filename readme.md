@@ -106,3 +106,18 @@ The staking feature allows users to earn points based on the LP tokens they prov
 
 6. Press the "stake" button, and accept the transactions that pop up (approval of LP tokens, and stake).
    (NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again
+
+["/Screenshots/home.png"](home)
+["/Screenshots/dex menu.png"](dex-menu)
+["/Screenshots/dex.png"](dex)
+["/Screenshots/sticky-note-donations.png"](sticky-note-donations)
+["/Screenshots/global-donations.png"](global-donations)
+["/Screenshots/room2.png"](Room-2)
+["/Screenshots/leaderboard-lp-stake.png"](leaderboard-stake)
+["/Screenshots/leaderboard.png"](leaderboard)
+["/Screenshots/aave-stake.JPG"](aave-stake)
+["/Screenshots/matic-to-usdc.JPG"](matic-to-usdc)
+["/Screenshots/add-liquidity.JPG"](add-liquidity)
+["/Screenshots/neko-leaderboard-stake.JPG"](neko-leaderboard-stake)
+["/Screenshots/neko-leaderboard-unstake.JPG"](neko-leaderboard-unstake)
+["/Screenshots/mint-test-tokens.JPG"](mint-test-tokens)
