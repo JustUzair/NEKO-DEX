@@ -110,7 +110,7 @@ The staking feature allows users to earn points based on the LP tokens they prov
 ![home](/Screenshots/home.png?raw=true)
 ![dex-menu](/Screenshots/dex%20menu.png?raw=true)
 ![dex](/Screenshots/dex.png?raw=true)
-![sticky-note-donations](/Screenshots/sticky-note-donations.png?raw=true)
+![sticky-note-donations](/Screenshots/sticky-note-donations.png?raw=true)<br/>
 ![global-donations](/Screenshots/global-donations.png?raw=true)
 ![Room-2](/Screenshots/room2.png?raw=true)
 ![leaderboard-stake](/Screenshots/leaderboard-lp-stake.png?raw=true)
