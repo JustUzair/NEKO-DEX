@@ -26,6 +26,16 @@ All fees collected from swaps are donated to a cat charity foundation, fostering
 
 The visually appealing and interactive user interface, inspired by a cat cafe, creates an engaging experience for participants. Elements such as the bulletin board, leaderboard, and staking feature encourage user interaction and participation.
 
+# Features
+  ### 1. <b> Decentralized Exchange </b> <br/>
+   Swap tokens, and provide liquidity to generate fees, which are donated.
+  ###  2. <b> Liquidity Provider Leaderboard </b>
+  Lock your LP tokens to show everyone how much you love cats.
+  ### 3. <b> Post it note donations  </b>
+  Leave a thoughtful message for everyone to see with your donation.
+  ### 4. <b> AAVE Staking </b>
+   Park your AAVE underlying tokens, or aTokens to generate fees, which are donated.
+
 ## Additional Details <br>
 
 NEKO DEX emphasizes transparency, with a live tracker displaying the total amount donated in US dollars. This provides users with real-time updates on the impact their transactions are making towards the cat charity foundation.
