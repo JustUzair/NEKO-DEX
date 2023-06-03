@@ -1,4 +1,5 @@
-# NEKO DEX 😺- A Cute Cat-Themed DeFi Protocol on Polygon and OKX Networks
+# NEKO DEX 😺
+A Cute Cat-Themed DeFi Protocol on Polygon and OKX Networks
 
 ## Problem Statement: <br>
 
