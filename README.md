@@ -12,7 +12,7 @@ The main objective of NEKO DEX is to combine DeFi services with charitable givin
 
 ### 1. Enable Decentralized Exchanges <br>
 
-NEKO DEX offers a decentralized exchange platform on the Polygon and OKX networks, allowing users to swap cryptocurrencies seamlessly while generating fees for the cat charity foundation.
+NEKO DEX offers a decentralized exchange platform on the Polygon and OKX networks, allowing users to swap cryptocurrencies seamlessly while generating fees for the cat charity foundation. (0.3% fee on swap)
 
 ### 2. Liquidity Provision <br>
 
@@ -26,17 +26,23 @@ All fees collected from swaps are donated to a cat charity foundation, fostering
 
 The visually appealing and interactive user interface, inspired by a cat cafe, creates an engaging experience for participants. Elements such as the bulletin board, leaderboard, and staking feature encourage user interaction and participation.
 
-# Features
-  ### 1. <b> Decentralized Exchange </b> <br/>
-   Swap tokens, and provide liquidity to generate fees, which are donated.
-  ###  2. <b> Liquidity Provider Leaderboard </b>
-  Lock your LP tokens to show everyone how much you love cats.
-  ### 3. <b> Post it note donations  </b>
-  Leave a thoughtful message for everyone to see with your donation.
-  ### 4. <b> AAVE Staking </b>
-   Park your AAVE underlying tokens, or aTokens to generate fees, which are donated.
+## Features :
+We currently have four major features at NEKO DEX
 
-## Additional Details <br>
+###  1. Decentralized Exchange  <br> 
+  Swap tokens, and provide liquidity to generate fees, which are donated. <br/>
+<i> 0.3% fee on swaps </i>
+
+###  2. Liquidity Provider Leaderboard  <br>
+  Lock your LP tokens to show everyone how much you love cats.
+
+### 3. Post it note donations  <br>
+  Leave a thoughtful message for everyone to see with your donation.
+
+###  4. AAVE Staking  <br>
+   Park your AAVE underlying tokens, or aTokens to generate lending fees, which are donated.
+<i> You can withdraw at any time for your original balance </i>
+### Additional Details
 
 NEKO DEX emphasizes transparency, with a live tracker displaying the total amount donated in US dollars. This provides users with real-time updates on the impact their transactions are making towards the cat charity foundation.
 
@@ -109,6 +115,23 @@ Below are some instructions for trying out NEKO DEX
 5. Withdraw whenever you like
 
 ![image](https://github.com/gas-limit/NEKO-DEX/assets/100609687/a792a492-b28f-45a1-b511-e084b4f64617)
+
+# Future Updates
+
+### Multiplayer
+Interact with others with
+others and speak in a chat
+box
+
+### Character Customization
+Offer ways to customize
+your character through
+donations
+
+### World Growth
+Expand a world outside the
+NEKO DEX cafe
+
 
 
 # Miscellaneous Screenshots
