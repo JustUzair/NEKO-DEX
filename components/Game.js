@@ -126,7 +126,10 @@ export default function Game() {
               (chainId == 80001 || chainId == 137) &&
               chainlinkFeedGlobalDonationPolygon) ||
             (chainId != null &&
-              (chainId == 65 || chainId == 66) &&
+              (chainId == 65 ||
+                chainId == 66 ||
+                chainId == 4002 ||
+                chainId == 250) &&
               chainlinkFeedGlobalDonationOKX),
           contractAddress: ReceiverAddress,
           functionName: "withdrawKnown",
@@ -143,7 +146,9 @@ export default function Game() {
               (chainId == 80001 && "Mumbai Polygonscan") ||
               (chainId == 137 && "Polygonscan") ||
               (chainId == 65 && "OKX Testnet Explorer") ||
-              (chainId == 66 && "OKX Mainnet Explorer")
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           console.log(data);

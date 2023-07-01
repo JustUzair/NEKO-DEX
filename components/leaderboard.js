@@ -177,7 +177,11 @@ export const Leaderboard = () => {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           await data.wait(1);
@@ -258,10 +262,7 @@ export const Leaderboard = () => {
       return;
     await getStakedTokenAmount(ETHPoolContractAddress, setETHLPStakedBalance);
     await getStakedTokenAmount(WBTCPoolContractAddress, setWBTCLPStakedBalance);
-    await getStakedTokenAmount(
-      LINKPoolContractAddress,
-      setLINKLPStakedBalance
-    );
+    await getStakedTokenAmount(LINKPoolContractAddress, setLINKLPStakedBalance);
     await getStakedTokenAmount(DAIPoolContractAddress, setDAILPStakedBalance);
   };
   //*************************************************************************************** */
@@ -312,10 +313,7 @@ export const Leaderboard = () => {
       return;
     await getTotalTokenAmount(ETHPoolContractAddress, setETHLPCurrentBalance);
     await getTotalTokenAmount(WBTCPoolContractAddress, setWBTCLPCurrentBalance);
-    await getTotalTokenAmount(
-      LINKPoolContractAddress,
-      setLINKLPCurrentBalance
-    );
+    await getTotalTokenAmount(LINKPoolContractAddress, setLINKLPCurrentBalance);
     await getTotalTokenAmount(DAIPoolContractAddress, setDAILPCurrentBalance);
   };
   //*************************************************************************************** */
@@ -394,7 +392,11 @@ export const Leaderboard = () => {
           successNotification(
             `TX : ${data.hash} (View on ${
               (chainId == 80001 && "Mumbai Polygonscan") ||
-              (chainId == 137 && "Polygonscan")
+              (chainId == 137 && "Polygonscan") ||
+              (chainId == 65 && "OKX Testnet Explorer") ||
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           await data.wait(1);

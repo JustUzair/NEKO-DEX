@@ -7,6 +7,7 @@ import { NotificationProvider } from "web3uikit";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { polygonMumbai } from "wagmi/chains";
+import { fantom, fantomTestnet } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
 import { MoralisProvider } from "react-moralis";
@@ -75,7 +76,14 @@ function MyApp({ Component, pageProps }) {
   };
 
   const { chains, provider } = configureChains(
-    [polygonMumbai, okcChain, okcTestnetChain, polygonMainnet], // Testnet LINK  address : 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
+    [
+      polygonMumbai,
+      okcChain,
+      okcTestnetChain,
+      polygonMainnet,
+      fantom,
+      fantomTestnet,
+    ],
     [
       jsonRpcProvider({
         rpc: chain => ({ http: chain.rpcUrls.default.http[0] }),

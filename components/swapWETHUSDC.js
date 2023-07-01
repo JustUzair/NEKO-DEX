@@ -7,7 +7,7 @@ import { useNotification } from "web3uikit";
 import DEXAbi from "../constants/DEXAbi.json";
 const mumbaiExplorerAddress = `https://mumbai.polygonscan.com/address/`;
 const okxExplorerAddress = `https://www.oklink.com/oktc-test/address/`;
-
+const fantomExplorerAddress = `https://testnet.ftmscan.com/address/`;
 export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
   const dispatch = useNotification();
   //****************************************************************/
@@ -210,7 +210,9 @@ export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
               (chainId == 80001 && "Mumbai Polygonscan") ||
               (chainId == 137 && "Polygonscan") ||
               (chainId == 65 && "OKX Testnet Explorer") ||
-              (chainId == 66 && "OKX Mainnet Explorer")
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -465,7 +467,9 @@ export function WETHUSDCDeposit({ setPoolView, setWETHUSDC }) {
               (chainId == 80001 && "Mumbai Polygonscan") ||
               (chainId == 137 && "Polygonscan") ||
               (chainId == 65 && "OKX Testnet Explorer") ||
-              (chainId == 66 && "OKX Mainnet Explorer")
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -700,7 +704,9 @@ export function WETHUSDCWithdraw({ setPoolView, setWETHUSDC }) {
               (chainId == 80001 && "Mumbai Polygonscan") ||
               (chainId == 137 && "Polygonscan") ||
               (chainId == 65 && "OKX Testnet Explorer") ||
-              (chainId == 66 && "OKX Mainnet Explorer")
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -884,7 +890,8 @@ export function PoolData() {
                     <a
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
-                        (chainId == 65 && okxExplorerAddress)
+                        (chainId == 65 && okxExplorerAddress) ||
+                        (chainId == 4002 && fantomExplorerAddress)
                       }${ETHPoolContractAddress}`}
                       target="_blank"
                     >
@@ -907,7 +914,8 @@ export function PoolData() {
                     <a
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
-                        (chainId == 65 && okxExplorerAddress)
+                        (chainId == 65 && okxExplorerAddress) ||
+                        (chainId == 4002 && fantomExplorerAddress)
                       }${WETHTestTokenContractAddress}`}
                       target="_blank"
                     >

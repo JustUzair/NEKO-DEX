@@ -4,6 +4,7 @@ import contractAddresses from "../constants/networkMappings.json";
 import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 const mumbaiExplorerAddress = `https://mumbai.polygonscan.com/address/`;
 const okxExplorerAddress = `https://www.oklink.com/oktc-test/address/`;
+const fantomExplorerAddress = `https://testnet.ftmscan.com/address/`;
 
 import ierc20Abi from "../constants/ierc20Abi.json";
 import { BigNumber, ethers } from "ethers";
@@ -215,7 +216,9 @@ export function DAIUSDCSwap({ setPoolView, setDAIUSDC }) {
               (chainId == 80001 && "Mumbai Polygonscan") ||
               (chainId == 137 && "Polygonscan") ||
               (chainId == 65 && "OKX Testnet Explorer") ||
-              (chainId == 66 && "OKX Mainnet Explorer")
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -466,7 +469,9 @@ export function DAIUSDCDeposit({ setPoolView, setDAIUSDC }) {
               (chainId == 80001 && "Mumbai Polygonscan") ||
               (chainId == 137 && "Polygonscan") ||
               (chainId == 65 && "OKX Testnet Explorer") ||
-              (chainId == 66 && "OKX Mainnet Explorer")
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -700,7 +705,9 @@ export function DAIUSDCWithdraw({ setPoolView, setDAIUSDC }) {
               (chainId == 80001 && "Mumbai Polygonscan") ||
               (chainId == 137 && "Polygonscan") ||
               (chainId == 65 && "OKX Testnet Explorer") ||
-              (chainId == 66 && "OKX Mainnet Explorer")
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -887,7 +894,8 @@ export function PoolData() {
                     <a
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
-                        (chainId == 65 && okxExplorerAddress)
+                        (chainId == 65 && okxExplorerAddress) ||
+                        (chainId == 4002 && fantomExplorerAddress)
                       }${DAIPoolContractAddress}`}
                       target="_blank"
                     >
@@ -910,7 +918,8 @@ export function PoolData() {
                     <a
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
-                        (chainId == 65 && okxExplorerAddress)
+                        (chainId == 65 && okxExplorerAddress) ||
+                        (chainId == 4002 && fantomExplorerAddress)
                       }${DAITestTokenContractAddress}`}
                       target="_blank"
                     >

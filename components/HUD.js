@@ -9,12 +9,16 @@ export const HUD = ({
 }) => {
   return (
     <div className="HUD">
-      {chainId != null && (chainId == 80001 || chainId == 137) && (
-        <div className="global-donations">
-          Global donations : $
-          {globalDonationsPolygon && globalDonationsPolygon[0]}
-        </div>
-      )}
+      {chainId != null &&
+        (chainId == 80001 ||
+          chainId == 137 ||
+          chainId == 4002 ||
+          chainId == 250) && (
+          <div className="global-donations">
+            Global donations : $
+            {globalDonationsPolygon && globalDonationsPolygon[0]}
+          </div>
+        )}
 
       {chainId != null && (chainId == 65 || chainId == 66) && (
         <div className="global-donations okc-global--donation">

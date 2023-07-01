@@ -184,7 +184,9 @@ export const AaveStake = () => {
               (chainId == 80001 && "Mumbai Polygonscan") ||
               (chainId == 137 && "Polygonscan") ||
               (chainId == 65 && "OKX Testnet Explorer") ||
-              (chainId == 66 && "OKX Mainnet Explorer")
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           await data.wait(1);
@@ -265,7 +267,9 @@ export const AaveStake = () => {
               (chainId == 80001 && "Mumbai Polygonscan") ||
               (chainId == 137 && "Polygonscan") ||
               (chainId == 65 && "OKX Testnet Explorer") ||
-              (chainId == 66 && "OKX Mainnet Explorer")
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           await data.wait(1);

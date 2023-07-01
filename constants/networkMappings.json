@@ -63,5 +63,37 @@
     "LINK": [],
     "AAVEStaking": [],
     "TestTokenFaucet": []
+  },
+  "4002": {
+    "StickyNotes": ["0xEF9B7207580c95eC4B76203b1Ed72a210CD6Db78"],
+    "ETHPool": ["0xeB66Aae97045a4F1aEa0fCb19e7E537ea717F3c3"],
+    "WBTCPool": ["0xcFd150823Cb81344353486a4Da43A799458B1F30"],
+    "LINKPool": ["0x95001435d24E9c4c052BCB22fe29360928b4CE4c"],
+    "DAIPool": ["0x6b22bDFD928143aaa2daD1Ee224d7de03159fa43"],
+    "Leaderboard": ["0xeA014BFc6cFCEcA3772212519303D8E2aD6aDE6F"],
+    "CharityAddress": ["0x92C1363Ea694da11579c0DEF63cE0168C94441A3"],
+    "USDC": ["0xb86983377d6Fe0a932a91f8f2B104EeB2E7BAD85"],
+    "WETH": ["0x7B04112851D73E97e2fF608cCc8a09Fb57b6D3dc"],
+    "WBTC": ["0x3232659a56c49f82B95e0615792cd41D9Fcf348C"],
+    "DAI": ["0x02dBfc344aABF3c4bF920326c9580BB8B4042632"],
+    "LINK": ["0x9cecC587fA595884ada1b4a1c4e94faB5678Bc63"],
+    "AAVEStaking": [""],
+    "TestTokenFaucet": ["0x4E05507E754f4b9870B65e46009a7Afb4f73dD07"]
+  },
+  "250": {
+    "StickyNotes": [],
+    "ETHPool": [],
+    "WBTCPool": [],
+    "LINKPool": [],
+    "DAIPool": [],
+    "Leaderboard": [],
+    "CharityAddress": [],
+    "USDC": [],
+    "WETH": [],
+    "WBTC": [],
+    "DAI": [],
+    "LINK": [],
+    "AAVEStaking": [],
+    "TestTokenFaucet": []
   }
 }

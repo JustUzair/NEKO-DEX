@@ -8,6 +8,7 @@ import { useNotification } from "web3uikit";
 
 const mumbaiExplorerAddress = `https://mumbai.polygonscan.com/address/`;
 const okxExplorerAddress = `https://www.oklink.com/oktc-test/address/`;
+const fantomExplorerAddress = `https://testnet.ftmscan.com/address/`;
 export function LINKUSDCSwap({ setPoolView, setLINKUSDC }) {
   const dispatch = useNotification();
 
@@ -213,7 +214,9 @@ export function LINKUSDCSwap({ setPoolView, setLINKUSDC }) {
               (chainId == 80001 && "Mumbai Polygonscan") ||
               (chainId == 137 && "Polygonscan") ||
               (chainId == 65 && "OKX Testnet Explorer") ||
-              (chainId == 66 && "OKX Mainnet Explorer")
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -465,7 +468,9 @@ export function LINKUSDCDeposit({ setPoolView, setLINKUSDC }) {
               (chainId == 80001 && "Mumbai Polygonscan") ||
               (chainId == 137 && "Polygonscan") ||
               (chainId == 65 && "OKX Testnet Explorer") ||
-              (chainId == 66 && "OKX Mainnet Explorer")
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -700,7 +705,9 @@ export function LINKUSDCWithdraw({ setPoolView, setLINKUSDC }) {
               (chainId == 80001 && "Mumbai Polygonscan") ||
               (chainId == 137 && "Polygonscan") ||
               (chainId == 65 && "OKX Testnet Explorer") ||
-              (chainId == 66 && "OKX Mainnet Explorer")
+              (chainId == 66 && "OKX Mainnet Explorer") ||
+              (chainId == 250 && "Ftmscan Mainnet Explorer") ||
+              (chainId == 4002 && "Ftmscan Testnet Explorer")
             } ) `
           );
           setPoolView(true);
@@ -754,10 +761,8 @@ export function LINKUSDCWithdraw({ setPoolView, setLINKUSDC }) {
           }}
           value={nekoBTCLPWithdrawAmount}
         />
-        
-        <div className="selectAsset1">LP Tokens
 
-        </div>
+        <div className="selectAsset1">LP Tokens</div>
         <span
           style={{
             fontSize: "11.5px",
@@ -768,7 +773,6 @@ export function LINKUSDCWithdraw({ setPoolView, setLINKUSDC }) {
           title={nekoBTCLPBalance}
         >
           LINK LP Balance : ~{parseFloat(nekoBTCLPBalance).toFixed(2)}
-
         </span>
 
         <span
@@ -887,7 +891,8 @@ export function PoolData() {
                     <a
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
-                        (chainId == 65 && okxExplorerAddress)
+                        (chainId == 65 && okxExplorerAddress) ||
+                        (chainId == 4002 && fantomExplorerAddress)
                       }${LINKPoolContractAddress}`}
                       target="_blank"
                     >
@@ -910,7 +915,8 @@ export function PoolData() {
                     <a
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
-                        (chainId == 65 && okxExplorerAddress)
+                        (chainId == 65 && okxExplorerAddress) ||
+                        (chainId == 4002 && fantomExplorerAddress)
                       }${LINKTestTokenContractAddress}`}
                       target="_blank"
                     >
