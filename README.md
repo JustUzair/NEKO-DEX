@@ -1,4 +1,6 @@
-# NEKO DEX 😺- A Cute Cat-Themed DeFi Protocol on Polygon and OKX Networks
+# NEKO DEX 😺
+A Cute Cat-Themed DeFi Protocol on Polygon and OKX Networks
+![home](/Screenshots/home.png?raw=true)
 
 ## Problem Statement: <br>
 
@@ -10,7 +12,7 @@ The main objective of NEKO DEX is to combine DeFi services with charitable givin
 
 ### 1. Enable Decentralized Exchanges <br>
 
-NEKO DEX offers a decentralized exchange platform on the Polygon and OKX networks, allowing users to swap cryptocurrencies seamlessly while generating fees for the cat charity foundation.
+NEKO DEX offers a decentralized exchange platform on the Polygon and OKX networks, allowing users to swap cryptocurrencies seamlessly while generating fees for the cat charity foundation. (0.3% fee on swap)
 
 ### 2. Liquidity Provision <br>
 
@@ -24,68 +26,73 @@ All fees collected from swaps are donated to a cat charity foundation, fostering
 
 The visually appealing and interactive user interface, inspired by a cat cafe, creates an engaging experience for participants. Elements such as the bulletin board, leaderboard, and staking feature encourage user interaction and participation.
 
-## Additional Details <br>
+## Features :
+We currently have four major features at NEKO DEX
+
+###  1. Decentralized Exchange  <br> 
+  Swap tokens, and provide liquidity to generate fees, which are donated. <br/>
+<i> 0.3% fee on swaps </i>
+
+###  2. Liquidity Provider Leaderboard  <br>
+  Lock your LP tokens to show everyone how much you love cats.
+
+### 3. Post it note donations  <br>
+  Leave a thoughtful message for everyone to see with your donation.
+
+###  4. AAVE Staking  <br>
+   Park your AAVE underlying tokens, or aTokens to generate lending fees, which are donated.
+<i> You can withdraw at any time for your original balance </i>
+### Additional Details
 
 NEKO DEX emphasizes transparency, with a live tracker displaying the total amount donated in US dollars. This provides users with real-time updates on the impact their transactions are making towards the cat charity foundation.
 
 The staking feature allows users to earn points based on the LP tokens they provide, the duration of their participation, and a scaling factor. This incentivizes liquidity provision and rewards participants who contribute the most to the NEKO DEX ecosystem.
 
-# Getting Started
+# How To Try
+Below are some instructions for trying out NEKO DEX
+## Getting Started
 
 1. Log in with a web3 wallet <br>
 2. Move your character using the arrow keys on your keyboard (sorry mobile users) <br>
 3. Move your character to the ATM screen, and answer "Okay" when prompted to view the ATM. <br>
 4. Press the Withdraw to mint test tokens, confirm the transaction in your wallet. <br>
 
+![image](https://github.com/gas-limit/NEKO-DEX/assets/100609687/d5c65f70-7cac-4f57-ab4f-b31b0a1237f1)
+![image](https://github.com/gas-limit/NEKO-DEX/assets/100609687/d41fd1f2-a3db-48ab-8a59-65a5adfdc63f)
+
+
 ## Making a swap
+   (NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) 
 
 1. Walk to the DEX counter, to the left of the room, and select "okay" when prompted to view the DEX. <br>
 2. Choose a pool you would like to swap tokens in. <br>
 3. Enter an amount to swap, and view the expected output amount. Press the swap button, and accept all of the transactions (approve tokens and submit swap)
-   (NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) <br>
-4. Take a look at the leaderboard, your address should be there along with your score. <br>
+<br>
+
+![image](https://github.com/gas-limit/NEKO-DEX/assets/100609687/c613b729-2f87-4700-b71f-2c09decd1df4)
 
 ## Providing Liquidity
-
-1. Walk to the DEX counter, to the left of the room, and select "okay" when prompted to view the DEX. <br>
-2. Choose a pool you would like to swap tokens in. <br>
-3. Enter an amount to swap, and view the expected output amount. Press the swap button, and accept all of the transactions (approve tokens and submit swap)
-   (NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) <br>
-4. Take a look at the leaderboard, your address should be there along with your score. <br>
-
-## Providing Liquidity
+(NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) <br>
 
 1. In a DEX Pool, select the "deposit" tab. <br>
 2. enter the tokens you would like to deposit into the liquidity pool. <br>
 3. Press the "deposit" button. <br>
 4. accept the transactions that pop up (approval of tokens, and deposit) <br>
 
-## Removing Liquidity.
+![image](https://github.com/gas-limit/NEKO-DEX/assets/100609687/727ab799-16d8-4cf9-9374-682e3626acfb)
 
-(NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) <br>
-
-## Removing Liquidity.
-
-1. In a DEX Pool, select the "withdraw" tab. <br>
-2. Input how many LP tokens you want to redeem <br>
-3. Press the "withdraw" button. <br>
-4. accept the transactions that pop up (approval of LP tokens, and withdraw) <br>
 
 ## Post a Sticky Note
+(NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again)
 
 1. Walk to the bulletin board on the top wall of the room. <br>
 2. Accept the prompt the asks if you want to view the board. <br>
 3. Press the "New Note" button at the bottom. <br>
 4. Enter the amount in USDC that you would like to donate, and a message you would like to post, (remember, it's there forever so keep it classy).
-   (NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) <br>
+  <br>
 
-## Stake LP Tokens
-
-1. Walk to the bulletin board on the top wall of the room. <br>
-2. Accept the prompt the asks if you want to view the board. <br>
-3. Press the "New Note" button at the bottom. <br>
-4. Enter the amount in USDC that you would like to donate, and a message you would like to post, (remember, it's there forever so keep it classy).
-   (NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again) <br>
+![image](https://github.com/gas-limit/NEKO-DEX/assets/100609687/148e09a3-415c-43f0-b96a-f7f8c9083288)
+![image](https://github.com/gas-limit/NEKO-DEX/assets/100609687/b4a23431-75e1-45a3-a946-ca5e43856967)
 
 ## Stake LP Tokens
 
@@ -97,10 +104,38 @@ The staking feature allows users to earn points based on the LP tokens they prov
 5. Press the "stake" button, and accept the transactions that pop up (approval of LP tokens, and stake).
    (NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again
 
-6. Press the "stake" button, and accept the transactions that pop up (approval of LP tokens, and stake).
-   (NOTE : Due to latency or traffic on rpc url, the tx may fail, in such cases try initiating the tx again
+![image](https://github.com/gas-limit/NEKO-DEX/assets/100609687/1439c316-6708-4455-ac41-1edcaef91baa)
 
-![home](/Screenshots/home.png?raw=true)
+## Stake AAVE Tokens
+
+1. While upstairs, walk to the ghost cat in the bottom right
+2. Select which asset to lock into the contract.
+3. Select the "stake"  button, and accept the transaction. 
+4. Profits are generated, and donated.
+5. Withdraw whenever you like
+
+![image](https://github.com/gas-limit/NEKO-DEX/assets/100609687/a792a492-b28f-45a1-b511-e084b4f64617)
+
+# Future Updates
+
+### Multiplayer
+Interact with others with
+others and speak in a chat
+box
+
+### Character Customization
+Offer ways to customize
+your character through
+donations
+
+### World Growth
+Expand a world outside the
+NEKO DEX cafe
+
+
+
+# Miscellaneous Screenshots
+
 ![dex-menu](/Screenshots/dex%20menu.png?raw=true)
 ![dex](/Screenshots/dex.png?raw=true)
 ![sticky-note-donations](/Screenshots/sticky-note-donations.png?raw=true)<br/>
