@@ -8,6 +8,8 @@ import { useNotification } from "web3uikit";
 
 const mumbaiExplorerAddress = `https://mumbai.polygonscan.com/address/`;
 const okxExplorerAddress = `https://www.oklink.com/oktc-test/address/`;
+const fantomExplorerAddress = `https://testnet.ftmscan.com/address/`;
+
 export function WBTCUSDCSwap({ setPoolView, setWBTCUSDC }) {
   const dispatch = useNotification();
 
@@ -889,7 +891,8 @@ export function PoolData() {
                     <a
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
-                        (chainId == 65 && okxExplorerAddress)
+                        (chainId == 65 && okxExplorerAddress) ||
+                        (chainId == 4002 && fantomExplorerAddress)
                       }${WBTCPoolContractAddress}`}
                       target="_blank"
                     >
@@ -912,7 +915,8 @@ export function PoolData() {
                     <a
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
-                        (chainId == 65 && okxExplorerAddress)
+                        (chainId == 65 && okxExplorerAddress) ||
+                        (chainId == 4002 && fantomExplorerAddress)
                       }${WBTCTestTokenContractAddress}`}
                       target="_blank"
                     >
