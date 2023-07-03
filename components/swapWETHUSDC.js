@@ -8,6 +8,8 @@ import DEXAbi from "../constants/DEXAbi.json";
 const mumbaiExplorerAddress = `https://mumbai.polygonscan.com/address/`;
 const okxExplorerAddress = `https://www.oklink.com/oktc-test/address/`;
 const fantomExplorerAddress = `https://testnet.ftmscan.com/address/`;
+const fantomMainnetExplorerAddress = `https://ftmscan.com/address/`;
+
 export function WETHUSDCSwap({ setPoolView, setWETHUSDC }) {
   const dispatch = useNotification();
   //****************************************************************/
@@ -891,7 +893,8 @@ export function PoolData() {
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
                         (chainId == 65 && okxExplorerAddress) ||
-                        (chainId == 4002 && fantomExplorerAddress)
+                        (chainId == 4002 && fantomExplorerAddress) ||
+                        (chainId == 250 && fantomMainnetExplorerAddress)
                       }${ETHPoolContractAddress}`}
                       target="_blank"
                     >
@@ -915,7 +918,8 @@ export function PoolData() {
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
                         (chainId == 65 && okxExplorerAddress) ||
-                        (chainId == 4002 && fantomExplorerAddress)
+                        (chainId == 4002 && fantomExplorerAddress) ||
+                        (chainId == 250 && fantomMainnetExplorerAddress)
                       }${WETHTestTokenContractAddress}`}
                       target="_blank"
                     >

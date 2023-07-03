@@ -5,6 +5,7 @@ import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
 const mumbaiExplorerAddress = `https://mumbai.polygonscan.com/address/`;
 const okxExplorerAddress = `https://www.oklink.com/oktc-test/address/`;
 const fantomExplorerAddress = `https://testnet.ftmscan.com/address/`;
+const fantomMainnetExplorerAddress = `https://ftmscan.com/address/`;
 
 import ierc20Abi from "../constants/ierc20Abi.json";
 import { BigNumber, ethers } from "ethers";
@@ -895,7 +896,8 @@ export function PoolData() {
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
                         (chainId == 65 && okxExplorerAddress) ||
-                        (chainId == 4002 && fantomExplorerAddress)
+                        (chainId == 4002 && fantomExplorerAddress) ||
+                        (chainId == 250 && fantomMainnetExplorerAddress)
                       }${DAIPoolContractAddress}`}
                       target="_blank"
                     >
@@ -919,7 +921,8 @@ export function PoolData() {
                       href={`${
                         (chainId == 80001 && mumbaiExplorerAddress) ||
                         (chainId == 65 && okxExplorerAddress) ||
-                        (chainId == 4002 && fantomExplorerAddress)
+                        (chainId == 4002 && fantomExplorerAddress) ||
+                        (chainId == 250 && fantomMainnetExplorerAddress)
                       }${DAITestTokenContractAddress}`}
                       target="_blank"
                     >
