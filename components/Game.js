@@ -229,7 +229,7 @@ export default function Game() {
               (donation.donatedTokenAddress == DAITestTokenContractAddress &&
                 "https://app.aave.com/icons/tokens/dai.svg");
             arr1.push(donation);
-            // console.log(arr1);
+            console.log(arr1);
           });
           console.log(arr1);
           setGlobalDonationsOKX(prevState => [...prevState, ...arr1]);
@@ -241,13 +241,19 @@ export default function Game() {
     if (chainId != null && (chainId == 80001 || chainId == 137)) {
       getGlobalDonationsPolygon();
     }
-    if (chainId != null && (chainId == 65 || chainId == 66)) {
+    if (
+      chainId != null &&
+      (chainId == 65 || chainId == 66 || chainId == 4002 || chainId == 250)
+    ) {
       getGlobalDonationsOKX();
     }
   }, [chainId]);
 
   useEffect(() => {
-    if (chainId != null && (chainId == 65 || chainId == 66)) {
+    if (
+      chainId != null &&
+      (chainId == 65 || chainId == 66 || chainId == 4002 || chainId == 250)
+    ) {
       const COINGECKO_PRICE_FEED_URL =
         "https://api.coingecko.com/api/v3/simple/price?ids=weth,wrapped-bitcoin,usd-coin,dai,chainlink&vs_currencies=usd";
       try {
