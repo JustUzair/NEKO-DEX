@@ -1,6 +1,6 @@
 # NEKO DEX 😺
 
-A Cute Cat-Themed DeFi Protocol on Polygon and OKX Networks
+A Cute Cat-Themed DeFi Protocol on Fantom, Polygon and OKX Networks
 ![home](/Screenshots/home.png?raw=true)
 
 ## Problem Statement: <br>
